@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/wallet/beldex/calculate_estimated_fee.dart';
 import 'package:beldex_wallet/src/wallet/beldex/transaction/transaction_priority.dart';
 import 'package:beldex_wallet/src/widgets/new_slide_to_act.dart';
@@ -10,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobx/mobx.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/routes.dart';
 import 'package:beldex_wallet/src/domain/common/balance_display_mode.dart';
@@ -35,7 +35,7 @@ import 'package:beldex_wallet/src/util/constants.dart' as constants;
 
 class NewStakePage extends BasePage {
   @override
-  String get title => S.current.title_new_stake;
+  String getTitle(AppLocalizations t) => t.title_new_stake;
 
   @override
   bool get isModalBackButton => false;
@@ -63,10 +63,10 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
   final _formKey = GlobalKey<FormState>();
 
   var controller = StreamController<double>.broadcast();
-  double position;
+  double? position;
 
   //
-  AnimationController animationController;
+  AnimationController? animationController;
   @override
   void initState() {
     super.initState();
@@ -80,7 +80,7 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
 
   @override
   void dispose(){
-    animationController.dispose();
+    animationController!.dispose();
     super.dispose();
   }
 
@@ -128,7 +128,7 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context)
                                         .primaryTextTheme
-                                        .headline6
+                                        .headline6!
                                         .color)),
                             SizedBox(
                               height: 10,
@@ -142,7 +142,7 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
                                   fontSize: 16,
                                   color: Theme.of(context)
                                       .accentTextTheme
-                                      .caption
+                                      .caption!
                                       .decorationColor //Theme.of(context).primaryTextTheme.headline6.color
                                   ),
                             ),
@@ -173,7 +173,7 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
                                 style: TextStyle(
                                   color: Theme.of(context)
                                       .primaryTextTheme
-                                      .caption
+                                      .caption!
                                       .color,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -266,12 +266,12 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
                 child: Column(children: <Widget>[
                   BeldexTextField(
                     controller: _addressController,
-                    hintText: S.of(context).service_node_key,
+                    hintText: tr(context).service_node_key,
                     focusNode: _focusNode,
                     validator: (value) {
                       final pattern = RegExp('[0-9a-fA-F]{64}');
-                      if (!pattern.hasMatch(value)) {
-                        return S.of(context).error_text_service_node;
+                      if (!pattern.hasMatch(value!)) {
+                        return tr(context).error_text_service_node;
                       }
                       return null;
                     },
@@ -287,7 +287,7 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
                         padding: const EdgeInsets.only(left: 25.0),
                         child: TextFormField(
                             style: TextStyle(
-                                fontSize: 18.0, color: Theme.of(context).primaryTextTheme.caption.color),
+                                fontSize: 18.0, color: Theme.of(context).primaryTextTheme.caption!.color),
                             controller: _cryptoAmountController,
                             keyboardType: TextInputType.numberWithOptions(
                                 signed: false, decimal: true),
@@ -304,7 +304,7 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
                                 TextStyle(color: BeldexPalette.red)),
                             validator: (value) {
                               sendStore.validateBELDEX(
-                                  value, balanceStore.unlockedBalance);
+                                  value!, balanceStore.unlockedBalance,tr(context));
                               return sendStore.errorMessage;
                             }),
                       ),
@@ -315,7 +315,7 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        Text('${S.of(context).send_estimated_fee}   ',
+                        Text('${tr(context).send_estimated_fee}   ',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -341,12 +341,12 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
         ),
         bottomSection: Observer(builder: (_) {
           return NewSlideToAct(
-            text: S.of(context).stake_beldex,
-            outerColor: Theme.of(context).primaryTextTheme.subtitle2.color,
+            text: tr(context).stake_beldex,
+            outerColor: Theme.of(context).primaryTextTheme.subtitle2!.color,
             innerColor: BeldexPalette.teal,
             onFutureSubmit: syncStore.status is SyncedSyncStatus
                 ? () async {
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       var isSuccessful = false;
 
                       await Navigator.of(context).pushNamed(Routes.auth,
@@ -358,7 +358,7 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
                         }
 
                         await sendStore.createStake(
-                            address: _addressController.text);
+                            address: _addressController.text, t: tr(context));
 
                         Navigator.of(auth.context).pop();
                         isSuccessful = true;
@@ -554,12 +554,12 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text(S.of(context).error),
+                  title: Text(tr(context).error),
                   content: Text(state.error),
                   actions: <Widget>[
-                    FlatButton(
+                    TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text(S.of(context).ok),)
+                        child: Text(tr(context).ok),)
                   ],
                 );
               });
@@ -572,20 +572,20 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text(S.of(context).confirm_sending),
-                  content: Text(S.of(context).commit_transaction_amount_fee(
-                      sendStore.pendingTransaction.amount,
-                      sendStore.pendingTransaction.fee)),
+                  title: Text(tr(context).confirm_sending),
+                  content: Text(tr(context).commit_transaction_amount_fee(
+                      sendStore.pendingTransaction!.amount,
+                      sendStore.pendingTransaction!.fee)),
                   actions: <Widget>[
-                    FlatButton(
+                    TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                           sendStore.commitTransaction();
                         },
-                      child: Text(S.of(context).ok),),
-                    FlatButton(
+                      child: Text(tr(context).ok),),
+                    TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text(S.of(context).cancel),
+                      child: Text(tr(context).cancel),
                     )
                   ],
                 );
@@ -599,16 +599,16 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text(S.of(context).sending),
-                  content: Text(S.of(context).transaction_sent),
+                  title: Text(tr(context).sending),
+                  content: Text(tr(context).transaction_sent),
                   actions: <Widget>[
-                    FlatButton(
+                    TextButton(
                         onPressed: () {
                           _addressController.text = '';
                           _cryptoAmountController.text = '';
                           Navigator.of(context)..pop()..pop();
                         },
-                        child: Text(S.of(context).ok),)
+                        child: Text(tr(context).ok),)
                   ],
                 );
               });

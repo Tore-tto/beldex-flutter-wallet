@@ -1,9 +1,9 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+//import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/domain/common/contact.dart';
 import 'package:beldex_wallet/src/domain/common/crypto_currency.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
@@ -18,10 +18,10 @@ import 'package:provider/provider.dart';
 class ContactPage extends BasePage {
   ContactPage({this.contact});
 
-  final Contact contact;
+  final Contact? contact;
 
   @override
-  String get title => S.current.add_address;
+  String getTitle(AppLocalizations t) => t.addAddress;
 
 @override
 Widget trailing(BuildContext context){
@@ -33,7 +33,7 @@ Widget trailing(BuildContext context){
 
 class ContactForm extends StatefulWidget {
   ContactForm(this.contact, this.contxt);
-  final Contact contact;
+  final Contact? contact;
   final BuildContext contxt;
   @override
   State<ContactForm> createState() => ContactFormState();
@@ -54,10 +54,10 @@ class ContactFormState extends State<ContactForm> {
     if (widget.contact == null) {
       _currencyTypeController.text = _selectedCrypto.toString();
     } else {
-      _selectedCrypto = widget.contact.type;
-      _contactNameController.text = widget.contact.name;
+      //_selectedCrypto = widget.contact.type;
+      _contactNameController.text = widget.contact!.name;
       _currencyTypeController.text = _selectedCrypto.toString();
-      _addressController.text = widget.contact.address;
+      _addressController.text = widget.contact!.address;
     }
     getAllAddressNames(widget.contxt);
   }
@@ -201,7 +201,7 @@ bool _checkName(String enteredName) {
                     if(_checkName(value) && widget.contact == null){
                       return 'This Name already Exist';
                     }
-                  addressBookStore.validateContactName(value);
+                  addressBookStore.validateContactName(value,tr(context));
                   return addressBookStore.errorMessage;
                 },
               ),
@@ -220,97 +220,97 @@ bool _checkName(String enteredName) {
                         ),
                       ),
                     ),
-                    Visibility(
-                      visible: coinVisibility,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 175,
-                        decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 1,
-                                  spreadRadius: 1,
-                                  offset: Offset(0.0, 2.0))
-                            ],
-                            border: Border.all(color: Colors.white),
-                            color: Color.fromARGB(255, 31, 32, 39),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: DraggableScrollbar.rrect(
-                          padding: EdgeInsets.only(
-                              left: 5, right: 5, top: 10, bottom: 10),
-                          controller: _scrollController,
-                          heightScrollThumb: 25,
-                          alwaysVisibleScrollThumb: true,
-                          backgroundColor: Theme.of(context)
-                              .primaryTextTheme
-                              .button
-                              .backgroundColor,
-                          child: ListView.builder(
-                              itemCount: CryptoCurrency.all.length,
-                              shrinkWrap: true,
-                              controller: _scrollController,
-                              itemBuilder: (BuildContext context, int index) {
-                                return InkWell(
-                                  onTap: () async {
-                                    var currencyType =
-                                        CryptoCurrency.all[0].toString();
-                                    var selectedCurrency = CryptoCurrency.all[0];
-                                    selectedCurrency = CryptoCurrency.all[index];
-                                    currencyType =
-                                        CryptoCurrency.all[index].toString();
-                                    if (coinVisibility == false) {
-                                      setState(() {
-                                        coinVisibility = true;
-                                      });
-                                    } else {
-                                      setState(() {
-                                        coinVisibility = false;
-                                      });
-                                    }
-                                    _selectedCrypto = selectedCurrency;
-                                    _currencyTypeController.text = currencyType;
-                                  },
-                                  child: Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 20.0, right: 20.0),
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      elevation: _selectedCrypto ==
-                                              CryptoCurrency.all[index]
-                                          ? 2.0
-                                          : 0.0,
-                                      color: _selectedCrypto ==
-                                              CryptoCurrency.all[index]
-                                          ? Theme.of(context).backgroundColor
-                                          : Color.fromARGB(255, 31, 32, 39),
-                                      child: Container(
-                                        width: MediaQuery.of(context).size.width,
-                                        padding:
-                                            EdgeInsets.only(top: 15, bottom: 15),
-                                        child: Text(
-                                          CryptoCurrency.all[index].toString(),
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: _selectedCrypto !=
-                                                      CryptoCurrency.all[index]
-                                                  ? Colors.grey.withOpacity(0.6)
-                                                  : Theme.of(context)
-                                                      .primaryTextTheme
-                                                      .headline6
-                                                      .color,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                        ),
-                      ),
-                    ),
+                    // Visibility(
+                    //   visible: coinVisibility,
+                    //   child: Container(
+                    //     width: MediaQuery.of(context).size.width,
+                    //     height: 175,
+                    //     decoration: BoxDecoration(
+                    //         boxShadow: [
+                    //           BoxShadow(
+                    //               blurRadius: 1,
+                    //               spreadRadius: 1,
+                    //               offset: Offset(0.0, 2.0))
+                    //         ],
+                    //         border: Border.all(color: Colors.white),
+                    //         color: Color.fromARGB(255, 31, 32, 39),
+                    //         borderRadius: BorderRadius.circular(10)),
+                    //     child: DraggableScrollbar.rrect(
+                    //       padding: EdgeInsets.only(
+                    //           left: 5, right: 5, top: 10, bottom: 10),
+                    //       controller: _scrollController,
+                    //       heightScrollThumb: 25,
+                    //       alwaysVisibleScrollThumb: true,
+                    //       backgroundColor: Theme.of(context)
+                    //           .primaryTextTheme
+                    //           .button!
+                    //           .backgroundColor,
+                    //       child: ListView.builder(
+                    //           itemCount: CryptoCurrency.all.length,
+                    //           shrinkWrap: true,
+                    //           controller: _scrollController,
+                    //           itemBuilder: (BuildContext context, int index) {
+                    //             return InkWell(
+                    //               onTap: () async {
+                    //                 var currencyType =
+                    //                     CryptoCurrency.all[0].toString();
+                    //                 var selectedCurrency = CryptoCurrency.all[0];
+                    //                 selectedCurrency = CryptoCurrency.all[index];
+                    //                 currencyType =
+                    //                     CryptoCurrency.all[index].toString();
+                    //                 if (coinVisibility == false) {
+                    //                   setState(() {
+                    //                     coinVisibility = true;
+                    //                   });
+                    //                 } else {
+                    //                   setState(() {
+                    //                     coinVisibility = false;
+                    //                   });
+                    //                 }
+                    //                 _selectedCrypto = selectedCurrency;
+                    //                 _currencyTypeController.text = currencyType;
+                    //               },
+                    //               child: Padding(
+                    //                 padding:
+                    //                     EdgeInsets.only(left: 20.0, right: 20.0),
+                    //                 child: Card(
+                    //                   shape: RoundedRectangleBorder(
+                    //                       borderRadius:
+                    //                           BorderRadius.circular(10)),
+                    //                   elevation: _selectedCrypto ==
+                    //                           CryptoCurrency.all[index]
+                    //                       ? 2.0
+                    //                       : 0.0,
+                    //                   color: _selectedCrypto ==
+                    //                           CryptoCurrency.all[index]
+                    //                       ? Theme.of(context).backgroundColor
+                    //                       : Color.fromARGB(255, 31, 32, 39),
+                    //                   child: Container(
+                    //                     width: MediaQuery.of(context).size.width,
+                    //                     padding:
+                    //                         EdgeInsets.only(top: 15, bottom: 15),
+                    //                     child: Text(
+                    //                       CryptoCurrency.all[index].toString(),
+                    //                       textAlign: TextAlign.center,
+                    //                       style: TextStyle(
+                    //                           fontSize: 16,
+                    //                           color: _selectedCrypto !=
+                    //                                   CryptoCurrency.all[index]
+                    //                               ? Colors.grey.withOpacity(0.6)
+                    //                               : Theme.of(context)
+                    //                                   .primaryTextTheme
+                    //                                   .headline6!
+                    //                                   .color,
+                    //                           fontWeight: FontWeight.bold),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ),
+                    //             );
+                    //           }),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -322,12 +322,12 @@ bool _checkName(String enteredName) {
                 autoValidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) {
                   for(var items in addressBookStore.contactList) {
-                    if (items.address.contains(value)) {
+                    if (items.address.contains(value!)) {
                       return 'The Address already Exist';
                     }
                   }
-                  addressBookStore.validateAddress(value,
-                      cryptoCurrency: _selectedCrypto);
+                  addressBookStore.validateAddress(value!,
+                      cryptoCurrency: _selectedCrypto,t:tr(context));
                   return addressBookStore.errorMessage;
                 },
               )
@@ -366,7 +366,7 @@ bool _checkName(String enteredName) {
              SizedBox(width: 5,),
              GestureDetector(
               onTap: coinVisibility ? null:() async {
-                    if (!_formKey.currentState.validate()) {return; }
+                    if (!_formKey.currentState!.validate()) {return; }
                   // if(validateInput(_contactNameController.text)){
                   //   return '';
                   // }
@@ -375,18 +375,19 @@ bool _checkName(String enteredName) {
                         final newContact = Contact(
                             name: _contactNameController.text,
                             address: _addressController.text,
-                            type: _selectedCrypto);
+                           // type: _selectedCrypto
+                        );
                          
                           await addressBookStore.add(contact: newContact);
                         
                        
                       } else {
-                        widget.contact.name = _contactNameController.text;
-                        widget.contact.address = _addressController.text;
-                        widget.contact
-                            .updateCryptoCurrency(currency: _selectedCrypto);
+                        widget.contact!.name = _contactNameController.text;
+                        widget.contact!.address = _addressController.text;
+                        // widget.contact!
+                        //     .updateCryptoCurrency(currency: _selectedCrypto);
 
-                        await addressBookStore.update(contact: widget.contact);
+                        await addressBookStore.update(contact: widget.contact!);
                       }
                       Navigator.pop(context);
                     } catch (e) {
@@ -434,8 +435,8 @@ bool _checkName(String enteredName) {
                                                   Navigator.of(context).pop(true);
                                                 },
                                                 child: Text(
-                                                  S.of(context).ok,
-                                                  style: TextStyle(color: Theme.of(context).primaryTextTheme.caption.color,),
+                                                  tr(context).ok,
+                                                  style: TextStyle(color: Theme.of(context).primaryTextTheme.caption!.color,),
                                                 ),
                                               ),
                                             ),

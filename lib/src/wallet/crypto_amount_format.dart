@@ -1,4 +1,4 @@
-import 'package:beldex_wallet/generated/l10n.dart';
+import 'package:beldex_wallet/l10n.dart';
 
 class AmountDetail {
   const AmountDetail(this.index, this.fraction);
@@ -22,54 +22,53 @@ class AmountDetail {
         orElse: () => AmountDetail.ultra);
   }
 
-  @override
-  String toString() {
+ String getTitle(AppLocalizations l10n)  {
     switch (index) {
       case (0):
-        return S.current.amount_details_five;
+        return l10n.fiveDecimals;
       case (1):
-        return S.current.amount_detail_four;
+        return l10n.fourDecimals;
       case (2):
-        return S.current.amount_detail_two;
+        return l10n.twoDecimals;
       case (3):
-        return S.current.amount_detail_zero;
+        return l10n.zeroDecimal;
       default:
         return '';
     }
   }
 }
 
-double cryptoAmountToDouble({num amount, num divider}) => amount / divider;
+double cryptoAmountToDouble({required num amount,required num divider}) => amount / divider;
 
-int doubleToCryptoAmount({double amount, num divider}) =>
+int doubleToCryptoAmount({required double amount,required num divider}) =>
     (amount * divider).toInt();
 
 // Litecoin
 const litecoinAmountDivider = 100000000;
 
-double litecoinAmountToDouble({int amount}) =>
+double litecoinAmountToDouble({required int amount}) =>
     cryptoAmountToDouble(amount: amount, divider: litecoinAmountDivider);
 
 // Ethereum
 const ethereumAmountDivider = 1000000000000000000;
 
-double ethereumAmountToDouble({num amount}) =>
+double ethereumAmountToDouble({required num amount}) =>
     cryptoAmountToDouble(amount: amount, divider: ethereumAmountDivider);
 
 // Dash
 const dashAmountDivider = 100000000;
 
-double dashAmountToDouble({int amount}) =>
+double dashAmountToDouble({required int amount}) =>
     cryptoAmountToDouble(amount: amount, divider: dashAmountDivider);
 
 // Bitcoin Cash
 const bitcoinCashAmountDivider = 100000000;
 
-double bitcoinCashAmountToDouble({int amount}) =>
+double bitcoinCashAmountToDouble({required int amount}) =>
     cryptoAmountToDouble(amount: amount, divider: bitcoinCashAmountDivider);
 
 // Bitcoin
 const bitcoinAmountDivider = 100000000;
 
-double bitcoinAmountToDouble({int amount}) =>
+double bitcoinAmountToDouble({required int amount}) =>
     cryptoAmountToDouble(amount: amount, divider: bitcoinAmountDivider);

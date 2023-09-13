@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/screens/pin_code/biometric_dialog.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math' as math;
 
@@ -19,15 +19,15 @@ import '../../../routes.dart';
 
 abstract class PinCodeWidget extends StatefulWidget {
   PinCodeWidget(
-      {Key key,
+      {Key? key,
       this.onPinCodeEntered,
-      this.hasLengthSwitcher,
+      required this.hasLengthSwitcher,
       this.notifyParent})
       : super(key: key);
 
-  final Function(List<int> pin, PinCodeState state) onPinCodeEntered;
+  final Function(List<int> pin, PinCodeState state)? onPinCodeEntered;
   final bool hasLengthSwitcher;
-  final Function() notifyParent;
+  final Function()? notifyParent;
 }
 
 class PinCode extends PinCodeWidget {
@@ -54,25 +54,23 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   static const fourPinLength = 4;
   static final deleteIcon = Icon(Icons.backspace, color: Colors.white);
   final _gridViewKey = GlobalKey();
-  bool isUnlockScreen = false;
+ // bool isUnlockScreen = false;
   int pinLength = defaultPinLength;
-  List<int> pin = List<int>.filled(defaultPinLength, null);
-  String title = S.current.enter_your_pin;
+  List<int> pin = <int>[];
+  String title ='';
   double _aspectRatio = 0;
 
   void setTitle(String title) => setState(() => this.title = title);
 
-  void clear() => setState(() => pin = List<int>.filled(pinLength, null));
+  void clear() => setState(() => pin.clear());
 
   void onPinCodeEntered(PinCodeState state) =>
-      widget.onPinCodeEntered.call(state.pin, this);
+      widget.onPinCodeEntered?.call(state.pin, this);
 
   void changePinLength(int length) {
-    final newPin = List<int>.filled(length, null);
-
     setState(() {
       pinLength = length;
-      pin = newPin;
+      pin.clear();
     });
   }
 
@@ -85,7 +83,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
 
   void calculateAspectRatio() {
     final renderBox =
-        _gridViewKey.currentContext.findRenderObject() as RenderBox;
+        _gridViewKey.currentContext!.findRenderObject() as RenderBox;
     final cellWidth = renderBox.size.width / 3;
     final cellHeight = renderBox.size.height / 4;
 
@@ -96,14 +94,14 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
     setState(() {});
   }
 
-  LocalAuthentication auth;
+  LocalAuthentication? auth;
   List<BiometricType> _availableBiometrics = <BiometricType>[];
 
   @override
   void initState() {
     auth = LocalAuthentication();
     //-->
-    getSetupArrow();
+   // getSetupArrow();
     _getAvailableBiometrics();
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback(afterLayout);
@@ -113,7 +111,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   Future<void> _getAvailableBiometrics() async {
     List<BiometricType> availableBiometrics;
     try {
-      availableBiometrics = await auth.getAvailableBiometrics();
+      availableBiometrics = await auth!.getAvailableBiometrics();
     } on PlatformException catch (e) {
       availableBiometrics = <BiometricType>[];
       print(e);
@@ -172,11 +170,11 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   ),
   backgroundColor:  Theme.of(context).backgroundColor)*/
 
-  void getSetupArrow() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {});
-    isUnlockScreen = prefs.getBool('removeArrow');
-  }
+  // void getSetupArrow() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   setState(() {});
+  //   isUnlockScreen = prefs.getBool('removeArrow');
+  // }
 
   @override
   void dispose() {
@@ -355,11 +353,11 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
           ),
         ),*/
         //Spacer(flex: 4),
-        Text(title,
+        Text(title.isNotEmpty ? title : tr(context).enterYourPin,
             style: TextStyle(
                 fontSize: 19,
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).primaryTextTheme.caption.color)),
+                color: Theme.of(context).primaryTextTheme.caption!.color)),
         Spacer(flex: 1),
         Container(
           width: 190,
@@ -367,7 +365,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(pinLength, (index) {
               const size = 20.0;
-              final isFilled = pin[index] != null;
+              final isFilled = index < pin.length;
 
               return Column(
                 children: [
@@ -410,20 +408,18 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
             child: TextButton(
                 //FlatButton
                 onPressed: () {
-                  changePinLength(pinLength == PinCodeState.fourPinLength
-                      ? PinCodeState.sixPinLength
-                      : PinCodeState.fourPinLength);
+                  changePinLength(pinLength == 4 ? 6 : 4);
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      _changePinLengthText(),
+                      _changePinLengthText(tr(context)),
                       style: TextStyle(
                           fontSize: 17.0,
                           fontWeight: FontWeight.w800,
                           color:
-                              Theme.of(context).primaryTextTheme.caption.color),
+                              Theme.of(context).primaryTextTheme.caption!.color),
                     ),
                     Icon(Icons.keyboard_arrow_right,
                         color: settingsStore.isDarkTheme
@@ -463,8 +459,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                                         _getAvailableBiometrics();
                                         showBiometricDialog(
                                             context,
-                                            S
-                                                .of(context)
+                                           tr(context)
                                                 .biometric_auth_reason);
                                       } else {
                                         showDialog<void>(
@@ -522,7 +517,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                                                           alignment:
                                                               Alignment.center,
                                                           child: Text(
-                                                            S.of(context).ok,
+                                                            tr(context).ok,
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .white,
@@ -587,7 +582,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                                 child: Icon(Icons.backspace_outlined,
                                     color: Theme.of(context)
                                         .primaryTextTheme
-                                        .caption
+                                        .caption!
                                         .color),
                               ),
                             );
@@ -609,7 +604,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                                       fontWeight: FontWeight.w800,
                                       color: Theme.of(context)
                                           .primaryTextTheme
-                                          .caption
+                                          .caption!
                                           .color)),
                             ),
                           );
@@ -621,52 +616,31 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   }
 
   void _push(int num) {
-    if (currentPinLength() >= pinLength) {
+    if (pin.length >= pinLength) {
       return;
     }
 
-    for (var i = 0; i < pin.length; i++) {
-      if (pin[i] == null) {
-        setState(() => pin[i] = num);
-        break;
-      }
-    }
+ setState(() {
+   pin.add(num);
+ });
 
-    final _currentPinLength = currentPinLength();
-
-    if (_currentPinLength == pinLength) {
+    if (pin.length == pinLength) {
       onPinCodeEntered(this);
     }
   }
 
   void _pop() {
-    if (currentPinLength() == 0) {
+    if (pin.isEmpty) {
       return;
     }
-
-    for (var i = pin.length - 1; i >= 0; i--) {
-      if (pin[i] != null) {
-        setState(() => pin[i] = null);
-        break;
-      }
-    }
+   pin.removeLast();
   }
 
-  int currentPinLength() {
-    return pin.fold(0, (v, e) {
-      if (e != null) {
-        return v + 1;
-      }
-
-      return v;
-    });
-  }
-
-  String _changePinLengthText() {
-    return S.current.use +
-        (pinLength == PinCodeState.fourPinLength
-            ? '${PinCodeState.sixPinLength}'
-            : '${PinCodeState.fourPinLength}') +
-        S.current.digit_pin;
+  String _changePinLengthText(AppLocalizations t) {
+    return t.use +
+        (pinLength == 4
+            ? '6'
+            : '4') +
+        t.digit_pin;
   }
 }

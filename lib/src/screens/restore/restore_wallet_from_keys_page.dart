@@ -1,3 +1,4 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:beldex_wallet/src/wallet/beldex/get_height_by_date.dart';
 import 'package:beldex_wallet/src/widgets/nospaceformatter.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:beldex_wallet/src/domain/services/wallet_service.dart';
 import 'package:beldex_wallet/src/stores/wallet_restoration/wallet_restoration_store.dart';
@@ -31,16 +31,16 @@ final _formKey1 = GlobalKey<FormState>();
 
 class RestoreWalletFromKeysPage extends BasePage {
   RestoreWalletFromKeysPage(
-      {@required this.walletsService,
-      @required this.sharedPreferences,
-      @required this.walletService});
+      {required this.walletsService,
+      required this.sharedPreferences,
+      required this.walletService});
 
   final WalletListService walletsService;
   final WalletService walletService;
   final SharedPreferences sharedPreferences;
 
   @override
-  String get title => S.current.restore_title_from_keys;
+  String getTitle(AppLocalizations t) => t.restore_title_from_keys;
 
   @override
   Widget trailing(BuildContext context) {
@@ -64,7 +64,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
   final _viewKeyController = TextEditingController();
   final _spendKeyController = TextEditingController();
   bool canShowPopup = false;
-  ReactionDisposer restoreKeysDisposer;
+  ReactionDisposer? restoreKeysDisposer;
 
   @override
   void dispose() {
@@ -91,9 +91,9 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                 return AlertDialog(
                   content: Text(state.error),
                   actions: <Widget>[
-                    FlatButton(
+                    TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text(S.of(context).ok),
+                      child: Text(tr(context).ok),
                     ),
                   ],
                 );
@@ -136,11 +136,11 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                   color: settingsStore.isDarkTheme
                                       ? Color(0xff77778B)
                                       : Color(0xff77778B)),
-                              hintText: S.of(context).enter_restore_wallet_name,
+                              hintText: tr(context).enterWalletName_,
                               errorStyle: TextStyle(height: 0.10),
                             ),
                             validator: (value) {
-                              walletRestorationStore.validateWalletName(value);
+                              walletRestorationStore.validateWalletName(value!,tr(context));
                               return walletRestorationStore.errorMessage;
                             },
                           ),
@@ -173,11 +173,11 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                   color: settingsStore.isDarkTheme
                                       ? Color(0xff77778B)
                                       : Color(0xff77778B)),
-                              hintText: S.of(context).restore_address,
+                              hintText: tr(context).restore_address,
                               errorStyle: TextStyle(height: 0.10),
                             ),
                             validator: (value) {
-                              walletRestorationStore.validateAddress(value);
+                              walletRestorationStore.validateAddress(value!,t:tr(context));
                               return walletRestorationStore.errorMessage;
                             },
                           ),
@@ -208,11 +208,11 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                   color: settingsStore.isDarkTheme
                                       ? Color(0xff77778B)
                                       : Color(0xff77778B)),
-                              hintText: S.of(context).restore_view_key_private,
+                              hintText: tr(context).restore_view_key_private,
                               errorStyle: TextStyle(height: 0.10),
                             ),
                             validator: (value) {
-                              walletRestorationStore.validateKeys(value);
+                              walletRestorationStore.validateKeys(value!,tr(context));
                               return walletRestorationStore.errorMessage;
                             },
                           ),
@@ -243,11 +243,11 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                                   color: settingsStore.isDarkTheme
                                       ? Color(0xff77778B)
                                       : Color(0xff77778B)),
-                              hintText: S.of(context).restore_spend_key_private,
+                              hintText: tr(context).restore_spend_key_private,
                               errorStyle: TextStyle(height: 0.10),
                             ),
                             validator: (value) {
-                              walletRestorationStore.validateKeys(value);
+                              walletRestorationStore.validateKeys(value!,tr(context));
                               return walletRestorationStore.errorMessage;
                             },
                           ),
@@ -278,8 +278,8 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
           width: double.infinity,
           child: LoadingPrimaryButton(
             onPressed: () async {
-              if (_formKey.currentState.validate()) {
-                if (_formKey1.currentState.validate()) {
+              if (_formKey.currentState!.validate()) {
+                if (_formKey1.currentState!.validate()) {
                   await walletRestorationStore.restoreFromKeys(
                       name: _nameController.text,
                       language: seedLanguageStore.selectedSeedLanguage,
@@ -291,10 +291,10 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                 }
               }
             },
-            text: S.of(context).restore_recover,
-            color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+            text: tr(context).restore_recover,
+            color: Theme.of(context).primaryTextTheme.button!.backgroundColor!,
             borderColor:
-                Theme.of(context).primaryTextTheme.button.backgroundColor,
+                Theme.of(context).primaryTextTheme.button!.backgroundColor!,
             isLoading: walletRestorationStore.state is WalletIsRestoring,
           ),
         );
@@ -334,7 +334,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
 ///// block height selection widget
 ///
 class BlockHeightSwapingWidget extends StatefulWidget {
-  const BlockHeightSwapingWidget({Key key}) : super(key: key);
+  const BlockHeightSwapingWidget({Key? key}) : super(key: key);
 
   @override
   State<BlockHeightSwapingWidget> createState() =>
@@ -394,12 +394,12 @@ class _BlockHeightSwapingWidgetState extends State<BlockHeightSwapingWidget> {
                                     ? Color(0xff77778B)
                                     : Color(0xff77778B)),
                             hintText:
-                                S.of(context).widgets_restore_from_blockheight,
+                                tr(context).widgets_restore_from_blockheight,
                             errorStyle: TextStyle(height: 0.10),
                           ),
                           validator: (value) {
                             final pattern = RegExp(r'^(?!.*\s)\d+$');
-                            if (!pattern.hasMatch(value)) {
+                            if (!pattern.hasMatch(value!)) {
                               return 'Enter a valid height without space';
                             }else {
                               return null;
@@ -440,14 +440,14 @@ class _BlockHeightSwapingWidgetState extends State<BlockHeightSwapingWidget> {
                                           color: settingsStore.isDarkTheme
                                               ? Color(0xff77778B)
                                               : Color(0xff77778B)),
-                                      hintText: S
-                                          .of(context)
+                                      hintText: 
+                                          tr(context)
                                           .widgets_restore_from_date,
                                       errorStyle: TextStyle(height: 0.10),
                                     ),
                                     controller: dateController,
                                     validator: (value) {
-                                      if (value.isEmpty) {
+                                      if (value!.isEmpty) {
                                         return 'Date should not be empty';
                                       } else {
                                         return null;
@@ -486,8 +486,8 @@ class _BlockHeightSwapingWidgetState extends State<BlockHeightSwapingWidget> {
                     children: [
                       Text(
                           isRestoreByHeight
-                              ? S.of(context).widgets_restore_from_date
-                              : S.of(context).widgets_restore_from_blockheight,
+                              ? tr(context).widgets_restore_from_date
+                              : tr(context).widgets_restore_from_blockheight,
                           style: TextStyle(
                               color: Color(0xffffffff),
                               fontSize: 14,

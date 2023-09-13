@@ -1,25 +1,28 @@
+//import 'dart:html';
 import 'dart:typed_data';
 
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/screens/subaddress/newsubAddress_dialog.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
-import 'package:dropdown_search/dropdown_search.dart';
+//import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 import 'package:beldex_wallet/src/screens/receive/qr_image.dart';
 import 'package:beldex_wallet/src/stores/subaddress_list/subaddress_list_store.dart';
 import 'package:beldex_wallet/src/stores/wallet/wallet_store.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:ui' as ui;
 //import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:wc_flutter_share/wc_flutter_share.dart';
+// import 'package:wc_flutter_share/wc_flutter_share.dart';
 
 String currentSubAddress = '';
 
@@ -28,7 +31,7 @@ class ReceivePage extends BasePage {
   bool get isModalBackButton => false;
 
   @override
-  String get title => S.current.receive;
+  String getTitle(AppLocalizations t) => t.receive;
 
   @override
   Color get textColor => Colors.white;
@@ -53,7 +56,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
   final _formKey = GlobalKey<FormState>();
   bool isExpand = false;
   bool isOpen = false;
-  OverlayEntry overlayEntry;
+  OverlayEntry? overlayEntry;
   GlobalKey globalKey = GlobalKey();
   bool _isOverlayVisible = false;
 
@@ -70,15 +73,15 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
 
   final _globalKey = GlobalKey();
 
-  Future<Uint8List> _capturePng() async {
+  Future<Uint8List?> _capturePng() async {
     try {
       final boundary =
-          _globalKey.currentContext.findRenderObject() as RenderRepaintBoundary;
+          _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await boundary.toImage(
         pixelRatio: 3.0,
       );
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      final pngBytes = byteData.buffer.asUint8List();
+      final pngBytes = byteData!.buffer.asUint8List();
       setState(() {});
       return pngBytes;
     } catch (e) {
@@ -89,13 +92,14 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
   void _incrementCounter(String address, String text) async {
     try {
       final imageUint8List = await _capturePng();
-      await WcFlutterShare.share(
-          text: address,
-          sharePopupTitle: 'share',
-          fileName: 'share.png',
-          mimeType: 'image/png',
-          bytesOfFile: imageUint8List);
-      setState(() {});
+
+      // await WcFlutterShare.share(
+      //     text: address,
+      //     sharePopupTitle: 'share',
+      //     fileName: 'share.png',
+      //     mimeType: 'image/png',
+      //     bytesOfFile: imageUint8List);
+      // setState(() {});
     } catch (e) {
       print(e.toString());
     }
@@ -118,7 +122,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
 
   void _hideOverlay() {
     if (overlayEntry != null) {
-      overlayEntry.remove();
+      overlayEntry!.remove();
       overlayEntry = null;
       setState(() {
         _isOverlayVisible = false;
@@ -132,7 +136,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
     final subAddressListStore = Provider.of<SubaddressListStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
     amountController.addListener(() {
-      if (_formKey.currentState.validate()) {
+      if (_formKey.currentState!.validate()) {
         walletStore.onChangedAmountValue(amountController.text);
       } else {
         walletStore.onChangedAmountValue('');
@@ -143,7 +147,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
       onWillPop: () async {
         if (overlayEntry != null) {
           // checking whether the overlayentry is alive (for dropdown list) and reove on user clicks backbutton.
-          overlayEntry.remove();
+          overlayEntry!.remove();
           overlayEntry = null;
           return false;
         }
@@ -220,7 +224,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
                                           padding:
                                               const EdgeInsets.only(right: 8.0),
                                           child: Text(
-                                            S.of(context).wallet_address,
+                                            tr(context).walletAddress,
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w800,
                                                 fontSize: 17,
@@ -259,7 +263,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
                                                     BorderRadius.circular(15.0),
                                               ),
                                               content: Text(
-                                                S.of(context).copied,
+                                                tr(context).copied,
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight: FontWeight.w700,
@@ -340,15 +344,15 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
                                   FilteringTextInputFormatter.deny(
                                       RegExp('[-, ]'))
                                 ],
-                                hintText: 'Enter ${S.of(context).amount}',
+                                hintText: 'Enter ${tr(context).amount}',
                                 validator: (value) {
-                                  walletStore.validateAmount(value);
-                                  return walletStore.errorMessage;
+                                  walletStore.validateAmount(value ?? '',tr(context));
+                                  return walletStore.errorMessage!;
                                 },
                                 controller: amountController,
                                 onChanged: (val) {
-                                  _globalKey.currentContext
-                                      .findRenderObject()
+                                  _globalKey.currentContext!
+                                      .findRenderObject()!
                                       .reassemble();
                                 },
                               )),
@@ -608,15 +612,15 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
     bool isCurrent;
     dynamic label;
     setState(() {
-      for (var i = 0; i < subAddressListStore.subaddresses.length; i++) {
-        subaddress = subAddressListStore.subaddresses[i];
+      for (var i = 0; i < subAddressListStore.subaddresses!.length; i++) {
+        subaddress = subAddressListStore.subaddresses![i];
         isCurrent = walletStore.subaddress.address == subaddress.address;
         label = subaddress.label ?? subaddress.address;
         if (isCurrent) {
           prefs.setString('currentSubAddress', label.toString());
         }
       }
-      currentSubAddress = prefs.getString('currentSubAddress');
+      currentSubAddress = prefs.getString('currentSubAddress')!;
     });
   }
 
@@ -625,7 +629,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
     final subAddressListStore = Provider.of<SubaddressListStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
-    return subAddressListStore.subaddresses.length <= 1
+    return subAddressListStore.subaddresses!.length <= 1
         ? Container()
         : Material(
             color: Colors.transparent,
@@ -633,7 +637,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
               behavior: HitTestBehavior.translucent,
               onTap: () {
                 if (overlayEntry != null) {
-                  overlayEntry.remove();
+                  overlayEntry!.remove();
                   overlayEntry = null;
                 }
               },
@@ -658,12 +662,12 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
                         return ListView.builder(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
-                            itemCount: subAddressListStore.subaddresses.length,
+                            itemCount: subAddressListStore.subaddresses!.length,
                             itemBuilder: (BuildContext context, int i) {
                               // print("data inside listview ${exitData[index]}");
                               return Observer(builder: (context) {
                                 final subaddress =
-                                    subAddressListStore.subaddresses[i];
+                                    subAddressListStore.subaddresses![i];
                                 final isCurrent =
                                     walletStore.subaddress.address ==
                                         subaddress.address;
@@ -673,7 +677,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
                                 return InkWell(
                                   onTap: () async {
                                     if (overlayEntry != null) {
-                                      overlayEntry.remove();
+                                      overlayEntry!.remove();
                                       overlayEntry = null;
                                     }
                                     final prefs =
@@ -683,7 +687,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
                                         'currentSubAddress', label.toString());
                                     setState(() {
                                       currentSubAddress =
-                                          prefs.getString('currentSubAddress');
+                                          prefs.getString('currentSubAddress')!;
                                     });
                                   },
                                   child: Column(
@@ -740,15 +744,15 @@ class NewBeldexTextField extends StatelessWidget {
       this.onChanged});
 
   final bool enabled;
-  final String hintText;
-  final TextInputType keyboardType;
-  final TextEditingController controller;
-  final String Function(String) validator;
-  final List<TextInputFormatter> inputFormatters;
-  final Widget prefixIcon;
-  final Widget suffixIcon;
-  final FocusNode focusNode;
-  final ValueChanged<String> onChanged;
+  final String? hintText;
+  final TextInputType? keyboardType;
+  final TextEditingController? controller;
+  final String Function(String?)? validator;
+  final List<TextInputFormatter>? inputFormatters;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final FocusNode? focusNode;
+  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -784,7 +788,7 @@ class NewBeldexTextField extends StatelessWidget {
                   fontWeight: FontWeight.w600),
               hintText: hintText,
               errorStyle: TextStyle(color: BeldexPalette.red)),
-          validator: validator,
+          validator: validator!,
           onChanged: onChanged,
         ),
       ),
@@ -793,11 +797,11 @@ class NewBeldexTextField extends StatelessWidget {
 }
 
 class SubAddressDropDownList extends StatefulWidget {
-  final SettingsStore settingsStore;
-  final WalletStore walletStore;
-  final SubaddressListStore subaddressListStore;
+  final SettingsStore? settingsStore;
+  final WalletStore? walletStore;
+  final SubaddressListStore? subaddressListStore;
   const SubAddressDropDownList(
-      {Key key, this.settingsStore, this.walletStore, this.subaddressListStore})
+      {Key? key, this.settingsStore, this.walletStore, this.subaddressListStore})
       : super(key: key);
 
   @override
@@ -813,7 +817,7 @@ final _controller = ScrollController(keepScrollOffset: true);
     // final settingsStore = Provider.of<SettingsStore>(context);
     return AlertDialog(
       insetPadding: EdgeInsets.all(8),
-      backgroundColor:widget.settingsStore.isDarkTheme
+      backgroundColor:widget.settingsStore!.isDarkTheme
                   ? Color(0xff272733)
                   : Color(0xffFFFFFF) ,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -821,7 +825,7 @@ final _controller = ScrollController(keepScrollOffset: true);
           child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(Icons.class__outlined,color: Colors.transparent,),
+          Icon(Icons.class_outlined,color: Colors.transparent,),
           Text('Sub Addresses', style: TextStyle(fontWeight: FontWeight.w800)),
            GestureDetector(
             onTap: ()=>Navigator.pop(context),
@@ -832,7 +836,7 @@ final _controller = ScrollController(keepScrollOffset: true);
           width: double.maxFinite,
           height: MediaQuery.of(context).size.height * 0.80 / 3,
           decoration: BoxDecoration(
-              color: widget.settingsStore.isDarkTheme
+              color: widget.settingsStore!.isDarkTheme
                   ? Color(0xff272733)
                   : Color(0xffFFFFFF),
              borderRadius: BorderRadius.circular(10)     
@@ -847,11 +851,11 @@ final _controller = ScrollController(keepScrollOffset: true);
                     controller: _controller,
                       shrinkWrap: true,
                      // physics: NeverScrollableScrollPhysics(),
-                      itemCount: widget.subaddressListStore.subaddresses.length,
+                      itemCount: widget.subaddressListStore!.subaddresses!.length,
                       itemBuilder: (context, i) {
                         return Observer(builder: (_) {
-                          final subaddress = widget.subaddressListStore.subaddresses[i];
-                          final isCurrent = widget.walletStore.subaddress.address ==
+                          final subaddress = widget.subaddressListStore!.subaddresses[i];
+                          final isCurrent = widget.walletStore!.subaddress.address ==
                               subaddress.address;
                           final label = subaddress.label.isNotEmpty
                               ? subaddress.label
@@ -860,13 +864,13 @@ final _controller = ScrollController(keepScrollOffset: true);
                             onTap:isCurrent ? null : () async {
                               //  widget.walletStore.setSubaddress(subaddress),
                               final prefs = await SharedPreferences.getInstance();
-                              widget.walletStore.setSubaddress(subaddress);
+                              widget.walletStore!.setSubaddress(subaddress);
                               Navigator.pop(context);
                               await prefs.setString(
                                   'currentSubAddress', label.toString());
                               setState(() {
                                 currentSubAddress =
-                                    prefs.getString('currentSubAddress');
+                                    prefs.getString('currentSubAddress')!;
                               });
                             },
                             child: isCurrent
@@ -904,7 +908,7 @@ final _controller = ScrollController(keepScrollOffset: true);
                                           fontSize: 16.0,
                                           color: Theme.of(context)
                                               .primaryTextTheme
-                                              .caption
+                                              .caption!
                                               .color, //Colors.white,//Theme.of(context).primaryTextTheme.headline5.color
                                         ),
                                       ),

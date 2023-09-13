@@ -1,14 +1,14 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/wallet/beldex/get_height_by_date.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:provider/provider.dart';
 
 class BlockchainHeightWidget extends StatefulWidget {
-  BlockchainHeightWidget({GlobalKey key}) : super(key: key);
+  BlockchainHeightWidget({GlobalKey? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => BlockchainHeightState();
@@ -57,7 +57,7 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
                   decoration: InputDecoration(
                     border: InputBorder.none,
                       hintStyle: TextStyle(color:settingsStore.isDarkTheme ? Color(0xff77778B) : Color(0xff77778B)),
-                      hintText: S.of(context).widgets_restore_from_blockheight,
+                      hintText: tr(context).widgets_restore_from_blockheight,
                       /*focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(
                               color: BeldexPalette.teal, width: 2.0)),
@@ -66,7 +66,7 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
                               color: Theme.of(context).focusColor, width: 1.0))*/),
                               validator: (value){
                                  final pattern = RegExp(r'^(?!.*\s)\d+$');
-                                 if(!pattern.hasMatch(value)){
+                                 if(!pattern.hasMatch(value!)){
                                    return 'Enter valid height without space';
                                  }else{
                                   return null;
@@ -118,7 +118,7 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
                               border: InputBorder.none,
                                 hintStyle:
                                     TextStyle(color:settingsStore.isDarkTheme ? Color(0xff77778B) : Color(0xff77778B)),
-                                hintText: S.of(context).widgets_restore_from_date,
+                                hintText: tr(context).widgets_restore_from_date,
                                 /*focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                         color: BeldexPalette.teal,
@@ -130,7 +130,7 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
                             
                             controller: dateController,
                             validator: (value) {
-                              if(value.isEmpty){
+                              if(value!.isEmpty){
                                 return 'Date should not be empty';
                               }else{
                                return null;
@@ -166,7 +166,7 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
             ),
             child:Row(
               children: [
-                Text(isRestoreByHeight ? S.of(context).widgets_restore_from_date : S.of(context).widgets_restore_from_blockheight,style:TextStyle( color:Color(0xffffffff),fontSize:14,fontWeight:FontWeight.w700)),
+                Text(isRestoreByHeight ? tr(context).widgets_restore_from_date : tr(context).widgets_restore_from_blockheight,style:TextStyle( color:Color(0xffffffff),fontSize:14,fontWeight:FontWeight.w700)),
                 Icon(Icons.arrow_right_alt_rounded,color: Color(0xffffffff),)
               ],
             )

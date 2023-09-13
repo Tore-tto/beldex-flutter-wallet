@@ -6,11 +6,11 @@ import 'package:provider/provider.dart';
 class StandartSwitch extends StatefulWidget {
   
 
-   StandartSwitch({@required this.value, @required this.onTaped,this.icon});
+   StandartSwitch({required this.value, required this.onTaped,required this.icon});
 
   final bool value;
   final VoidCallback onTaped;
-  var icon=false;
+  bool icon=false;
   @override
   StandartSwitchState createState() => StandartSwitchState();
 }
@@ -31,8 +31,8 @@ class StandartSwitchState extends State<StandartSwitch> {
             color:settingsStore.isDarkTheme ? Color(0xff333343): Color(0xffEDEDED),  //Theme.of(context).toggleButtonsTheme.color,
             gradient: LinearGradient(
               colors: [
-                Theme.of(context).accentTextTheme.headline6.backgroundColor,//Colors.black,
-                Theme.of(context).accentTextTheme.headline6.backgroundColor,//Colors.grey[900],
+                Theme.of(context).accentTextTheme.headline6!.backgroundColor!,//Colors.black,
+                Theme.of(context).accentTextTheme.headline6!.backgroundColor!,//Colors.grey[900],
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -46,12 +46,12 @@ class StandartSwitchState extends State<StandartSwitch> {
           //padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
             //shape:BoxShape.circle,
-              color:widget.icon ? widget.value ? Color(0xff0BA70F) : Color(0xff737373) :
+              color:widget.icon! ? widget.value ? Color(0xff0BA70F) : Color(0xff737373) :
                widget.value
-                  ? Theme.of(context).primaryTextTheme.button.backgroundColor
-                  : Theme.of(context).accentTextTheme.caption.decorationColor,
+                  ? Theme.of(context).primaryTextTheme.button!.backgroundColor
+                  : Theme.of(context).accentTextTheme.caption!.decorationColor,
               borderRadius: BorderRadius.all(Radius.circular(100.0))),
-          child:  widget.icon ? widget.value ?
+          child:  widget.icon! ? widget.value ?
          Image.asset('assets/images/new-images/moon.png') :  Image.asset('assets/images/new-images/sun.png') : Container()
         ),
       ),

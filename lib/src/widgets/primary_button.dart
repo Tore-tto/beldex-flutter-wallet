@@ -4,17 +4,17 @@ import 'package:beldex_wallet/palette.dart';
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton(
-      {@required this.onPressed,
-      @required this.text,
-      @required this.color,
-      @required this.borderColor,
+      {required this.onPressed,
+      required this.text,
+      required this.color,
+      required this.borderColor,
       this.isDisabled = false,
       this.onDisabledPressed});
 
   final VoidCallback onPressed;
-  final VoidCallback onDisabledPressed;
-  final Color color;
-  final Color borderColor;
+  final VoidCallback? onDisabledPressed;
+  final Color? color;
+  final Color? borderColor;
   final String text;
   final bool isDisabled;
 
@@ -23,19 +23,19 @@ class PrimaryButton extends StatelessWidget {
     return ButtonTheme(
         minWidth: double.infinity,
         height: 56.0,
-        child: FlatButton(
+        child: MaterialButton(
           onPressed: isDisabled
               ? onDisabledPressed
               : onPressed,
-          color: isDisabled ? Theme.of(context).primaryTextTheme.button.backgroundColor:color,//Colors.transparent : color,
+          color: isDisabled ? Theme.of(context).primaryTextTheme.button!.backgroundColor:color,//Colors.transparent : color,
           shape: RoundedRectangleBorder(
-              side: BorderSide(color: borderColor),
+              side: BorderSide(color: borderColor!),
               borderRadius: BorderRadius.circular(10.0)),
           child: Text(text,
               style: TextStyle(
                   fontSize: 16.0,
                   fontWeight:FontWeight.w700,
-                  color: isDisabled ? Theme.of(context).primaryTextTheme.button.color:Theme.of(context).primaryTextTheme.button.color//Palette.darkGrey : Theme.of(context).primaryTextTheme.button.color
+                  color: isDisabled ? Theme.of(context).primaryTextTheme.button!.color:Theme.of(context).primaryTextTheme.button!.color//Palette.darkGrey : Theme.of(context).primaryTextTheme.button.color
               )),
         ));
   }
@@ -43,15 +43,15 @@ class PrimaryButton extends StatelessWidget {
 
 class PrimaryButtonNode extends StatelessWidget {
   const PrimaryButtonNode(
-      {@required this.onPressed,
-        @required this.text,
-        @required this.color,
-        @required this.borderColor,
+      {required this.onPressed,
+        required this.text,
+        required this.color,
+        required this.borderColor,
         this.isDisabled = false,
         this.onDisabledPressed});
 
   final VoidCallback onPressed;
-  final VoidCallback onDisabledPressed;
+  final VoidCallback? onDisabledPressed;
   final Color color;
   final Color borderColor;
   final String text;
@@ -62,18 +62,18 @@ class PrimaryButtonNode extends StatelessWidget {
     return ButtonTheme(
         minWidth: double.infinity,
         height: 56.0,
-        child: FlatButton(
+        child: MaterialButton(
           onPressed: isDisabled
               ? onDisabledPressed
               : onPressed,
-          color: isDisabled ? Theme.of(context).primaryTextTheme.button.backgroundColor:color,//Colors.transparent : color,
+          color: isDisabled ? Theme.of(context).primaryTextTheme.button!.backgroundColor:color,//Colors.transparent : color,
           shape: RoundedRectangleBorder(
               side: BorderSide(color: borderColor),
               borderRadius: BorderRadius.circular(10.0)),
           child: Text(text,
               style: TextStyle(
                   fontSize: 16.0,
-                  color: isDisabled ? Theme.of(context).primaryTextTheme.caption.color:Theme.of(context).primaryTextTheme.caption.color//Palette.darkGrey : Theme.of(context).primaryTextTheme.button.color
+                  color: isDisabled ? Theme.of(context).primaryTextTheme.caption!.color:Theme.of(context).primaryTextTheme.caption!.color//Palette.darkGrey : Theme.of(context).primaryTextTheme.button.color
               )),
         ));
   }
@@ -81,10 +81,10 @@ class PrimaryButtonNode extends StatelessWidget {
 
 class LoadingPrimaryButton extends StatelessWidget {
   const LoadingPrimaryButton(
-      {@required this.onPressed,
-      @required this.text,
-      @required this.color,
-      @required this.borderColor,
+      {required this.onPressed,
+      required this.text,
+      required this.color,
+      required this.borderColor,
       this.isDisabled = false,
       this.isLoading = false});
 
@@ -100,7 +100,7 @@ class LoadingPrimaryButton extends StatelessWidget {
     return ButtonTheme(
         minWidth: double.infinity,
         height: 56.0,
-        child: FlatButton(
+        child: MaterialButton(
           onPressed: (isLoading || isDisabled) ? null : onPressed,
           color: color,
           shape: RoundedRectangleBorder(
@@ -112,20 +112,20 @@ class LoadingPrimaryButton extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w900,
-                      color: Theme.of(context).primaryTextTheme.button.color)),
+                      color: Theme.of(context).primaryTextTheme.button!.color)),
         ));
   }
 }
 
 class PrimaryIconButton extends StatelessWidget {
   const PrimaryIconButton({
-    @required this.onPressed,
-    @required this.iconData,
-    @required this.text,
-    @required this.color,
-    @required this.borderColor,
-    @required this.iconColor,
-    @required this.iconBackgroundColor,
+    required this.onPressed,
+    required this.iconData,
+    required this.text,
+    required this.color,
+    required this.borderColor,
+    required this.iconColor,
+    required this.iconBackgroundColor,
   });
 
   final VoidCallback onPressed;
@@ -141,7 +141,7 @@ class PrimaryIconButton extends StatelessWidget {
     return ButtonTheme(
         minWidth: double.infinity,
         height: 56.0,
-        child: FlatButton(
+        child: MaterialButton(
           onPressed: onPressed,
           color: color,
           shape: RoundedRectangleBorder(
@@ -168,7 +168,7 @@ class PrimaryIconButton extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 16.0,
                           color:
-                              Theme.of(context).primaryTextTheme.button.color)),
+                              Theme.of(context).primaryTextTheme.button!.color)),
                 ),
               )
             ],
@@ -179,9 +179,9 @@ class PrimaryIconButton extends StatelessWidget {
 
 class PrimaryImageButton extends StatelessWidget {
   const PrimaryImageButton(
-      {@required this.onPressed,
-      @required this.image,
-      @required this.text,
+      {required this.onPressed,
+      required this.image,
+      required this.text,
       this.color = Palette.purple,
       this.borderColor = Palette.deepPink,
       this.iconColor = Colors.black});
@@ -198,7 +198,7 @@ class PrimaryImageButton extends StatelessWidget {
     return ButtonTheme(
         minWidth: double.infinity,
         height: 58.0,
-        child: FlatButton(
+        child: MaterialButton(
           onPressed: onPressed,
           color: color,
           shape: RoundedRectangleBorder(
@@ -225,7 +225,7 @@ class PrimaryImageButton extends StatelessWidget {
                                 fontSize: 18.0,
                                 color: Theme.of(context)
                                     .primaryTextTheme
-                                    .button
+                                    .button!
                                     .color)),
                       ),
                     )

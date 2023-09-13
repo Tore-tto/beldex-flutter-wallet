@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/domain/common/qr_scanner.dart';
 import 'package:beldex_wallet/src/node/sync_status.dart';
 import 'package:beldex_wallet/src/screens/dashboard/dashboard_rescan_dialog.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/routes.dart';
 import 'package:beldex_wallet/src/domain/common/balance_display_mode.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
@@ -46,7 +46,7 @@ class DashboardPage extends BasePage {
           decoration: BoxDecoration(),
           child: SvgPicture.asset(
             'assets/images/new-images/refresh.svg',
-            color: Theme.of(context).primaryTextTheme.caption.color,
+            color: Theme.of(context).primaryTextTheme.caption!.color,
             width: 23,
             height: 23,
           )),
@@ -63,7 +63,7 @@ class DashboardPage extends BasePage {
           style: TextStyle(
               fontSize: 24.0 - (12 - 8) * 2.0,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryTextTheme.headline6.color),
+              color: Theme.of(context).primaryTextTheme.headline6!.color),
         );
       },
     );
@@ -159,7 +159,7 @@ class DashboardPage extends BasePage {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 5.0),
-                        child: Text(S.of(context).address_book,
+                        child: Text(tr(context).address_book,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16)),
                       )
@@ -183,7 +183,7 @@ class DashboardPage extends BasePage {
                           'assets/images/new-images/transactions.svg'),
                       Padding(
                         padding: const EdgeInsets.only(left: 5.0),
-                        child: Text(S.of(context).transactions,
+                        child: Text(tr(context).transactions,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -215,7 +215,7 @@ class DashboardPage extends BasePage {
 }
 
 class DashboardPageBody extends StatefulWidget {
-  DashboardPageBody({Key key}) : super(key: key);
+  DashboardPageBody({Key? key}) : super(key: key);
 
   @override
   DashboardPageBodyState createState() => DashboardPageBodyState();
@@ -228,7 +228,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
   final _syncingObserverKey = GlobalKey();
   final _listObserverKey = GlobalKey();
   //final _listKey = GlobalKey();
-  String syncStatus;
+  String? syncStatus;
   //
   // List<Item> transactions = [
   //   Item(
@@ -339,8 +339,8 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
 //     }
 //   }
 
-  Connectivity connectivity;
-  StreamSubscription<ConnectivityResult> subscription;
+  Connectivity? connectivity;
+  StreamSubscription<ConnectivityResult>? subscription;
   var reconnect = false;
 
   @override
@@ -351,13 +351,13 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
   Future<void> _presentQRScanner(BuildContext context) async {
     try {
       final code = await presentQRScanner();
-      final uri = Uri.parse(code);
+      final uri = Uri.parse(code!);
       var address = '';
       var amount = '';
       if (uri != null) {
         address = uri.path;
         if (uri.queryParameters.isNotEmpty) {
-          amount = uri.queryParameters[uri.queryParameters.keys.first];
+          amount = uri.queryParameters[uri.queryParameters.keys.first]!;
         }
       } else {
         address = code;
@@ -408,10 +408,10 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                     key: _syncingObserverKey,
                     builder: (_) {
                       final status = syncStore.status;
-                      final statusText = status.title();
+                      final statusText = status.title(tr(context));
                       final progress = syncStore.status.progress();
                       final isFailure = status is FailedSyncStatus;
-                      syncStatus = status.title();
+                      syncStatus = status.title(tr(context));
                       //syncStatus = status.title();
                       print('dashboard ----->');
                       print('dashboard page status --> $status');
@@ -433,7 +433,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                       }
                       if (status is FailedSyncStatus) {
                         descriptionText =
-                            S.of(context).please_try_to_connect_to_another_node;
+                            tr(context).please_try_to_connect_to_another_node;
                         reconnect = true;
                         if (networkStatus == NetworkStatus.online &&
                             reconnect) {
@@ -490,7 +490,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     fontSize: 11,
                                     color: Theme.of(context)
                                         .primaryTextTheme
-                                        .caption
+                                        .caption!
                                         .color,
                                     height: 2.0))
                           ],
@@ -556,7 +556,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                           style: TextStyle(
                                             color: Theme.of(context)
                                                 .primaryTextTheme
-                                                .caption
+                                                .caption!
                                                 .color,
                                             fontSize: MediaQuery.of(context)
                                                     .size
@@ -571,7 +571,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                           style: TextStyle(
                                             color: Theme.of(context)
                                                 .primaryTextTheme
-                                                .caption
+                                                .caption!
                                                 .color,
                                             fontSize: 14,
                                             fontWeight: FontWeight.w600,
@@ -639,7 +639,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                           Observer(builder: (_) {
                             final status = syncStore.status;
 
-                            final syncS = status.title();
+                            final syncS = status.title(tr(context));
                             return InkWell(
                               onTap: syncS == 'SYNCHRONIZED'
                                   ? () {
@@ -676,7 +676,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     Padding(
                                       padding: const EdgeInsets.only(left: 8.0),
                                       child: Text(
-                                        S.of(context).send,
+                                        tr(context).send,
                                         style: TextStyle(
                                             color: syncStatus == 'SYNCHRONIZED'
                                                 ? Colors.white
@@ -716,7 +716,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 8.0),
                                     child: Text(
-                                      S.of(context).receive,
+                                      tr(context).receive,
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -757,7 +757,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                           builder: (_) {
                             final status = syncStore.status;
 
-                            final syncSt = status.title();
+                            final syncSt = status.title(tr(context));
                             return GestureDetector(
                               onTap: syncSt == 'SYNCHRONIZED'
                                   ? (){
@@ -816,8 +816,8 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
     );
   }
 
-  Future<bool> onBackPressed() {
-    return showDialog(
+  Future<bool>  onBackPressed()async {
+    final result = await showDialog<bool>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
@@ -839,7 +839,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      S.of(context).are_you_sure,
+                      tr(context).are_you_sure,
                       textAlign: TextAlign.center,
                       style:
                           TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
@@ -847,7 +847,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
-                        S.of(context).do_you_want_to_exit_the_wallet,
+                        tr(context).doYouWantToExitTheWallet,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 17, fontWeight: FontWeight.w800),
@@ -875,7 +875,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                 Navigator.of(context).pop(false);
                               },
                               child: Text(
-                                S.of(context).no,
+                                tr(context).no,
                                 style: TextStyle(
                                     color: settingsStore.isDarkTheme
                                         ? Color(0xff93939B)
@@ -897,7 +897,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                 Navigator.of(context).pop(true);
                               },
                               child: Text(
-                                S.of(context).yes,
+                                tr(context).yes,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w800),
@@ -913,27 +913,28 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
             ),
           );
         });
+    return result ?? false;
   }
 }
 
 class Item {
   Item({this.id, this.icon, this.text, this.amount, this.color});
 
-  String id;
-  IconData icon;
-  String text;
-  String amount;
-  Color color;
+  String? id;
+  IconData? icon;
+  String? text;
+  String? amount;
+  Color? color;
 }
 
 Future showMenuForRescan(
     BuildContext context, String title, String body, String fee, String address,
-    {String buttonText,
-    void Function(BuildContext context) onPressed,
-    void Function(BuildContext context) onDismiss}) {
+    {String? buttonText,
+    required void Function(BuildContext context) onPressed,
+    required void Function(BuildContext context) onDismiss}) {
   return showDialog<void>(
       builder: (_) => ShowMenuForRescan(title, body, fee, address,
-          buttonText: buttonText, onDismiss: onDismiss, onPressed: onPressed),
+          buttonText: buttonText!, onDismiss: onDismiss, onPressed: onPressed),
       context: context);
 }
 
@@ -944,15 +945,15 @@ class ShowMenuForRescan extends StatelessWidget {
     this.fee,
     this.address, {
     this.buttonText,
-    this.onPressed,
-    this.onDismiss,
+    required this.onPressed,
+    required this.onDismiss,
   }); // : super(key: key);
 
   final String title;
   final String body;
   final String fee;
   final String address;
-  final String buttonText;
+  final String? buttonText;
   final void Function(BuildContext context) onPressed;
   final void Function(BuildContext context) onDismiss;
 
@@ -1130,7 +1131,7 @@ class ShowMenuForRescan extends StatelessWidget {
 }
 
 class SyncInfoAlertDialog extends StatefulWidget {
-  const SyncInfoAlertDialog({Key key}) : super(key: key);
+  const SyncInfoAlertDialog({Key? key}) : super(key: key);
 
   @override
   State<SyncInfoAlertDialog> createState() => _SyncInfoAlertDialogState();
@@ -1148,7 +1149,7 @@ class _SyncInfoAlertDialogState extends State<SyncInfoAlertDialog> {
   void getHeight() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      bHeight = prefs.getInt('currentHeight');
+      bHeight = prefs.getInt('currentHeight')!;
     });
   }
 

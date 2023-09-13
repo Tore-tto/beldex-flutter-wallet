@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:beldex_wallet/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +8,6 @@ import 'package:beldex_wallet/palette.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 import 'package:beldex_wallet/src/widgets/primary_button.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:flutter_html/flutter_html.dart';
 class DisclaimerPage extends BasePage {
   DisclaimerPage({this.isReadOnly = false});
@@ -18,7 +18,7 @@ class DisclaimerPage extends BasePage {
   bool get isModalBackButton => false;
 
   @override
-  String get title => S.current.settings_terms_and_conditions;
+  String getTitle(AppLocalizations t) => t.settings_terms_and_conditions;
 
   // @override
   // Widget leading(BuildContext context) {
@@ -76,19 +76,19 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
-              S.of(context).settings_terms_and_conditions,
+              tr(context).settings_terms_and_conditions,
               textAlign: TextAlign.center,
             ),
             content: Text(
-              S.of(context).byUsingThisAppYouAgreeToTheTermsOf,
+              tr(context).byUsingThisAppYouAgreeToTheTermsOf,
               textAlign: TextAlign.center,
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text(S.of(context).ok)),
+                  child: Text(tr(context).ok)),
             ],
           );
         });
@@ -236,7 +236,7 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
                                       : null,
                                 ),
                                 Text(
-                                  S.of(context).iAgreeToTermsOfUse,
+                                  tr(context).iAgreeToTermsOfUse,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14.0),
@@ -253,16 +253,16 @@ class DisclaimerBodyState extends State<DisclaimerPageBody> {
                   padding:
                       EdgeInsets.only(left: 25.0, right: 25.0, bottom: 25.0),
                   child: PrimaryButton(
-                    onPressed: _checked ? () {} : null,
-                    text: S.of(context).accept,
+                    onPressed:() {},
+                    text: tr(context).accept,
                     color: Theme.of(context)
                         .primaryTextTheme
-                        .button
-                        .backgroundColor,
+                        .button!
+                        .backgroundColor!,
                     borderColor: Theme.of(context)
                         .primaryTextTheme
-                        .button
-                        .decorationColor,
+                        .button!
+                        .decorationColor!,
                   ),
                 )
               : Offstage(),

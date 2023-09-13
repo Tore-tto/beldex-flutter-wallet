@@ -7,18 +7,17 @@ import 'package:beldex_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 Future showSimpleConfirmDialog(BuildContext context, String title, String body,String fee,String address,
-    {String buttonText,
-    void Function(BuildContext context) onPressed,
-    void Function(BuildContext context) onDismiss}) {
+    {String? buttonText,
+    required void Function(BuildContext context) onPressed,
+    void Function(BuildContext context)? onDismiss}) {
   return showDialog<void>(
       builder: (_) => ConfirmSending(title, body,fee,address,
-          buttonText: buttonText, onDismiss: onDismiss, onPressed: onPressed),
+          buttonText: buttonText!, onDismiss: onDismiss!, onPressed: onPressed),
       context: context);
 }
 
@@ -27,12 +26,12 @@ Future showSimpleConfirmDialog(BuildContext context, String title, String body,S
 
 
 Future showSimpleSentTrans(BuildContext context, String title, String body,String fee,String address,
-    {String buttonText,
-    void Function(BuildContext context) onPressed,
-    void Function(BuildContext context) onDismiss}) {
+    {String? buttonText,
+    required void Function(BuildContext context) onPressed,
+    void Function(BuildContext context)? onDismiss}) {
   return showDialog<void>(
       builder: (_) => SendTransactionSuccessfully(title, body,fee,address,
-          buttonText: buttonText, onDismiss: onDismiss, onPressed: onPressed),
+          buttonText: buttonText!, onDismiss: onDismiss!, onPressed: onPressed),
       context: context);
 }
 
@@ -42,21 +41,21 @@ Future showSimpleSentTrans(BuildContext context, String title, String body,Strin
 
 
 Future showSimpleSentTransDetails(BuildContext context, String title, String body,String fee,String address,
-    {String buttonText,
-    void Function(BuildContext context) onPressed,
-    void Function(BuildContext context) onDismiss}) {
+    {String? buttonText,
+    required void Function(BuildContext context) onPressed,
+    void Function(BuildContext context)? onDismiss}) {
   return showDialog<void>(
       builder: (_) => SendTransactionSuccessfully(title, body,fee,address,
-          buttonText: buttonText, onDismiss: onDismiss, onPressed: onPressed),
+          buttonText: buttonText!, onDismiss: onDismiss!, onPressed: onPressed),
       context: context);
 }
 
 
 
 Future showDetailsAfterSendSuccessfully(BuildContext context, String title, String body,String fee,String address,
-    {String buttonText,
-    void Function(BuildContext context) onPressed,
-    void Function(BuildContext context) onDismiss}) {
+    {String? buttonText,
+   required void Function(BuildContext context) onPressed,
+    void Function(BuildContext context)? onDismiss}) {
   return showDialog<void>(
       builder: (_) => SendDetailsAfterTransaction(title, body,fee,address,
           buttonText: buttonText, onDismiss: onDismiss, onPressed: onPressed),
@@ -74,9 +73,9 @@ class SendDetailsAfterTransaction extends StatelessWidget {
   final String body;
   final String fee;
   final String address;
-  final String buttonText;
-  final void Function(BuildContext context) onPressed;
-  final void Function(BuildContext context) onDismiss;
+  final String? buttonText;
+  final void Function(BuildContext context)? onPressed;
+  final void Function(BuildContext context)? onDismiss;
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +181,7 @@ class SendDetailsAfterTransaction extends StatelessWidget {
                                     ),
                                     child: GestureDetector(
                                       onTap: (){
-                                         if (onDismiss!= null) onDismiss(context);
+                                         if (onDismiss!= null) onDismiss!(context);
                                       },
                                       child: Center(child:Text('Cancel',style: TextStyle(fontSize:15,fontWeight: FontWeight.w800)))),
                                   ),
@@ -195,7 +194,7 @@ class SendDetailsAfterTransaction extends StatelessWidget {
                                     ),
                                     child: GestureDetector(
                                        onTap: (){
-                                    if (onPressed != null) onPressed(context);
+                                    if (onPressed != null) onPressed!(context);
                                   },
                                       child: Center(child:Text('OK',style: TextStyle(fontSize:15,fontWeight: FontWeight.w800,color: Colors.white),))),
                                   )
@@ -251,9 +250,9 @@ class TransactionSendDetails extends StatelessWidget {
   final String body;
   final String fee;
   final String address;
-  final String buttonText;
-  final void Function(BuildContext context) onPressed;
-  final void Function(BuildContext context) onDismiss;
+  final String? buttonText;
+   final void Function(BuildContext context)? onPressed;
+  final void Function(BuildContext context)? onDismiss;
 
   @override
   Widget build(BuildContext context) {
@@ -359,7 +358,7 @@ class TransactionSendDetails extends StatelessWidget {
                                     ),
                                     child: GestureDetector(
                                       onTap: (){
-                                         if (onDismiss!= null) onDismiss(context);
+                                         if (onDismiss!= null) onDismiss!(context);
                                       },
                                       child: Center(child:Text('Cancel',style: TextStyle(fontSize:15,fontWeight: FontWeight.w800)))),
                                   ),
@@ -372,7 +371,7 @@ class TransactionSendDetails extends StatelessWidget {
                                     ),
                                     child: GestureDetector(
                                        onTap: (){
-                                    if (onPressed != null) onPressed(context);
+                                    if (onPressed != null) onPressed!(context);
                                   },
                                       child: Center(child:Text('OK',style: TextStyle(fontSize:15,fontWeight: FontWeight.w800,color: Colors.white),))),
                                   )
@@ -407,9 +406,9 @@ class SendTransactionSuccessfully extends StatefulWidget {
   final String body;
   final String fee;
   final String address;
-  final String buttonText;
-  final void Function(BuildContext context) onPressed;
-  final void Function(BuildContext context) onDismiss;
+  final String? buttonText;
+  final void Function(BuildContext context)? onPressed;
+  final void Function(BuildContext context)? onDismiss;
 
   @override
   _SendTransactionSuccessfullyState createState() => _SendTransactionSuccessfullyState();
@@ -469,7 +468,7 @@ void callFuture()async{
                             children: [
                                GestureDetector(
                                 onTap: () {
-                                    if (widget.onDismiss!= null) widget.onDismiss(context);
+                                    if (widget.onDismiss!= null) widget.onDismiss!(context);
                                     // setState(() {
                                     //   canChangeWidget= true;                                        
                                     // });
@@ -556,9 +555,9 @@ class ConfirmSending extends StatelessWidget {
   final String body;
   final String fee;
   final String address;
-  final String buttonText;
-  final void Function(BuildContext context) onPressed;
-  final void Function(BuildContext context) onDismiss;
+  final String? buttonText;
+  final void Function(BuildContext context)? onPressed;
+  final void Function(BuildContext context)? onDismiss;
 
   @override
   Widget build(BuildContext context) {
@@ -664,7 +663,7 @@ class ConfirmSending extends StatelessWidget {
                                     ),
                                     child: GestureDetector(
                                       onTap: (){
-                                         if (onDismiss!= null) onDismiss(context);
+                                         if (onDismiss!= null) onDismiss!(context);
                                       },
                                       child: Center(child:Text('Cancel',style: TextStyle(fontSize:15,fontWeight: FontWeight.w800)))),
                                   ),
@@ -677,7 +676,7 @@ class ConfirmSending extends StatelessWidget {
                                     ),
                                     child: GestureDetector(
                                        onTap: (){
-                                    if (onPressed != null) onPressed(context);
+                                    if (onPressed != null) onPressed!(context);
                                   },
                                       child: Center(child:Text('OK',style: TextStyle(fontSize:15,fontWeight: FontWeight.w800,color: Colors.white),))),
                                   )

@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:beldex_wallet/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/routes.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_svg/svg.dart';
 class DangerzonePage extends BasePage {
   final String nextPage;
   final String pageTitle;
-  DangerzonePage({this.nextPage,this.pageTitle});
+  DangerzonePage({required this.nextPage,required this.pageTitle});
 
   @override
   String get title => pageTitle;
@@ -28,8 +28,8 @@ Widget trailing(BuildContext context){
     final textScaleFactor = _screenWidth < _baseWidth ? 0.76 : 1.0;
     final appStore = Platform.isAndroid ? 'Play Store' : 'AppStore';
     final item = nextPage == Routes.dangerzoneSeed
-        ? S.of(context).seed_title
-        : S.of(context).keys_title;
+        ? tr(context).seed_title
+        : tr(context).keys_title;
 
     return Column(children: <Widget>[
       Expanded(
@@ -55,11 +55,11 @@ Widget trailing(BuildContext context){
                 padding: EdgeInsets.all(10),
                 child: Text(
                   //S.of(context).dangerzone,
-                  S.of(context).important,
+                  tr(context).important,
                   style: TextStyle(
                     fontSize: 30.0,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryTextTheme.caption.color,
+                    color: Theme.of(context).primaryTextTheme.caption!.color,
                   ),
                   textScaleFactor: textScaleFactor,
                   textAlign: TextAlign.center,
@@ -68,10 +68,10 @@ Widget trailing(BuildContext context){
               Padding(
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    S.of(context).never_give_your(item),
+                    tr(context).never_give_your(item),
                     style: TextStyle(
                       fontSize: 22.0,
-                      color: Theme.of(context).primaryTextTheme.caption.color,
+                      color: Theme.of(context).primaryTextTheme.caption!.color,
                     ),
                     textScaleFactor: textScaleFactor,
                     textAlign: TextAlign.center,
@@ -79,12 +79,10 @@ Widget trailing(BuildContext context){
               Padding(
                   padding: EdgeInsets.all(10),
                   child: Text(
-                    S.of(context).important_warning(
-                          item, appStore
-                        ),
+                    tr(context).important,
                     style: TextStyle(
                       fontSize: 16.0,
-                      color: Theme.of(context).primaryTextTheme.caption.color,
+                      color: Theme.of(context).primaryTextTheme.caption!.color,
                     ),
                     textScaleFactor: textScaleFactor,
                     textAlign: TextAlign.center,
@@ -103,7 +101,7 @@ Widget trailing(BuildContext context){
             color:Color(0xff0BA70F),
             borderRadius: BorderRadius.circular(10)
           ),
-          child:Center(child: Text(S.of(context).yes_im_sure,style: TextStyle(fontWeight:FontWeight.bold,
+          child:Center(child: Text(tr(context).yes_im_sure,style: TextStyle(fontWeight:FontWeight.bold,
           fontSize:19,
           color: Colors.white
           ),),) 

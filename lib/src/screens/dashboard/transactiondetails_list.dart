@@ -1,9 +1,9 @@
-import 'package:date_range_picker/date_range_picker.dart' as date_rage_picker;
+//import 'package:date_range_picker/date_range_picker.dart' as date_rage_picker;
+import 'package:beldex_wallet/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/routes.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 import 'package:beldex_wallet/src/screens/dashboard/date_section_row.dart';
@@ -12,6 +12,7 @@ import 'package:beldex_wallet/src/stores/action_list/action_list_store.dart';
 import 'package:beldex_wallet/src/stores/action_list/date_section_item.dart';
 import 'package:beldex_wallet/src/stores/action_list/transaction_list_item.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class TransactionDetailsList extends BasePage {
@@ -24,7 +25,7 @@ class TransactionDetailsList extends BasePage {
 }
 
 class TransactionDetailsListBody extends StatefulWidget {
-  TransactionDetailsListBody({Key key}) : super(key: key);
+  TransactionDetailsListBody({Key? key}) : super(key: key);
 
   @override
   TransactionDetailsListBodyState createState() =>
@@ -35,19 +36,19 @@ class TransactionDetailsListBodyState
     extends State<TransactionDetailsListBody> {
   final _listObserverKey = GlobalKey();
   final _listKey = GlobalKey();
-  String syncStatus;
+  String? syncStatus;
   IconData iconDataVal = Icons.arrow_upward_outlined;
 
   @override
   Widget build(BuildContext context) {
     final actionListStore = Provider.of<ActionListStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
-    final transactionDateFormat = settingsStore.getCurrentDateFormat(
-        formatUSA: 'MMMM d, yyyy, HH:mm', formatDefault: 'd MMMM yyyy, HH:mm');
+    final t = tr(context);
+    final transactionDateFormat = DateFormat.yMMMd(t.localeName).add_jm();
     return Observer(
         key: _listObserverKey,
         builder: (_) {
-          final items = actionListStore.items ?? <String>[];
+          final items = actionListStore.items;
           final itemsCount = items.length + 2;
           return Scaffold(
             backgroundColor: settingsStore.isDarkTheme
@@ -86,7 +87,7 @@ class TransactionDetailsListBodyState
               title: Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  S.of(context).transactions_text,
+                  tr(context).transactions,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                 ),
               ),
@@ -128,7 +129,7 @@ class TransactionDetailsListBodyState
                                                           color: Theme.of(
                                                                   context)
                                                               .primaryTextTheme
-                                                              .caption
+                                                              .caption!
                                                               .color))),
                                               PopupMenuItem(
                                                   value: 0,
@@ -138,8 +139,8 @@ class TransactionDetailsListBodyState
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
                                                               children: [
-                                                                Text(S
-                                                                    .of(context)
+                                                                Text(
+                                                                    tr(context)
                                                                     .incoming),
                                                                 Theme(
                                                                   data: Theme.of(
@@ -174,8 +175,7 @@ class TransactionDetailsListBodyState
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
                                                               children: [
-                                                                Text(S
-                                                                    .of(context)
+                                                                Text(tr(context)
                                                                     .outgoing),
                                                                 Theme(
                                                                   data: Theme.of(
@@ -204,42 +204,58 @@ class TransactionDetailsListBodyState
                                                               ]))),
                                               PopupMenuItem(
                                                   value: 2,
-                                                  child: Text(S
-                                                      .of(context)
+                                                  child: Text(
+                                                      tr(context)
                                                       .transactions_by_date)),
                                             ],
                                         onSelected: (item) async {
                                           print('item length --> $item');
                                           if (item == 2) {
-                                            final picked =
-                                                await date_rage_picker
-                                                    .showDatePicker(
-                                                        context: context,
-                                                        initialFirstDate:
-                                                            DateTime.now()
-                                                                .subtract(
-                                                                    Duration(
-                                                                        days:
-                                                                            1)),
-                                                        initialLastDate:
-                                                            DateTime.now(),
-                                                        firstDate:
-                                                            DateTime(2015),
-                                                        lastDate:
-                                                            DateTime.now());
+                                            final picked = await showDateRangePicker(
+                                  context: context,
+                                  initialDateRange: DateTimeRange(
+                                    start: DateTime.now().subtract(Duration(days: 1)),
+                                    end: DateTime.now()
+                                  ),
+                                  firstDate: DateTime(2018),
+                                  lastDate: DateTime.now()
+                                );
 
-                                            if (picked != null) {
-                                              actionListStore
-                                                  .transactionFilterStore
-                                                  .changeStartDate(
-                                                      picked.first);
-                                              actionListStore
-                                                  .transactionFilterStore
-                                                  .changeEndDate(picked == null
-                                                      ? null
-                                                      : picked.last.add(
-                                                          Duration(days: 1)));
-                                            }
+                                actionListStore.transactionFilterStore.changeStartDate(picked?.start);
+                                // Add 1d to the end date because we want the picker returns the
+                                // DateTime of the beginning of the end date, but we want to include
+                                // everything on that date as well.
+                                actionListStore.transactionFilterStore.changeEndDate(
+                                  picked == null ? null : picked.end.add(Duration(days: 1)));
+                                            // final picked =
+                                            //     await date_rage_picker
+                                            //         .showDatePicker(
+                                            //             context: context,
+                                            //             initialFirstDate:
+                                            //                 DateTime.now()
+                                            //                     .subtract(
+                                            //                         Duration(
+                                            //                             days:
+                                            //                                 1)),
+                                            //             initialLastDate:
+                                            //                 DateTime.now(),
+                                            //             firstDate:
+                                            //                 DateTime(2015),
+                                            //             lastDate:
+                                            //                 DateTime.now());
+
+                                            // if (picked != null) {
+                                            //   actionListStore
+                                            //       .transactionFilterStore
+                                            //       .changeStartDate(
+                                            //           picked.first);
+                                            //   actionListStore
+                                            //       .transactionFilterStore
+                                            //       .changeEndDate(picked == null
+                                            //           ? null
+                                            //           : picked.last.add(
+                                            //               Duration(days: 1)));
+                                            // }
                                           }
                                         },
                                         child: SvgPicture.asset(
@@ -248,7 +264,7 @@ class TransactionDetailsListBodyState
                                           height: 18,
                                           color: Theme.of(context)
                                               .primaryTextTheme
-                                              .caption
+                                              .caption!
                                               .color,
                                         ))),
                               )
@@ -305,7 +321,7 @@ class TransactionDetailsListBodyState
                               padding:
                                   const EdgeInsets.only(top: 8.0, bottom: 8.0),
                               child: Text(
-                                S.of(context).no_trans_yet,
+                                tr(context).noTransactionsYet,
                                 style: TextStyle(
                                     fontWeight: FontWeight.w800, fontSize: 16.0),
                               ),
@@ -353,8 +369,8 @@ class TransactionDetailsListBodyState
         });
   }
 
-  Future<bool> onBackPressed() {
-    return showDialog(
+  Future<bool> onBackPressed()async{
+    final result = await showDialog<bool>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
@@ -375,12 +391,12 @@ class TransactionDetailsListBodyState
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      S.of(context).are_you_sure,
+                      tr(context).are_you_sure,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 15),
                     ),
                     Text(
-                      S.of(context).do_you_want_to_exit_an_app,
+                      tr(context).do_you_want_to_exit_an_app,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 15),
                     ),
@@ -404,12 +420,12 @@ class TransactionDetailsListBodyState
                                 Navigator.of(context).pop(false);
                               },
                               child: Text(
-                                S.of(context).no,
+                                tr(context).no,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
                                   color: Theme.of(context)
                                       .primaryTextTheme
-                                      .caption
+                                      .caption!
                                       .color,
                                 ),
                               ),
@@ -427,7 +443,7 @@ class TransactionDetailsListBodyState
                                 Navigator.of(context).pop(true);
                               },
                               child: Text(
-                                S.of(context).yes,
+                                tr(context).yes,
                                 style: TextStyle(
                                   fontWeight: FontWeight.w800,
                                   color: Colors.white,
@@ -444,15 +460,16 @@ class TransactionDetailsListBodyState
             ),
           );
         });
+    return result ?? false;
   }
 }
 
-class Item {
-  Item({this.id, this.icon, this.text, this.amount, this.color});
+// class Item {
+//   Item({this.id, this.icon, this.text, this.amount, this.color});
 
-  String id;
-  IconData icon;
-  String text;
-  String amount;
-  Color color;
-}
+//   String id;
+//   IconData icon;
+//   String text;
+//   String amount;
+//   Color color;
+// }

@@ -1,10 +1,8 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:beldex_wallet/palette.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/stores/wallet/wallet_keys_store.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 //import 'package:flutter_windowmanager/flutter_windowmanager.dart';
@@ -13,7 +11,7 @@ class ShowKeysPage extends BasePage {
   bool get isModalBackButton => true;
 
   @override
-  String get title => S.current.wallet_keys;
+  String getTitle(AppLocalizations t) => t.wallet_keys;
 
 
  @override
@@ -35,10 +33,10 @@ class ShowKeysPage extends BasePage {
         child: Observer(
           builder: (_) {
             final keysMap = {
-              S.of(context).view_key_public: walletKeysStore.publicViewKey,
-              S.of(context).view_key_private: walletKeysStore.privateViewKey,
-              S.of(context).spend_key_public: walletKeysStore.publicSpendKey,
-              S.of(context).spend_key_private: walletKeysStore.privateSpendKey
+              tr(context).view_key_public: walletKeysStore.publicViewKey,
+              tr(context).view_key_private: walletKeysStore.privateViewKey,
+              tr(context).spend_key_public: walletKeysStore.publicSpendKey,
+              tr(context).spend_key_private: walletKeysStore.privateSpendKey
             };
 
             return ListView.separated(
@@ -86,8 +84,7 @@ class ShowKeysPage extends BasePage {
                                                             shape: RoundedRectangleBorder(
                                                                 borderRadius: BorderRadius.circular(15.0) //only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
                                                             ),
-                                                            content: Text(S
-                                                                .of(context)
+                                                            content: Text(tr(context)
                                                                 .copied,style: TextStyle(color: Color(0xff0EB212),fontWeight:FontWeight.w700,fontSize:15) ,textAlign: TextAlign.center,),
                                                             backgroundColor: Color(0xff0BA70F).withOpacity(0.10), //.fromARGB(255, 46, 113, 43),
                                                             duration: Duration(
@@ -110,7 +107,7 @@ class ShowKeysPage extends BasePage {
                               child: Text(value,
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
-                                      fontSize: 13.0, color: Theme.of(context).primaryTextTheme.caption.color,)),
+                                      fontSize: 13.0, color: Theme.of(context).primaryTextTheme.caption!.color,)),
                             ),
                             Flexible(
                               flex:1,

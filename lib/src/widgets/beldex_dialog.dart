@@ -1,25 +1,25 @@
 import 'dart:ui';
 
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:beldex_wallet/src/widgets/new_slide_to_act.dart';
 import 'package:flutter/material.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/src/widgets/primary_button.dart';
 import 'package:beldex_wallet/src/widgets/slide_to_act.dart';
 import 'package:provider/provider.dart';
 
 Future showBeldexDialog(BuildContext context, Widget child,
-    {void Function(BuildContext context) onDismiss}) {
+    { required void Function(BuildContext context) onDismiss}) {
   return showDialog<void>(
       builder: (_) => BeldexDialog(body: child, onDismiss: onDismiss),
       context: context);
 }
 
 Future showSimpleBeldexDialog(BuildContext context, String title, String body,
-    {String buttonText,
-    void Function(BuildContext context) onPressed,
-    void Function(BuildContext context) onDismiss}) {
+    {String? buttonText,
+   required void Function(BuildContext context) onPressed,
+    void Function(BuildContext context)? onDismiss}) {
   return showDialog<void>(
       builder: (_) => SimpleBeldexDialog(title, body,
           buttonText: buttonText, onDismiss: onDismiss, onPressed: onPressed),
@@ -29,9 +29,9 @@ Future showSimpleBeldexDialog(BuildContext context, String title, String body,
 
 // Rescan & reconnect dialog
 Future showRescanDialog(BuildContext context, String title, String body,
-    {String buttonText,
-    void Function(BuildContext context) onPressed,
-    void Function(BuildContext context) onDismiss}) {
+    {String? buttonText,
+    required void Function(BuildContext context) onPressed,
+    void Function(BuildContext context)? onDismiss}) {
   return showDialog<void>(
       builder: (_) => RescanDialog(title, body,
           buttonText: buttonText, onDismiss: onDismiss, onPressed: onPressed),
@@ -43,9 +43,9 @@ Future showRescanDialog(BuildContext context, String title, String body,
 
 
 Future showDialogForResetNode(BuildContext context, String title, String body,String fee,String address,
-    {String buttonText,
-    void Function(BuildContext context) onPressed,
-    void Function(BuildContext context) onDismiss}) {
+    {String? buttonText,
+   required void Function(BuildContext context) onPressed,
+    void Function(BuildContext context)? onDismiss}) {
   return showDialog<void>(
       builder: (_) => ShowResetNodeDialog(title, body,fee,address,
           buttonText: buttonText, onDismiss: onDismiss, onPressed: onPressed),
@@ -63,9 +63,9 @@ class ShowResetNodeDialog extends StatefulWidget {
   final String body;
   final String fee;
   final String address;
-  final String buttonText;
-  final void Function(BuildContext context) onPressed;
-  final void Function(BuildContext context) onDismiss;
+  final String? buttonText;
+  final void Function(BuildContext context)? onPressed;
+  final void Function(BuildContext context)? onDismiss;
 
   @override
   _ShowResetNodeDialogState createState() => _ShowResetNodeDialogState();
@@ -89,7 +89,7 @@ class _ShowResetNodeDialogState extends State<ShowResetNodeDialog> {
            // mainAxisSize: MainAxisSize.min,
             children: [
              GestureDetector(
-              onTap: ()=>widget.onDismiss(context),
+              onTap: ()=>widget.onDismiss!(context),
                child: Container(
                 width: MediaQuery.of(context).size.height*0.42/3,
                 height: 50,
@@ -106,7 +106,7 @@ class _ShowResetNodeDialogState extends State<ShowResetNodeDialog> {
                ),
              ),
              GestureDetector(
-              onTap: ()=>widget.onPressed(context),
+              onTap: ()=>widget.onPressed!(context),
                child: Container(
                 width: MediaQuery.of(context).size.height*0.42/3,
                 height: 50,
@@ -163,9 +163,10 @@ class _ShowResetNodeDialogState extends State<ShowResetNodeDialog> {
 
 
 Future showConfirmBeldexDialog(BuildContext context, String title, String body,
-    {void Function(BuildContext context) onConfirm,
-    Future Function(BuildContext context) onFutureConfirm,
-    void Function(BuildContext context) onDismiss}) {
+    { 
+     void Function(BuildContext context)? onConfirm,
+    Future Function(BuildContext context)? onFutureConfirm,
+    void Function(BuildContext context)? onDismiss}) {
   return showDialog<void>(
       builder: (_) => ConfirmBeldexDialog(title, body,
           onDismiss: onDismiss,
@@ -178,14 +179,14 @@ Future showConfirmBeldexDialog(BuildContext context, String title, String body,
 class BeldexDialog extends StatelessWidget {
   BeldexDialog({this.body, this.onDismiss,});
 
-  final void Function(BuildContext context) onDismiss;
-  final Widget body;
+  final void Function(BuildContext context)? onDismiss;
+  final Widget? body;
 
   void _onDismiss(BuildContext context) {
     if (onDismiss == null) {
       Navigator.of(context).pop();
     } else {
-      onDismiss(context);
+      onDismiss!(context);
     }
   }
 
@@ -224,9 +225,9 @@ class SimpleBeldexDialog extends StatelessWidget {
 
   final String title;
   final String body;
-  final String buttonText;
-  final void Function(BuildContext context) onPressed;
-  final void Function(BuildContext context) onDismiss;
+  final String? buttonText;
+  final void Function(BuildContext context)? onPressed;
+  final void Function(BuildContext context)? onDismiss;
   @override
   Widget build(BuildContext context) {
     return BeldexDialog(
@@ -244,7 +245,7 @@ class SimpleBeldexDialog extends StatelessWidget {
                           decoration: TextDecoration.none,
                           color: Theme.of(context)
                               .primaryTextTheme
-                              .caption
+                              .caption!
                               .color))),
               Padding(
                   padding: EdgeInsets.only(top: 15, bottom: 30),
@@ -254,16 +255,16 @@ class SimpleBeldexDialog extends StatelessWidget {
                           decoration: TextDecoration.none,
                           color: Theme.of(context)
                               .primaryTextTheme
-                              .caption
+                              .caption!
                               .color))),
               PrimaryButton(
-                  text: buttonText ?? S.of(context).ok,
+                  text: buttonText ?? tr(context).ok,
                   color:
-                      Theme.of(context).primaryTextTheme.button.backgroundColor,
+                      Theme.of(context).primaryTextTheme.button!.backgroundColor!,
                   borderColor:
-                      Theme.of(context).primaryTextTheme.button.backgroundColor,
+                      Theme.of(context).primaryTextTheme.button!.backgroundColor!,
                   onPressed: () {
-                    if (onPressed != null) onPressed(context);
+                    if (onPressed != null) onPressed!(context);
                   })
             ],
           ),
@@ -279,9 +280,9 @@ class RescanDialog extends StatelessWidget {
 
   final String title;
   final String body;
-  final String buttonText;
-  final void Function(BuildContext context) onPressed;
-  final void Function(BuildContext context) onDismiss;
+  final String? buttonText;
+  final void Function(BuildContext context)? onPressed;
+  final void Function(BuildContext context)? onDismiss;
   @override
   Widget build(BuildContext context) {
     final settingsStore = Provider.of<SettingsStore>(context);
@@ -343,9 +344,9 @@ class ConfirmBeldexDialog extends StatelessWidget {
 
   final String title;
   final String body;
-  final Future Function(BuildContext context) onFutureConfirm;
-  final void Function(BuildContext context) onConfirm;
-  final void Function(BuildContext context) onDismiss;
+  final Future Function(BuildContext context)? onFutureConfirm;
+  final void Function(BuildContext context)? onConfirm;
+  final void Function(BuildContext context)? onDismiss;
 
   @override
   Widget build(BuildContext context) {
@@ -367,7 +368,7 @@ class ConfirmBeldexDialog extends StatelessWidget {
                           decoration: TextDecoration.none,
                           color: Theme.of(context)
                               .primaryTextTheme
-                              .caption
+                              .caption!
                               .color))),
               Padding(
                   padding: EdgeInsets.only(top: 15, bottom: 30),
@@ -377,13 +378,13 @@ class ConfirmBeldexDialog extends StatelessWidget {
                           decoration: TextDecoration.none,
                           color: Theme.of(context)
                               .primaryTextTheme
-                              .caption
+                              .caption!
                               .color))),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                      GestureDetector(
-                      onTap:onDismiss != null ? ()=> onDismiss(context) : null,
+                      onTap:onDismiss != null ? ()=> onDismiss!(context) : null,
                        child: Container(
                         //height:40,
                         //width:70,
@@ -393,13 +394,13 @@ class ConfirmBeldexDialog extends StatelessWidget {
                           color:settingsStore.isDarkTheme ? Color(0xff383848) : Color(0xffE8E8E8),
                           borderRadius:BorderRadius.circular(8)
                         ),
-                        child:Center(child: Text(S.of(context).cancel,textAlign: TextAlign.center, style: TextStyle(
+                        child:Center(child: Text(tr(context).cancel,textAlign: TextAlign.center, style: TextStyle(
                           decoration: TextDecoration.none,
                           color:settingsStore.isDarkTheme ? Color(0xff93939B) : Color(0xff222222),fontSize:15, ),)),
                     ),
                      ),
                     GestureDetector(
-                      onTap:  onConfirm != null ? () => onConfirm(context) : null,
+                      onTap:  onConfirm != null ? () => onConfirm!(context) : null,
                       child: Container(
                         height:MediaQuery.of(context).size.height*0.18/3,
                         width:MediaQuery.of(context).size.width*1/3,
@@ -407,7 +408,7 @@ class ConfirmBeldexDialog extends StatelessWidget {
                           color: Color(0xff0BA70F),
                           borderRadius:BorderRadius.circular(8)
                         ),
-                        child:Center(child: Text(S.of(context).ok,textAlign: TextAlign.center, style: TextStyle(
+                        child:Center(child: Text(tr(context).ok,textAlign: TextAlign.center, style: TextStyle(
                           decoration: TextDecoration.none,
                           color:Colors.white,fontSize:15, ),)),
                       ),

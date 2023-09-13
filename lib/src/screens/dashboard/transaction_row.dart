@@ -1,7 +1,7 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:beldex_wallet/src/wallet/transaction/transaction_info.dart';
 import 'package:flutter/material.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/src/wallet/transaction/transaction_direction.dart';
 import 'package:flutter/services.dart';
@@ -11,13 +11,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 class TransactionRow extends StatelessWidget {
   TransactionRow({
-    this.direction,
-    this.formattedDate,
-    this.formattedAmount,
-    this.formattedFiatAmount,
-    this.isPending,
-    @required this.onTap,
-    this.transaction,
+   required this.direction,
+   required this.formattedDate,
+   required this.formattedAmount,
+   required this.formattedFiatAmount,
+    required this.isPending,
+    required this.onTap,
+    required this.transaction,
     //this.isStake
   });
 
@@ -104,10 +104,10 @@ class TransactionRow extends StatelessWidget {
                                         (direction ==
                                                     TransactionDirection
                                                         .incoming
-                                                ? S.of(context).received
-                                                : S.of(context).sent) +
+                                                ? tr(context).received
+                                                : tr(context).sent) +
                                             (isPending
-                                                ? S.of(context).pending
+                                                ? tr(context).pending
                                                 : // isStake ? S.of(context).stake :
                                                 ''),
                                         style: TextStyle(
@@ -163,7 +163,7 @@ class TransactionRow extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                        S.of(context).transaction_details_transaction_id,
+                                        tr(context).transaction_details_transaction_id,
                                         style: TextStyle(
                                             fontSize: 14,
                                             fontFamily: 'Poppins',
@@ -216,7 +216,7 @@ class TransactionRow extends StatelessWidget {
                                               borderRadius:
                                                   BorderRadius.circular(15.0)),
                                           content: Text(
-                                            S.of(context).copied,
+                                            tr(context).copied,
                                             style: TextStyle(
                                                 color: Color(0xffffffff),
                                                 fontWeight: FontWeight.w700,
@@ -367,7 +367,7 @@ class TransactionRow extends StatelessWidget {
                                         children: [
                                           Expanded(
                                               child: Text(
-                                            transaction.recipientAddress,
+                                            transaction.recipientAddress!,
                                             style: TextStyle(
                                                 color: Color(0xffACACAC),
                                                 fontSize: 14,
@@ -407,7 +407,7 @@ class TransactionRow extends StatelessWidget {
                                                         BorderRadius.circular(
                                                             15.0)),
                                                 content: Text(
-                                                  S.of(context).copied,
+                                                  tr(context).copied,
                                                   style: TextStyle(
                                                       color: Color(0xffffffff),
                                                       fontWeight:

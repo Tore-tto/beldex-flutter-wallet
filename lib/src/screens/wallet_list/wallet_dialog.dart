@@ -7,12 +7,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 Future showDetailsAfterSendSuccessfully(BuildContext context, String title, String body,String fee,String address,
-    {String buttonText,
-    void Function(BuildContext context) onPressed,
-    void Function(BuildContext context) onDismiss}) {
+    {String? buttonText,
+    void Function(BuildContext context)? onPressed,
+    void Function(BuildContext context)? onDismiss}) {
   return showDialog<void>(
       builder: (_) => SendDetailsAfterTransaction(title, body,fee,address,
-          buttonText: buttonText, onDismiss: onDismiss, onPressed: onPressed),
+          buttonText: buttonText!, onDismiss: onDismiss!, onPressed: onPressed!),
       context: context);
 }
 
@@ -24,9 +24,9 @@ class SendDetailsAfterTransaction extends StatelessWidget {
   final String body;
   final String fee;
   final String address;
-  final String buttonText;
-  final void Function(BuildContext context) onPressed;
-  final void Function(BuildContext context) onDismiss;
+  final String? buttonText;
+  final void Function(BuildContext context)? onPressed;
+  final void Function(BuildContext context)? onDismiss;
 
   @override
   Widget build(BuildContext context) {

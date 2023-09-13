@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'beldex_dialog.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/widgets/primary_button.dart';
 
 

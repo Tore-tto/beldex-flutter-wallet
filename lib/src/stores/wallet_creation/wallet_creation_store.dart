@@ -1,10 +1,11 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:mobx/mobx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:beldex_wallet/src/domain/services/wallet_list_service.dart';
 import 'package:beldex_wallet/src/stores/wallet_creation/wallet_creation_state.dart';
 import 'package:beldex_wallet/src/stores/authentication/authentication_store.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
+
 
 part 'wallet_creation_store.g.dart';
 
@@ -12,11 +13,11 @@ class WalletCreationStore = WalletCreationStoreBase with _$WalletCreationStore;
 
 abstract class WalletCreationStoreBase with Store {
   WalletCreationStoreBase(
-      {@required this.authStore,
-      @required this.walletListService,
-      @required this.sharedPreferences}) {
+      {required this.authStore,
+      required this.walletListService,
+      required this.sharedPreferences}):
     state = WalletCreationStateInitial();
-  }
+  
 
   final AuthenticationStore authStore;
   final WalletListService walletListService;
@@ -26,13 +27,12 @@ abstract class WalletCreationStoreBase with Store {
   WalletCreationState state;
 
   @observable
-  String errorMessage;
+  String? errorMessage;
 
-  @observable
-  bool isValid;
+
 
   @action
-  Future create({String name, String language}) async {
+  Future create({required String name,required String language}) async {
     state = WalletCreationStateInitial();
 
     try {
@@ -45,10 +45,10 @@ abstract class WalletCreationStoreBase with Store {
     }
   }
 
-  void validateWalletName(String value) {
+  void validateWalletName(String value,AppLocalizations t) {
     const pattern = '^[a-zA-Z0-9_]{1,255}\$';
     final regExp = RegExp(pattern);
-    isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : S.current.error_msg_for_wallet_name;
+    final isValid = regExp.hasMatch(value);
+    errorMessage = isValid ? null : t.enterAValidNameUpto15Characters;
   }
 }

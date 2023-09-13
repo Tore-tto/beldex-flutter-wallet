@@ -1,6 +1,6 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/routes.dart';
 import 'package:beldex_wallet/src/stores/balance/balance_store.dart';
 import 'package:beldex_wallet/src/stores/wallet/wallet_store.dart';
@@ -8,17 +8,18 @@ import 'package:beldex_wallet/src/widgets/beldex_dialog.dart';
 import 'package:provider/provider.dart';
 
 class WalletMenu {
-  WalletMenu(this.context);
+  WalletMenu(this.context)
+  : items = [
+    tr(context).reconnect,
+    tr(context).rescan
+  ];
 
  /* final List<String> items = [
     S.current.reconnect,
     S.current.rescan,
     S.current.reload_fiat
   ];*/
-  final List<String> items = [
-    S.current.reconnect,
-    S.current.rescan
-  ];
+  final List<String> items ;
 
   final BuildContext context;
 
@@ -46,32 +47,34 @@ class WalletMenu {
     //   walletStore.reconnect();
     //   Navigator.of(context)..pop()..pop();
     // });
-   await showReconnectConfirmDialog( context, S.of(context).reconnection, S.of(context).reconnect_alert_text,
+   await showReconnectConfirmDialog( context, tr(context).reconnection, tr(context).reconnect_alert_text,
         onPressed: (context) {
       walletStore.reconnect();
       Navigator.of(context)..pop()..pop();
-    });
+    },
+    onDismiss:(context)=> null,
+    );
   
 }
 }
 
 Future showReconnectConfirmDialog(BuildContext context, String title, String body,
-    {String buttonText,
-    void Function(BuildContext context) onPressed,
-    void Function(BuildContext context) onDismiss}) {
+    {String? buttonText,
+    required void Function(BuildContext context) onPressed,
+    required void Function(BuildContext context) onDismiss}) {
   return showDialog<void>(
       builder: (_) => AlertReconnectConfirmDialog(title, body,
-          buttonText: buttonText, onDismiss: onDismiss, onPressed: onPressed),
+          buttonText: buttonText!, onDismiss: onDismiss, onPressed: onPressed),
       context: context);
 }
 
 
 class AlertReconnectConfirmDialog extends StatefulWidget {
   const AlertReconnectConfirmDialog(this.title, this.body,
-      {this.buttonText, this.onPressed, this.onDismiss,});
+      {this.buttonText, required this.onPressed, required this.onDismiss,});
  final String title;
   final String body;
-  final String buttonText;
+  final String? buttonText;
   final void Function(BuildContext context) onPressed;
   final void Function(BuildContext context) onDismiss;
   @override

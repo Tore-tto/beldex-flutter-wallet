@@ -6,7 +6,7 @@ class BeldexTransactionCreationCredentials
   BeldexTransactionCreationCredentials(
       {this.address, this.priority, this.amount});
 
-  final String address;
-  final String amount;
-  final BeldexTransactionPriority priority;
+  final String? address;
+  final String? amount;
+  final BeldexTransactionPriority? priority;
 }

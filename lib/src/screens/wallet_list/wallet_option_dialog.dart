@@ -1,11 +1,11 @@
 
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 class WalletAlertDialog<Item extends int> extends StatefulWidget {
   final Function(Item) onItemSelected;
-  WalletAlertDialog({ Key key, this.onItemSelected}) : super(key: key);
+  WalletAlertDialog({ Key? key,required this.onItemSelected}) : super(key: key);
 
   @override
   State<WalletAlertDialog> createState() => _WalletAlertDialogState();
@@ -26,7 +26,7 @@ class _WalletAlertDialogState extends State<WalletAlertDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(S.of(context).changeWallet,style: TextStyle(
+            Text(tr(context).changeWallet,style: TextStyle(
                 fontSize: 18,
                 // fontFamily: 'Poppinsbold',
                 fontWeight: FontWeight.bold
@@ -42,7 +42,7 @@ class _WalletAlertDialogState extends State<WalletAlertDialog> {
               height: MediaQuery.of(context).size.height*0.20/3,
               minWidth: MediaQuery.of(context).size.width*1.3/2,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              child: Text(S.of(context).wallet_list_load_wallet,style: TextStyle(fontSize:17,color:Colors.white,fontWeight:FontWeight.w800),),
+              child: Text(tr(context).wallet_list_load_wallet,style: TextStyle(fontSize:17,color:Colors.white,fontWeight:FontWeight.w800),),
             ),
             SizedBox(
               height: 10,
@@ -55,7 +55,7 @@ class _WalletAlertDialogState extends State<WalletAlertDialog> {
               height: MediaQuery.of(context).size.height*0.20/3,
               minWidth: MediaQuery.of(context).size.width*1.3/2,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-              child:Text(S.of(context).removeWallet,style: TextStyle(fontSize:17,color:settingsStore.isDarkTheme ? Colors.white : Colors.black,fontWeight:FontWeight.w800),),
+              child:Text(tr(context).removeWallet,style: TextStyle(fontSize:17,color:settingsStore.isDarkTheme ? Colors.white : Colors.black,fontWeight:FontWeight.w800),),
             ),
           ],
         ),

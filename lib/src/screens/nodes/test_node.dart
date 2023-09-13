@@ -23,7 +23,7 @@ class NodeForTest{
   }
 
   Future<bool> sendRPCRequest(String method,String nodeUri,
-      {Map params}) async {
+      {Map? params}) async {
     Map<String, dynamic> resultBody;
     bool flag = false;
     final requestBody = params != null

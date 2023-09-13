@@ -1,15 +1,15 @@
 import 'dart:convert';
+import 'package:beldex_wallet/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 
 class FaqPage extends BasePage {
   @override
-  String get title => S.current.faq;
+  String getTitle(AppLocalizations t) => t.faq;
 
   // @override
   // Widget leading(BuildContext context) {
@@ -154,7 +154,7 @@ Widget trailing(BuildContext context){
   String getFaqPath(BuildContext context) {
     final settingsStore = context.read<SettingsStore>();
 
-    switch (settingsStore.languageCode) {
+    switch (tr(context).localeName) {
       case 'en':
         return 'assets/faq/faq_en.json';
       case 'de':

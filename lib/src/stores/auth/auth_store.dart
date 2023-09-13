@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'package:beldex_wallet/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mobx/mobx.dart';
 import 'package:beldex_wallet/src/domain/services/user_service.dart';
 import 'package:beldex_wallet/src/domain/services/wallet_service.dart';
 import 'package:beldex_wallet/src/stores/auth/auth_state.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
+
 
 part 'auth_store.g.dart';
 
@@ -13,16 +14,15 @@ class AuthStore = AuthStoreBase with _$AuthStore;
 
 abstract class AuthStoreBase with Store {
   AuthStoreBase(
-      {@required this.userService,
-      @required this.walletService,
-      @required this.sharedPreferences}) {
-    state = AuthenticationStateInitial();
+      {required this.userService,
+      required this.walletService,
+      required this.sharedPreferences}):
+    state = AuthenticationStateInitial(),
     _failureCounter = 0;
-  }
   
   static const maxFailedLogins = 3;
   static const banTimeout = 180; // 3 minutes
-  final banTimeoutKey = S.current.auth_store_ban_timeout;
+  final banTimeoutKey = 'ban_timeout';
 
   final UserService userService;
   final WalletService walletService;
@@ -36,13 +36,13 @@ abstract class AuthStoreBase with Store {
   int _failureCounter;
 
   @action
-  Future auth({String password}) async {
+  Future auth({required String password,required AppLocalizations t}) async {
     state = AuthenticationStateInitial();
     final _banDuration = banDuration();
 
     if (_banDuration != null) {
       state = AuthenticationBanned(
-          error: S.current.auth_store_banned_for + '${_banDuration.inMinutes}' + S.current.auth_store_banned_minutes);
+          error: t.auth_store_banned_for + '${_banDuration.inMinutes}' + t.auth_store_banned_minutes);
       return;
     }
 
@@ -58,15 +58,15 @@ abstract class AuthStoreBase with Store {
       if (_failureCounter >= maxFailedLogins) {
         final banDuration = await ban();
         state = AuthenticationBanned(
-            error: S.current.auth_store_banned_for + '${banDuration.inMinutes}' + S.current.auth_store_banned_minutes);
+            error: t.auth_store_banned_for + '${banDuration.inMinutes}' + t.auth_store_banned_minutes);
         return;
       }
 
-      state = AuthenticationFailure(error: S.current.auth_store_incorrect_password);
+      state = AuthenticationFailure(error: t.auth_store_incorrect_password);
     }
   }
 
-  Duration banDuration() {
+  Duration? banDuration() {
     final unbanTimestamp = sharedPreferences.getInt(banTimeoutKey);
 
     if (unbanTimestamp == null) {

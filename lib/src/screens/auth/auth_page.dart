@@ -1,9 +1,9 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/stores/auth/auth_state.dart';
 import 'package:beldex_wallet/src/stores/auth/auth_store.dart';
 import 'package:beldex_wallet/src/screens/pin_code/pin_code.dart';
@@ -15,7 +15,7 @@ typedef OnAuthenticationFinished = void Function(bool, AuthPageState);
 class AuthPage extends StatefulWidget {
   AuthPage({this.onAuthenticationFinished, this.closable = true});
 
-  final OnAuthenticationFinished onAuthenticationFinished;
+  final OnAuthenticationFinished? onAuthenticationFinished;
   final bool closable;
 
   @override
@@ -27,11 +27,11 @@ class AuthPageState extends State<AuthPage> {
   final _pinCodeKey = GlobalKey<PinCodeState>();
 
   void changeProcessText(String text) {
-    _key.currentState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(text), backgroundColor: Colors.green));
   }
 
-  void close() => Navigator.of(_key.currentContext).pop();
+  void close() => Navigator.of(_key.currentContext!).pop();
 
   //
   void refresh() {
@@ -46,12 +46,12 @@ class AuthPageState extends State<AuthPage> {
     if (settingsStore.allowBiometricAuthentication) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final biometricAuth = BiometricAuth();
-        biometricAuth.isAuthenticated().then((isAuth) {
+        biometricAuth.isAuthenticated(tr(context)).then((isAuth) {
           if (isAuth) {
             authStore.biometricAuth();
-            _key.currentState.showSnackBar(
+           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(S.of(context).authenticated),
+                content: Text(tr(context).authenticated),
                 backgroundColor: Colors.green,
               ),
             );
@@ -64,11 +64,11 @@ class AuthPageState extends State<AuthPage> {
       if (state is AuthenticatedSuccessfully) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (widget.onAuthenticationFinished != null) {
-            widget.onAuthenticationFinished(true, this);
+            widget.onAuthenticationFinished!(true, this);
           } else {
-            _key.currentState.showSnackBar(
+           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(S.of(context).authenticated),
+                content: Text(tr(context).authenticated),
                 backgroundColor: Colors.green,
               ),
             );
@@ -78,9 +78,9 @@ class AuthPageState extends State<AuthPage> {
 
       if (state is AuthenticationInProgress) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _key.currentState.showSnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(S.of(context).authentication),
+              content: Text(tr(context).authentication),
               backgroundColor: Colors.green,
             ),
           );
@@ -89,34 +89,34 @@ class AuthPageState extends State<AuthPage> {
 
       if (state is AuthenticationFailure) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _pinCodeKey.currentState.clear();
-          _key.currentState.hideCurrentSnackBar();
-          _key.currentState.showSnackBar(
+          _pinCodeKey.currentState?.clear();
+         ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(S.of(context).failed_authentication(state.error)),
+              content: Text(tr(context).failed_authentication(state.error)),
               backgroundColor: Colors.red,
             ),
           );
 
           if (widget.onAuthenticationFinished != null) {
-            widget.onAuthenticationFinished(false, this);
+            widget.onAuthenticationFinished!(false, this);
           }
         });
       }
 
       if (state is AuthenticationBanned) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _pinCodeKey.currentState.clear();
-          _key.currentState.hideCurrentSnackBar();
-          _key.currentState.showSnackBar(
+          _pinCodeKey.currentState?.clear();
+           ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(S.of(context).failed_authentication(state.error)),
+              content: Text(tr(context).failed_authentication(state.error)),
               backgroundColor: Colors.red,
             ),
           );
 
           if (widget.onAuthenticationFinished != null) {
-            widget.onAuthenticationFinished(false, this);
+            widget.onAuthenticationFinished!(false, this);
           }
         });
       }
@@ -163,7 +163,7 @@ class AuthPageState extends State<AuthPage> {
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 22,
-                color: Theme.of(context).primaryTextTheme.caption.color,
+                color: Theme.of(context).primaryTextTheme.caption!.color,
               ),
             ),
           ),
@@ -173,7 +173,7 @@ class AuthPageState extends State<AuthPage> {
         resizeToAvoidBottomInset: false,
         body: PinCode(
           (pin, _) =>
-              authStore.auth(password: pin.fold('', (ac, val) => ac + '$val')),
+              authStore.auth(password: pin.fold('', (ac, val) => ac + '$val'), t: tr(context)),
           false,
           _pinCodeKey,
           refresh,

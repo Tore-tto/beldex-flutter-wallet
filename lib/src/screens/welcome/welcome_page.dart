@@ -1,8 +1,7 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
-//import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/routes.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 //import 'package:beldex_wallet/src/widgets/primary_button.dart';
@@ -44,7 +43,7 @@ class WelcomePage extends BasePage {
             ),
             Padding(
               padding: const EdgeInsets.only(top:8.0),
-              child: Text(S.of(context).beldex_wall,
+              child: Text(tr(context).wallet_list_title,
                style: TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.bold,
@@ -59,7 +58,7 @@ class WelcomePage extends BasePage {
               child:SvgPicture.asset(settingsStore.isDarkTheme ? 'assets/images/new-images/Empty_screen_image.svg': 'assets/images/new-images/Empty_screen_image_white.svg')
             ),
             Text(
-              S.of(context).welcome_to_bel_wallet,
+            tr(context).welcomeToBeldexWallet,
             style: TextStyle(
               fontSize: _screenHeight*0.05/3,
               fontWeight: FontWeight.w700,
@@ -69,7 +68,7 @@ class WelcomePage extends BasePage {
             Padding(
               padding: const EdgeInsets.only(top:8.0),
               child: Text(
-                S.of(context).select_an_options,
+                tr(context).selectAnOptionBelowToCreateOrnRecoverExistingWallet,
                 textAlign: TextAlign.center,
               style: TextStyle(
                
@@ -101,7 +100,7 @@ class WelcomePage extends BasePage {
                           Navigator.pushNamed(
                               context,  Routes.restoreOptions);
                         },
-                        label: Padding( padding: const EdgeInsets.only(left:12.0),child: Text(S.of(context).restore_wallet,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700),)),
+                        label: Padding( padding: const EdgeInsets.only(left:12.0),child: Text(tr(context).restore_wallet,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700),)),
                         style: ElevatedButton.styleFrom(
                             alignment: Alignment.centerLeft,
                             primary: Color(0xff2979FB), //.fromARGB(255, 46, 160, 33),
@@ -143,7 +142,7 @@ class WelcomePage extends BasePage {
                           Navigator.pushNamed(
                               context, Routes.newWalletFromWelcome);
                         },
-                        label: Padding( padding: const EdgeInsets.only(left:12.0),child: Text(S.of(context).create_new,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700),)),
+                        label: Padding( padding: const EdgeInsets.only(left:12.0),child: Text(tr(context).create_new,style: TextStyle(fontSize: 16,fontWeight: FontWeight.w700),)),
                         style: ElevatedButton.styleFrom(
                             alignment: Alignment.centerLeft,
                             primary: Color(0xff0BA70F),  //Color.fromARGB(255, 46, 160, 33),

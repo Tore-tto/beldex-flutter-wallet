@@ -1,7 +1,7 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 import 'package:provider/provider.dart';
 import 'package:yaml/yaml.dart';
@@ -10,7 +10,7 @@ class ChangelogPage extends BasePage {
   final String changelogPath = 'assets/changelog.yml';
 
   @override
-  String get title => S.current.changelog;
+  String getTitle(AppLocalizations t) => t.changelog;
 
 @override
 Widget trailing(BuildContext context){

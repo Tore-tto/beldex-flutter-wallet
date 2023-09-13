@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class LoadingPage extends StatelessWidget{
   final WalletDescription wallet;
   final WalletListStore walletListStore;
-  LoadingPage({ Key key, this.wallet,this.walletListStore }) : super(key: key);
+  LoadingPage({ Key? key,required this.wallet,required this.walletListStore }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

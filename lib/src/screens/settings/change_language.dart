@@ -1,7 +1,7 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/domain/common/language.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class ChangeLanguage extends BasePage {
   @override
-  String get title => S.current.settings_change_language;
+  String getTitle(AppLocalizations t) => t.settings_change_language;
 
 
 
@@ -27,10 +27,15 @@ class ChangeLanguage extends BasePage {
 
     final currentColor = Theme.of(context).selectedRowColor;
     final notCurrentColor =
-        Theme.of(context).accentTextTheme.subtitle1.backgroundColor;
+        Theme.of(context).accentTextTheme.subtitle1!.backgroundColor;
     //var scrollController = ScrollController(keepScrollOffset: true);
 
  final _controller = ScrollController(keepScrollOffset: true);
+
+    final languages = <LanguageName>[
+        LanguageName('', 'System default'),
+        ...languageNames];
+        final langNotifier = Provider.of<LanguageNotifier>(context);
  final _scrollController = ScrollController(keepScrollOffset: true);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -50,7 +55,7 @@ class ChangeLanguage extends BasePage {
             child: Column(
               children: [
                 Text(
-                  S.of(context).choose_app_language,
+                  tr(context).chooseLanguage,
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 19,fontWeight: FontWeight.w700),
                 ),
@@ -75,21 +80,21 @@ class ChangeLanguage extends BasePage {
                 padding: EdgeInsets.only(right: 6),
                 child: ListView.builder(
                   controller: _controller,
-                  itemCount: languages.values.length,
+                  itemCount: languages.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final isCurrent = settingsStore.languageCode == null
-                        ? false
-                        : languages.keys.elementAt(index) ==
-                            settingsStore.languageCode;
+                    final lang = languages[index];
+                    final isCurrent = lang.code == (settingsStore.languageOverride ?? '');
 
                     return InkWell(
                       splashColor: Colors.transparent,
                       onTap: () async {
                         if (!isCurrent) {
-                          await settingsStore.saveLanguageCode(
-                              languageCode: languages.keys.elementAt(index));
-                          currentLanguage.setCurrentLanguage(
-                              languages.keys.elementAt(index));
+                           settingsStore.saveLanguageOverride(lang.code == '' ? null : lang.code);
+                           langNotifier.trigger();
+                          // await settingsStore.saveLanguageCode(
+                          //     languageCode: languages.keys.elementAt(index));
+                          // currentLanguage.setCurrentLanguage(
+                          //     languages.keys.elementAt(index));
                           Navigator.of(context).pop();
                         }
                       },
@@ -106,7 +111,8 @@ class ChangeLanguage extends BasePage {
                                   padding: const EdgeInsets.all(10.0),
                                   child: Center(
                                     child: Text(
-                                      languages.values.elementAt(index),
+                                      lang.name,
+                                      // languages.values.elementAt(index),
                                       style: TextStyle(
                                           fontSize: 19,
                                           fontWeight: FontWeight.bold),
@@ -121,7 +127,8 @@ class ChangeLanguage extends BasePage {
                                   bottom: 25.0),
                               child: Center(
                                 child: Text(
-                                  languages.values.elementAt(index),
+                                  lang.name,
+                                 // languages.values.elementAt(index),
                                   style: TextStyle(
                                       fontSize: 19,
                                       color: Colors.grey[800],

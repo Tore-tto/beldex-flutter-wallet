@@ -10,9 +10,9 @@ import 'package:beldex_wallet/src/node/node_list.dart';
 import 'package:beldex_wallet/src/wallet/beldex/transaction/transaction_priority.dart';
 
 Future defaultSettingsMigration(
-    {@required int version,
-      @required SharedPreferences sharedPreferences,
-      @required Box<Node> nodes}) async {
+    {required int version,
+      required SharedPreferences sharedPreferences,
+      required Box<Node> nodes}) async {
   final currentVersion =
       sharedPreferences.getInt('current_default_settings_migration_version') ??
           0;
@@ -63,7 +63,7 @@ Future defaultSettingsMigration(
       'current_default_settings_migration_version', version);
 }
 
-Future<void> replaceNodesMigration({@required Box<Node> nodes}) async {
+Future<void> replaceNodesMigration({required Box<Node> nodes}) async {
   final replaceNodes = <String, Node>{
     'publicnode1.rpcnode.stream:29095':
     Node(uri: 'publicnode1.rpcnode.stream:29095'),
@@ -94,8 +94,8 @@ Future<void> replaceNodesMigration({@required Box<Node> nodes}) async {
 }
 
 Future<void> changeCurrentNodeToDefault(
-    {@required SharedPreferences sharedPreferences,
-      @required Box<Node> nodes}) async {
+    {required SharedPreferences sharedPreferences,
+      required Box<Node> nodes}) async {
   final timeZone = DateTime.now().timeZoneOffset.inHours;
   var nodeUri = '';
 
@@ -118,8 +118,8 @@ Future<void> changeCurrentNodeToDefault(
     nodeUri = 'publicnode1.rpcnode.stream:29095';
   }
 
-  final node = nodes.values.firstWhere((Node node) => node.uri == nodeUri) ??
-      nodes.values.first;
+  final node = nodes.values.firstWhere((Node node) => node.uri == nodeUri,
+     orElse:()=> nodes.values.first);
   final nodeId = node != null ? node.key as int : 0; // 0 - England
   /*print('nodeId 1 -> $nodeUri');
   print('nodeId 2 -> ${node!=null}');
@@ -131,8 +131,8 @@ Future<void> changeCurrentNodeToDefault(
 }
 
 Future<void> replaceDefaultNode(
-    {@required SharedPreferences sharedPreferences,
-      @required Box<Node> nodes}) async {
+    {required SharedPreferences sharedPreferences,
+      required Box<Node> nodes}) async {
   const nodesForReplace = <String>[
     'publicnode1.rpcnode.stream:29095',
     'explorer.beldex.io:19091',

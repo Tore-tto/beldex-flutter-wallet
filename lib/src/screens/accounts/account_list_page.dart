@@ -1,3 +1,4 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/screens/accounts/create_account_dialog.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/routes.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
+
 import 'package:beldex_wallet/src/stores/account_list/account_list_store.dart';
 import 'package:beldex_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
@@ -17,7 +18,7 @@ import 'package:beldex_wallet/src/util/constants.dart' as constants;
 
 class AccountListPage extends BasePage {
   @override
-  String get title => S.current.accounts;
+  String getTitle(AppLocalizations t) => t.accounts;
 
   @override
   Widget trailing(BuildContext context) {
@@ -64,7 +65,7 @@ class AccountListPage extends BasePage {
               thickness: 8,
               thumbColor: settingsStore.isDarkTheme ? Color(0xff3A3A45) : Color(0xffC2C2C2),
               radius: Radius.circular(10.0),
-              isAlwaysShown: true,
+              thumbVisibility: true,
               child: ListView.builder(
                    controller: _controller,
                   itemCount: accounts == null ? 0 : accounts.length,
@@ -83,14 +84,13 @@ class AccountListPage extends BasePage {
                         ),
                         child: Slidable(
                           key: Key(account.id.toString()),
-                          actionPane: SlidableDrawerActionPane(),
-                          secondaryActions: <Widget>[
-                            IconSlideAction(
-                              caption: S.of(context).edit,
-                              color: Colors.blue,
+                          endActionPane: ActionPane(motion: DrawerMotion(), children:[
+                            SlidableAction(
+                              label:tr(context).edit,
                               icon: Icons.edit,
-                              onTap: (){
-                                showDialog<void>(context: context, builder: (_){
+                              backgroundColor: Colors.blue,
+                              onPressed: (context){
+                                  showDialog<void>(context: context, builder: (_){
                                   return CreateAccountDialog(account: account,accList: accounts,);
                                 });
                                 // await Navigator.of(context).pushNamed(
@@ -99,9 +99,8 @@ class AccountListPage extends BasePage {
                                  accountListStore.updateAccountList();//.then((_) {
                                  // if (isCurrent) walletStore.setAccount(accountListStore.accounts[index]);
                                // });
-                              },
-                            )
-                          ],
+                            })
+                          ]),
                           child: InkWell(
                             onTap: () {
                               if(isCurrent){
@@ -175,8 +174,8 @@ class AccountListPage extends BasePage {
     );
   }
 
-  Future<bool> onConfirmation(BuildContext context, WalletStore walletStore, Account account, bool isCurrent) {
-    return showDialog(
+  Future<bool?> onConfirmation(BuildContext context, WalletStore walletStore, Account account, bool isCurrent) {
+    return showDialog<bool>(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
@@ -195,7 +194,7 @@ class AccountListPage extends BasePage {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      S.of(context).are_you_sure,
+                      tr(context).are_you_sure,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
@@ -204,7 +203,7 @@ class AccountListPage extends BasePage {
                       child: Text(
                         'Do you want to change your\n primary account?',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18,color: Theme.of(context).primaryTextTheme.caption.color),
+                        style: TextStyle(fontSize: 18,color: Theme.of(context).primaryTextTheme.caption!.color),
                       ),
                     ),
                     SizedBox(
@@ -226,7 +225,7 @@ class AccountListPage extends BasePage {
                                 Navigator.of(context).pop(false);
                               },
                               child: Text(
-                                S.of(context).no,
+                                tr(context).no,
                                 style: TextStyle(fontSize: 18,fontWeight:FontWeight.w800,color: settingsStore.isDarkTheme ?Color(0xff93939B): Color(0xff222222), ),
                               ),
                             ),
@@ -246,7 +245,7 @@ class AccountListPage extends BasePage {
                                 Navigator.of(context).pop(true);
                               },
                               child: Text(
-                                S.of(context).yes,
+                                tr(context).yes,
                                 style: TextStyle(color: Color(0xffffffff),fontSize: 18,fontWeight:FontWeight.w800),
                               ),
                             ),

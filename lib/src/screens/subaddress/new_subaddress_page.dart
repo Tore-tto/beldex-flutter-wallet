@@ -1,11 +1,11 @@
 import 'dart:ui';
 
+import 'package:beldex_wallet/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobx/mobx.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 import 'package:beldex_wallet/src/stores/subaddress_creation/subaddress_creation_state.dart';
 import 'package:beldex_wallet/src/stores/subaddress_creation/subaddress_creation_store.dart';
@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 
 class NewSubaddressPage extends BasePage {
   @override
-  String get title => S.current.receive;
+  String getTitle(AppLocalizations t) => t.receive;
 
   @override
   Widget leading(BuildContext context) {
@@ -85,9 +85,9 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
                 Center(
                   child: BeldexTextField(
                       controller: _labelController,
-                      hintText: S.of(context).new_subaddress_label_name,
+                      hintText: tr(context).new_subaddress_label_name,
                       validator: (value) {
-                        subaddressCreationStore.validateSubaddressName(value);
+                        subaddressCreationStore.validateSubaddressName(value!);
                         return subaddressCreationStore.errorMessage;
                       }),
                 ),
@@ -98,15 +98,15 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
             width: 250,
             child: LoadingPrimaryButton(
                 onPressed: () async {
-                  if (_formKey.currentState.validate()) {
+                  if (_formKey.currentState!.validate()) {
                     await subaddressCreationStore.add(label: _labelController.text);
                     Navigator.of(context).pop();
                   }
                 },
-                text: S.of(context).new_subaddress_create,
-                color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+                text: tr(context).new_subaddress_create,
+                color: Theme.of(context).primaryTextTheme.button!.backgroundColor!,
                 borderColor:
-                Theme.of(context).primaryTextTheme.button.backgroundColor,
+                Theme.of(context).primaryTextTheme.button!.backgroundColor!,
                 isLoading: subaddressCreationStore.state is SubaddressIsCreating),
           ),
         )

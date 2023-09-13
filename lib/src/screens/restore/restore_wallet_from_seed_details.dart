@@ -1,3 +1,4 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:beldex_wallet/src/wallet/beldex/get_height_by_date.dart';
 import 'package:beldex_wallet/src/widgets/nospaceformatter.dart';
@@ -7,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/stores/wallet_restoration/wallet_restoration_store.dart';
 import 'package:beldex_wallet/src/stores/wallet_restoration/wallet_restoration_state.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
@@ -48,8 +48,8 @@ class _RestoreFromSeedDetailsFormState
   final _formKey = GlobalKey<FormState>();
   final _blockchainHeightKey = GlobalKey<BlockchainHeightState>();
   final _nameController = TextEditingController();
-  String heighterrorMessage; 
-  ReactionDisposer restoreSeedDisposer;
+  String? heighterrorMessage; 
+  ReactionDisposer? restoreSeedDisposer;
 
 
  @override
@@ -76,9 +76,9 @@ class _RestoreFromSeedDetailsFormState
                 return AlertDialog(
                   content: Text(state.error),
                   actions: <Widget>[
-                    FlatButton(
+                    TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text(S.of(context).ok),
+                      child: Text(tr(context).ok),
                     ),
                   ],
                 );
@@ -103,7 +103,7 @@ class _RestoreFromSeedDetailsFormState
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(S.of(context).enterWalletName,style: TextStyle(fontSize:MediaQuery.of(context).size.height*0.07/3,color: settingsStore.isDarkTheme ? Color(0xffEBEBEB) : Color(0xff373737)
+                          Text(tr(context).enterWalletName,style: TextStyle(fontSize:MediaQuery.of(context).size.height*0.07/3,color: settingsStore.isDarkTheme ? Color(0xffEBEBEB) : Color(0xff373737)
                           ,fontWeight: FontWeight.w800),),
                         ],
                       ),
@@ -126,13 +126,13 @@ class _RestoreFromSeedDetailsFormState
                                   border: InputBorder.none,
                                     hintStyle: TextStyle(
                                         color: settingsStore.isDarkTheme ? Color(0xff77778B) : Color(0xff6F6F6F)),
-                                    hintText: S.of(context).enter_restore_wallet_name,
+                                    hintText: tr(context).enterWalletName_,
                                 errorStyle: TextStyle(height: 0.1)
                                 ),
-                                onChanged: (val)=> _formKey.currentState.validate(),
+                                onChanged: (val)=> _formKey.currentState!.validate(),
                                 validator: (value) {
                                   walletRestorationStore
-                                      .validateWalletName(value);
+                                      .validateWalletName(value!,tr(context));
                                   return walletRestorationStore.errorMessage;
                                 },
                             ),
@@ -154,8 +154,8 @@ class _RestoreFromSeedDetailsFormState
               //  if(blockheightValue.isNotEmpty && numberRegex.hasMatch(blockheightValue)){
                  
               //  }
-              if (_formKey.currentState.validate()) {
-               if(_formKey2.currentState.validate()){
+              if (_formKey.currentState!.validate()) {
+               if(_formKey2.currentState!.validate()){
                  walletRestorationStore.restoreFromSeed(
                     name: _nameController.text,
                     restoreHeight: height);
@@ -170,10 +170,10 @@ class _RestoreFromSeedDetailsFormState
               }
             },
             isLoading: walletRestorationStore.state is WalletIsRestoring,
-            text: S.of(context).restore_recover,
-            color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+            text: tr(context).restore_recover,
+            color: Theme.of(context).primaryTextTheme.button!.backgroundColor!,
             borderColor:
-                Theme.of(context).primaryTextTheme.button.backgroundColor);
+                Theme.of(context).primaryTextTheme.button!.backgroundColor!);
       }),
     );
   }
@@ -186,7 +186,7 @@ class _RestoreFromSeedDetailsFormState
 
 
 class BlockHeightSwapingWidget extends StatefulWidget {
-  const BlockHeightSwapingWidget({Key key}) : super(key: key);
+  const BlockHeightSwapingWidget({Key? key}) : super(key: key);
 
   @override
   State<BlockHeightSwapingWidget> createState() =>
@@ -245,12 +245,12 @@ restoreHeightController.text = '';
                                     ? Color(0xff77778B)
                                     : Color(0xff77778B)),
                             hintText:
-                                S.of(context).widgets_restore_from_blockheight,
+                                tr(context).widgets_restore_from_blockheight,
                             errorStyle: TextStyle(height: 0.1)
                           ),
                           validator: (value) {
                             final pattern = RegExp(r'^(?!.*\s)\d+$');
-                            if (!pattern.hasMatch(value)) {
+                            if (!pattern.hasMatch(value!)) {
                               return 'Enter valid height without space';
                             } else {
                               return null;
@@ -309,11 +309,11 @@ restoreHeightController.text = '';
                                               ? Color(0xff77778B)
                                               : Color(0xff77778B)),
                                       hintText:
-                                          S.of(context).widgets_restore_from_date,
+                                          tr(context).widgets_restore_from_date,
                                     ),
                                     controller: dateController,
                                     validator: (value) {
-                                      if (value.isEmpty) {
+                                      if (value!.isEmpty) {
                                         return 'Date should not be empty';
                                       } else {
                                         return null;
@@ -352,8 +352,8 @@ restoreHeightController.text = '';
                     children: [
                       Text(
                           isRestoreByHeight
-                              ? S.of(context).widgets_restore_from_date
-                              : S.of(context).widgets_restore_from_blockheight,
+                              ? tr(context).widgets_restore_from_date
+                              : tr(context).widgets_restore_from_blockheight,
                           style: TextStyle(
                               color: Color(0xffffffff),
                               fontSize: 14,

@@ -18,20 +18,17 @@ class BalanceStore = BalanceStoreBase with _$BalanceStore;
 
 abstract class BalanceStoreBase with Store {
   BalanceStoreBase(
-      {String fullBalance = '0.0',
-      String unlockedBalance = '0.0',
-      @required WalletService walletService,
-      @required SettingsStore settingsStore,
-      @required PriceStore priceStore}) {
-    fullBalance = fullBalance;
-    unlockedBalance = unlockedBalance;
-    isReversing = false;
-    _walletService = walletService;
-    _settingsStore = settingsStore;
-    _priceStore = priceStore;
+      {
+      required WalletService walletService,
+      required SettingsStore settingsStore,
+      required PriceStore priceStore}):
+    _walletService = walletService,
+    _settingsStore = settingsStore,
+    _priceStore = priceStore {
+
 
     if (_walletService.currentWallet != null) {
-      _onWalletChanged(_walletService.currentWallet);
+      _onWalletChanged(_walletService.currentWallet!);
     }
 
     _onWalletChangeSubscription = _walletService.onWalletChange
@@ -39,63 +36,46 @@ abstract class BalanceStoreBase with Store {
   }
 
   @observable
-  int fullBalance;
+  int fullBalance = 0;
 
   @observable
-  int unlockedBalance;
+  int unlockedBalance=0;
 
   @computed
   String get fullBalanceString {
-    if (fullBalance == null) {
-      return belDexAmountToString(0, detail: _settingsStore.balanceDetail);
-    }
-
     return belDexAmountToString(fullBalance, detail: _settingsStore.balanceDetail);
   }
 
   @computed
   String get unlockedBalanceString {
-    if (unlockedBalance == null) {
-      return belDexAmountToString(0, detail: _settingsStore.balanceDetail);
-    }
-
     return belDexAmountToString(unlockedBalance, detail: _settingsStore.balanceDetail);
   }
 
   @computed
   String get fiatFullBalance {
-    if (fullBalance == null) {
-      print('fullBalance == null');
-      return '0.00';
-    }
-
-    final symbol = PriceStoreBase.generateSymbolForPair(
-        fiat: _settingsStore.fiatCurrency, crypto: CryptoCurrency.bdx);
+    final symbol = PriceStoreBase.generateSymbolForFiat(
+        fiat: _settingsStore.fiatCurrency);
     final price = _priceStore.prices[symbol];
-    return calculateFiatAmount(price: price, cryptoAmount: fullBalance);
+    return calculateFiatAmount(price: price!, cryptoAmount: fullBalance);
   }
 
   @computed
   String get fiatUnlockedBalance {
-    if (unlockedBalance == null) {
-      print('unlockedBalance == null');
-      return '0.00';
-    }
-
-    final symbol = PriceStoreBase.generateSymbolForPair(
-        fiat: _settingsStore.fiatCurrency, crypto: CryptoCurrency.bdx);
+    final symbol = PriceStoreBase.generateSymbolForFiat(
+        fiat: _settingsStore.fiatCurrency);
     final price = _priceStore.prices[symbol];
-    return calculateFiatAmount(price: price, cryptoAmount: unlockedBalance);
+    return calculateFiatAmount(price: price!, cryptoAmount: unlockedBalance);
   }
 
-  @observable
-  bool isReversing;
+@observable
+bool isReversing = false;
 
-  WalletService _walletService;
-  StreamSubscription<Wallet> _onWalletChangeSubscription;
-  StreamSubscription<Balance> _onBalanceChangeSubscription;
-  SettingsStore _settingsStore;
-  PriceStore _priceStore;
+
+  final WalletService _walletService;
+  late StreamSubscription<Wallet> _onWalletChangeSubscription;
+  StreamSubscription<Balance>? _onBalanceChangeSubscription;
+  final SettingsStore _settingsStore;
+  final PriceStore _priceStore;
 
 //  @override
 //  void dispose() {
@@ -122,7 +102,7 @@ abstract class BalanceStoreBase with Store {
 
   Future _onWalletChanged(Wallet wallet) async {
     if (_onBalanceChangeSubscription != null) {
-      await _onBalanceChangeSubscription.cancel();
+      await _onBalanceChangeSubscription!.cancel();
     }
 
     _onBalanceChangeSubscription = _walletService.onBalanceChange
@@ -131,7 +111,7 @@ abstract class BalanceStoreBase with Store {
     await _updateBalances(wallet);
   }
 
-  Future _updateBalances(Wallet wallet) async {
+  Future _updateBalances(Wallet? wallet) async {
     if (wallet == null) {
       return;
     }

@@ -32,7 +32,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 32 //31
+    compileSdkVersion 33 //31
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -44,9 +44,8 @@ android {
 
     defaultConfig {
         applicationId "io.beldex.wallet"
-        //applicationId "com.mymonero.new_beldex_wallet"
-        minSdkVersion 23 //21
-        targetSdkVersion 31
+        minSdkVersion 21 //21
+        targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
 
@@ -75,9 +74,9 @@ android {
             //signingConfig signingConfigs.release //important
 
             minifyEnabled true
-            useProguard true
-
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            useProguard true
+//
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }

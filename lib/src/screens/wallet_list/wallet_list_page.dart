@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/screens/wallet_list/wallet_option_dialog.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:beldex_wallet/routes.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/wallet/wallet_description.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 import 'package:beldex_wallet/src/stores/wallet_list/wallet_list_store.dart';
@@ -18,7 +18,7 @@ import '../../loading_page.dart';
 class WalletListPage extends BasePage {
 
   @override
-  String get title => S.current.wallets;
+  String getTitle(AppLocalizations t) => t.wallets;
 
   @override
   Widget trailing(BuildContext context) {
@@ -35,7 +35,7 @@ class WalletListBody extends StatefulWidget {
 }
 
 class WalletListBodyState extends State<WalletListBody> {
-  WalletListStore _walletListStore;
+  WalletListStore? _walletListStore;
   var isAuthenticatedSuccessfully = false;
 // final _scrollController = ScrollController(keepScrollOffset: true);
   Future<void> presetMenuForWallet(WalletDescription wallet, BuildContext bodyContext) async {
@@ -47,7 +47,7 @@ class WalletListBodyState extends State<WalletListBody> {
         WalletAlertDialog(
           onItemSelected: (int item) =>
             walletMenu.action(item, wallet))).then((value){
-      isAuthenticatedSuccessfully = value;
+      isAuthenticatedSuccessfully = value!;
     });
   }
 
@@ -66,7 +66,7 @@ class WalletListBodyState extends State<WalletListBody> {
     //     );
     //   },
     // );
-      Navigator.pushReplacement(context,MaterialPageRoute<void>(builder: (context)=>LoadingPage(wallet:wallet,walletListStore: _walletListStore)));
+      Navigator.pushReplacement(context,MaterialPageRoute<void>(builder: (context)=>LoadingPage(wallet:wallet,walletListStore: _walletListStore!)));
     }
   }
 
@@ -121,11 +121,11 @@ class WalletListBodyState extends State<WalletListBody> {
                           // separatorBuilder: (_, index) =>
                           //     Divider(color: Colors.transparent,
                           //         height: 10.0),
-                          itemCount: _walletListStore.wallets.length,
+                          itemCount: _walletListStore!.wallets.length,
                           itemBuilder: (__, index) {
-                            final wallet = _walletListStore.wallets[index];
+                            final wallet = _walletListStore!.wallets[index];
                             final isCurrentWallet =
-                            _walletListStore.isCurrentWallet(wallet);
+                            _walletListStore!.isCurrentWallet(wallet);
 
                             return InkWell(
                                 onTap: () async {
@@ -225,7 +225,7 @@ class WalletListBodyState extends State<WalletListBody> {
           TextButton.icon(
             style: ElevatedButton.styleFrom(
                 side: BorderSide(
-                  color:Theme.of(context).accentTextTheme.caption.decorationColor,
+                  color:Theme.of(context).accentTextTheme.caption!.decorationColor!,
                 ),
                 alignment: Alignment.centerLeft,
                 primary: Color(0xff2979FB),
@@ -254,8 +254,8 @@ class WalletListBodyState extends State<WalletListBody> {
             },
             label: Padding(
               padding: const EdgeInsets.only(left:12.0),
-              child: Text(S
-                  .of(context)
+              child: Text(
+                  tr(context)
                   .wallet_list_restore_wallet,style: TextStyle(fontSize: 16,color: Color(0xffffffff),fontWeight:FontWeight.w800),),
             ),
           ),
@@ -274,8 +274,8 @@ class WalletListBodyState extends State<WalletListBody> {
               borderRadius: BorderRadius.circular(10),
             ),
             child:Center(
-              child:Text(S
-                    .of(context)
+              child:Text(
+                    tr(context)
                     .wallet_list_create_new_wallet,style: TextStyle(fontSize: 16,color: Color(0xffffffff),fontWeight:FontWeight.w800),)
             )
           ),
@@ -292,7 +292,7 @@ class WalletListBodyState extends State<WalletListBody> {
 class LoadingScreen extends StatelessWidget {
    final WalletDescription wallet;
   final WalletListStore walletListStore;
-   LoadingScreen({ Key key, this.wallet, this.walletListStore }) : super(key: key);
+   LoadingScreen({ Key? key,required this.wallet,required this.walletListStore }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,9 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/screens/rescan/rescan_page.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/src/wallet/mnemotic_item.dart';
 import 'package:beldex_wallet/src/wallet/beldex/mnemonics/chinese_simplified.dart';
@@ -24,7 +24,7 @@ final List<String> _englishWords =
     EnglishMnemonics.words + EnglishOldMnemonics.words;
 
 class SeedWidget extends StatefulWidget {
-  SeedWidget({Key key, this.onMnemoticChange, this.onFinish, this.seedLanguage})
+  SeedWidget({required Key key,required this.onMnemoticChange,required this.onFinish,required this.seedLanguage})
       : super(key: key) {
     switch (seedLanguage) {
       case 'English':
@@ -65,7 +65,7 @@ class SeedWidget extends StatefulWidget {
   final Function(List<MnemoticItem>) onMnemoticChange;
   final Function() onFinish;
   final String seedLanguage;
-  List<String> words;
+  late final List<String> words;
 
   @override
   SeedWidgetState createState() => SeedWidgetState();
@@ -77,14 +77,14 @@ class SeedWidgetState extends State<SeedWidget> {
   List<MnemoticItem> items = <MnemoticItem>[];
   final _seedController = TextEditingController();
   final _seedTextFieldKey = GlobalKey();
-  MnemoticItem selectedItem;
-  bool isValid;
-  String errorMessage;
+  MnemoticItem? selectedItem;
+  bool isValid = false;
+  String? errorMessage;
   int maxWordCount = 25;
   int wordCount = 0;
-  List<MnemoticItem> currentMnemotics;
-  bool isCurrentMnemoticValid;
-  String _errorMessage;
+  List<MnemoticItem>? currentMnemotics;
+  bool isCurrentMnemoticValid = false;
+  String? _errorMessage;
   String _errorMessage1 = '';
 
   @override
@@ -146,7 +146,7 @@ class SeedWidgetState extends State<SeedWidget> {
   }
 
   void editTextOfSelectedMnemotic(String text) {
-    setState(() => selectedItem.changeText(text));
+    setState(() => selectedItem!.changeText(text));
     selectedItem = null;
     _seedController.text = '';
 
@@ -203,7 +203,7 @@ class SeedWidgetState extends State<SeedWidget> {
 
       var isValid = true;
 
-      for (final word in currentMnemotics) {
+      for (final word in currentMnemotics!) {
         isValid = word.isCorrect();
 
         if (!isValid) {
@@ -218,10 +218,10 @@ class SeedWidgetState extends State<SeedWidget> {
   void saveCurrentMnemoticToItems() {
     setState(() {
       if (selectedItem != null) {
-        selectedItem.changeText(currentMnemotics.first.text.trim());
+        selectedItem!.changeText(currentMnemotics!.first.text.trim());
         selectedItem = null;
       } else {
-        items.addAll(currentMnemotics);
+        items.addAll(currentMnemotics!);
         //_seedController.text = items.join(', ');
       }
 
@@ -232,21 +232,24 @@ class SeedWidgetState extends State<SeedWidget> {
 
   void showErrorIfExist() {
     setState(() => _errorMessage =
-        !isCurrentMnemoticValid ? S.current.incorrect_seed : null);
+        !isCurrentMnemoticValid! ? tr(context).incorrect_seed : null);
   }
 
   bool isSeedValid() {
-    bool isValid;
+   // bool isValid;
 
     for (final item in items) {
-      isValid = item.isCorrect();
+      // isValid = item.isCorrect();
 
-      if (!isValid) {
-        break;
+      // if (!isValid) {
+      //   break;
+      // }
+      if(!item.isCorrect()){
+        return false;
       }
     }
 
-    return isValid;
+    return true;
   }
 
   @override
@@ -319,7 +322,7 @@ class SeedWidgetState extends State<SeedWidget> {
                             TextFormField(
                               key: _seedTextFieldKey,
                               maxLines: 5,
-                              onFieldSubmitted: (text) => isCurrentMnemoticValid
+                              onFieldSubmitted: (text) => isCurrentMnemoticValid!
                                   ? saveCurrentMnemoticToItems()
                                   : null,
                               style: TextStyle(fontSize: 16.0),
@@ -374,7 +377,7 @@ class SeedWidgetState extends State<SeedWidget> {
                                 hintStyle: TextStyle(
                                     color: Colors.grey.withOpacity(0.6)),
                                 hintText:
-                                    S.of(context).restore_from_seed_placeholder,
+                                    tr(context).restore_from_seed_placeholder,
                                 errorText: _errorMessage,
                                 /*focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
@@ -430,7 +433,7 @@ class SeedWidgetState extends State<SeedWidget> {
                                   onTap: () async {
                                     await Clipboard.getData('text/plain').then(
                                         (clipboard) =>
-                                            replaceText(clipboard.text));
+                                            replaceText(clipboard!.text!));
                                     setState(() {
                                       wordCount = _seedController.text
                                           .split(' ')
@@ -533,7 +536,7 @@ class SeedWidgetState extends State<SeedWidget> {
                             } else {
                               print('inside second else --->');
                               setState(() {
-                                _errorMessage1 = S.of(context).pleaseEnterAValidSeed;
+                                _errorMessage1 = tr(context).pleaseEnterAValidSeed;
                               });
                               return null;
                             }
@@ -545,7 +548,7 @@ class SeedWidgetState extends State<SeedWidget> {
                                   color: Color(0xff0BA70F),
                                   borderRadius: BorderRadius.circular(10)),
                               alignment: Alignment.center,
-                              child: Text(S.of(context).restore_next,
+                              child: Text(tr(context).restore_next,
                                   style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w700,

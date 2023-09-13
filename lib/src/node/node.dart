@@ -9,7 +9,7 @@ part 'node.g.dart';
 
 @HiveType(typeId: 1)
 class Node extends HiveObject {
-  Node({@required this.uri, this.login, this.password});
+  Node({required this.uri, this.login, this.password});
 
   Node.fromMap(Map map)
       : uri = (map['uri'] ?? '') as String,
@@ -22,10 +22,10 @@ class Node extends HiveObject {
   String uri;
 
   @HiveField(1)
-  String login;
+  String? login;
 
   @HiveField(2)
-  String password;
+  String? password;
 
   Future<bool> isOnline() async {
     final resBody = await sendRPCRequest('get_info');
@@ -33,17 +33,17 @@ class Node extends HiveObject {
   }
 
   Future<Map<String, dynamic>> sendRPCRequest(String method,
-      {Map params}) async {
+      {Map? params}) async {
     Map<String, dynamic> resultBody;
 
     final requestBody = params != null
         ? {'jsonrpc': '2.0', 'id': '0', 'method': method, 'params': params}
         : {'jsonrpc': '2.0', 'id': '0', 'method': method};
 
-    if (login != null && password != null && login.isNotEmpty && password.isNotEmpty) {
+    if (login != null && password != null && login!.isNotEmpty && password!.isNotEmpty) {
       final digestRequest = DigestRequest();
       final response = await digestRequest.request(
-          uri: uri, login: login, password: password, requestBody: requestBody);
+          uri: uri, login: login!, password: password!, requestBody: requestBody);
       resultBody = response.data as Map<String, dynamic>;
     } else {
       final url = Uri.http(uri, '/json_rpc');

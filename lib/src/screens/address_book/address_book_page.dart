@@ -1,16 +1,17 @@
+import 'dart:ffi';
+
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:beldex_wallet/src/widgets/showSnackBar.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/routes.dart';
-import 'package:beldex_wallet/src/domain/common/crypto_currency.dart';
+//import 'package:beldex_wallet/src/domain/common/crypto_currency.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 import 'package:beldex_wallet/src/stores/address_book/address_book_store.dart';
 import 'package:beldex_wallet/src/widgets/beldex_dialog.dart';
@@ -23,11 +24,11 @@ class AddressBookPage extends BasePage {
   final bool isEditable;
 
   @override
-  String get title => S.current.address_book;
+  String getTitle(AppLocalizations t) => t.address_book;
 
   @override
-  Widget trailing(BuildContext context) {
-    if (!isEditable) return null;
+  Widget? trailing(BuildContext context) {
+    if (isEditable) return null;
     final addressBookStore = Provider.of<AddressBookStore>(context);
     return InkWell(
       onTap: () async {
@@ -46,8 +47,7 @@ class AddressBookPage extends BasePage {
             Icons.add,
             color: Color(0xffffffff),
             size: 26,
-          )
-          ),
+          )),
     );
   }
 
@@ -105,7 +105,8 @@ class AddressBookPage extends BasePage {
                                                 0.55 /
                                                 3,
                                         width: double.infinity,
-                                        margin: EdgeInsets.only(left:15.0,right: 15,top: 10),
+                                        margin: EdgeInsets.only(
+                                            left: 15.0, right: 15, top: 10),
                                         padding: EdgeInsets.all(10),
                                         decoration: BoxDecoration(
                                             border: Border.all(
@@ -143,23 +144,24 @@ class AddressBookPage extends BasePage {
                                                     ),
                                                   ),
                                                   InkWell(
-                                                     onTap: () {
-                                                       Navigator.of(context).pop(contact);
-                                                     },
-                                                     child: Padding(
-                                                       padding:
-                                                           const EdgeInsets.only(
-                                                               right: 8.0),
-                                                       child: SvgPicture.asset(
-                                                           'assets/images/new-images/send.svg',
-                                                           color: settingsStore
-                                                                   .isDarkTheme
-                                                               ? Color(
-                                                                   0xffffffff)
-                                                               : Color(
-                                                                   0xff16161D)),
-                                                     ),
-                                                   )
+                                                    onTap: () {
+                                                      Navigator.of(context)
+                                                          .pop(contact);
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 8.0),
+                                                      child: SvgPicture.asset(
+                                                          'assets/images/new-images/send.svg',
+                                                          color: settingsStore
+                                                                  .isDarkTheme
+                                                              ? Color(
+                                                                  0xffffffff)
+                                                              : Color(
+                                                                  0xff16161D)),
+                                                    ),
+                                                  )
                                                 ],
                                               ),
                                             ),
@@ -167,9 +169,13 @@ class AddressBookPage extends BasePage {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(contact.address,
-                                              
                                                   style: TextStyle(
-                                                     fontSize: MediaQuery.of(context).size.height*0.05/3,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.05 /
+                                                              3,
                                                       color: settingsStore
                                                               .isDarkTheme
                                                           ? Color(0xffFFFFFF)
@@ -179,55 +185,64 @@ class AddressBookPage extends BasePage {
                                         ))
                                     : Slidable(
                                         key: Key('${contact.key}'),
-                                        actionPane: SlidableDrawerActionPane(),
-                                        secondaryActions: <Widget>[
-                                          IconSlideAction(
-                                            caption: 'Edit',
-                                            color: Colors.blue,
-                                            foregroundColor: settingsStore.isDarkTheme? Color(0xff171720) : Color(0xffffffff),
-                                            icon: Icons.edit,
-                                            onTap: () async {
-                                              await Navigator.of(context)
-                                                  .pushNamed(
-                                                      Routes
-                                                          .addressBookAddContact,
-                                                      arguments: contact);
-                                              await addressBookStore
-                                                  .updateContactList();
-                                            },
-                                          ),
-                                          IconSlideAction(
-                                            caption: 'Delete',
-                                            color: Colors.red,
-                                            foregroundColor:settingsStore.isDarkTheme? Color(0xff171720) : Color(0xffffffff),
-                                            icon: CupertinoIcons.delete,
-                                            onTap: () async {
-                                              await showAlertDialog(context)
-                                                  .then((isDelete) async {
-                                                if (isDelete != null &&
-                                                    isDelete) {
-                                                  await addressBookStore.delete(
-                                                      contact: contact);
+                                        endActionPane: ActionPane(
+                                            motion: const DrawerMotion(),
+                                            children: [
+                                              SlidableAction(
+                                                label: 'Edit',
+                                                backgroundColor: Colors.blue,
+                                                foregroundColor:
+                                                    settingsStore.isDarkTheme
+                                                        ? Color(0xff171720)
+                                                        : Color(0xffffffff),
+                                                icon: Icons.edit,
+                                                onPressed: (context) async {
+                                                  await Navigator.of(context)
+                                                      .pushNamed(
+                                                          Routes
+                                                              .addressBookAddContact,
+                                                          arguments: contact);
                                                   await addressBookStore
                                                       .updateContactList();
-                                                }
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                        dismissal: SlidableDismissal(
-                                          child: SlidableDrawerDismissal(),
-                                          onDismissed: (actionType) async {
-                                            await addressBookStore.delete(
-                                                contact: contact);
-                                            await addressBookStore
-                                                .updateContactList();
-                                          },
-                                          onWillDismiss: (actionType) async {
-                                            return await showAlertDialog(
-                                                context);
-                                          },
-                                        ),
+                                                },
+                                              ),
+                                              SlidableAction(
+                                                label: 'Delete',
+                                                backgroundColor: Colors.red,
+                                                icon: CupertinoIcons.delete,
+                                                foregroundColor:
+                                                    settingsStore.isDarkTheme
+                                                        ? Color(0xff171720)
+                                                        : Color(0xffffffff),
+                                                onPressed: (context) async {
+                                                  await showAlertDialog(context)
+                                                      .then((isDelete) async {
+                                                    if (isDelete) {
+                                                      await addressBookStore
+                                                          .delete(
+                                                              contact: contact);
+                                                      await addressBookStore
+                                                          .updateContactList();
+                                                    }
+                                                  });
+                                                },
+                                              ),
+                                            ]),
+                                        startActionPane: ActionPane(
+                                            motion: const DrawerMotion(),
+                                            dismissible: DismissiblePane(
+                                              onDismissed: () async {
+                                                await addressBookStore.delete(
+                                                    contact: contact);
+                                                await addressBookStore
+                                                    .updateContactList();
+                                              },
+                                              confirmDismiss: () async {
+                                                return await showAlertDialog(
+                                                    context);
+                                              },
+                                            ),
+                                            children: []),
                                         child: Container(
                                             height: MediaQuery.of(context)
                                                     .size
@@ -235,7 +250,8 @@ class AddressBookPage extends BasePage {
                                                 0.55 /
                                                 3,
                                             width: double.infinity,
-                                            margin: EdgeInsets.only(left:15.0,right: 15,top: 10),
+                                            margin: EdgeInsets.only(
+                                                left: 15.0, right: 15, top: 10),
                                             padding: EdgeInsets.all(10),
                                             decoration: BoxDecoration(
                                                 border: Border.all(
@@ -283,10 +299,10 @@ class AddressBookPage extends BasePage {
                                                                       .address));
                                                           displaySnackBar(
                                                               context,
-                                                              S
-                                                                  .of(context)
-                                                                  .copied);
-                                                                  print('address copied');
+                                                              'Copied'
+                                                            );
+                                                          print(
+                                                              'address copied');
                                                         },
                                                         child: Padding(
                                                           padding:
@@ -311,7 +327,12 @@ class AddressBookPage extends BasePage {
                                                       const EdgeInsets.all(8.0),
                                                   child: Text(contact.address,
                                                       style: TextStyle(
-                                                        fontSize: MediaQuery.of(context).size.height*0.05/3,
+                                                          fontSize: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.05 /
+                                                              3,
                                                           color: settingsStore
                                                                   .isDarkTheme
                                                               ? Color(
@@ -329,74 +350,6 @@ class AddressBookPage extends BasePage {
           );
   }
 
-  Color _getCurrencyBackgroundColor(CryptoCurrency currency) {
-    Color color;
-    switch (currency) {
-      case CryptoCurrency.bdx:
-        color = BeldexPalette.tealWithOpacity;
-        break;
-      case CryptoCurrency.ada:
-        color = Colors.blue[200];
-        break;
-      case CryptoCurrency.bch:
-        color = Colors.orangeAccent;
-        break;
-      case CryptoCurrency.bnb:
-        color = Colors.blue;
-        break;
-      case CryptoCurrency.btc:
-        color = Colors.orange;
-        break;
-      case CryptoCurrency.dash:
-        color = Colors.blue;
-        break;
-      case CryptoCurrency.eos:
-        color = Colors.orangeAccent;
-        break;
-      case CryptoCurrency.eth:
-        color = Colors.black;
-        break;
-      case CryptoCurrency.ltc:
-        color = Colors.blue[200];
-        break;
-      case CryptoCurrency.nano:
-        color = Colors.orange;
-        break;
-      case CryptoCurrency.trx:
-        color = Colors.black;
-        break;
-      case CryptoCurrency.usdt:
-        color = Colors.blue[200];
-        break;
-      case CryptoCurrency.xlm:
-        color = color = Colors.blue;
-        break;
-      case CryptoCurrency.xrp:
-        color = Colors.orangeAccent;
-        break;
-      default:
-        color = Colors.white;
-    }
-    return color;
-  }
-
-  Color _getCurrencyTextColor(CryptoCurrency currency) {
-    Color color;
-    switch (currency) {
-      case CryptoCurrency.xmr:
-        color = BeldexPalette.teal;
-        break;
-      case CryptoCurrency.ltc:
-      case CryptoCurrency.ada:
-      case CryptoCurrency.usdt:
-        color = Palette.lightBlue;
-        break;
-      default:
-        color = Colors.white;
-    }
-    return color;
-  }
-
   Future<bool> showAlertDialog(BuildContext context) async {
     var result = false;
     await showConfirmBeldexDialog(context, 'Remove contact',
@@ -405,7 +358,7 @@ class AddressBookPage extends BasePage {
         onConfirm: (context) {
           result = true;
           Navigator.pop(context, true);
-          return true;
+          //return result;
         });
     return result;
   }

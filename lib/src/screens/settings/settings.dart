@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+//import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:beldex_wallet/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/routes.dart';
 import 'package:beldex_wallet/src/domain/common/balance_display_mode.dart';
@@ -33,7 +33,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends BasePage {
   @override
-  String get title => S.current.settings_title;
+  String getTitle(AppLocalizations t) => t.settings_title;
 
   @override
   Color get backgroundColor => Palette.lightGrey2;
@@ -82,27 +82,28 @@ class SettingsFormState extends State<SettingsForm> {
 
   void _setSettingsList() {
     final settingsStore = context.read<SettingsStore>();
+    final t = tr(context);
     _items.addAll([
       SettingsItem(
-          title: S.current.settings_nodes, attribute: Attributes.header),
+          title: t.settings_nodes, attribute: Attributes.header),
       SettingsItem(
           onTaped: () => Navigator.of(context).pushNamed(Routes.nodeList),
-          title: S.current.settings_current_node,
+          title: t.settings_current_node,
           widget: Observer(
               builder: (_) => Text(
-                    settingsStore.node == null ? '' : settingsStore.node.uri,
+                    settingsStore.node?.uri ?? '',
                     textAlign: TextAlign.right,
                     style: TextStyle(
                         fontSize: 16.0,
                         color:
-                            Theme.of(context).primaryTextTheme.headline6.color),
+                            Theme.of(context).primaryTextTheme.headline6!.color),
                   )),
           attribute: Attributes.arrow),
       SettingsItem(
-          title: S.current.settings_wallets, attribute: Attributes.header),
+          title: t.settings_wallets, attribute: Attributes.header),
       SettingsItem(
           onTaped: () => _setBalance(context),
-          title: S.current.settings_display_balance_as,
+          title: t.settings_display_balance_as,
           widget: Observer(
               builder: (_) => Text(
                     settingsStore.balanceDisplayMode.toString(),
@@ -110,12 +111,12 @@ class SettingsFormState extends State<SettingsForm> {
                     style: TextStyle(
                         fontSize: 16.0,
                         color:
-                            Theme.of(context).primaryTextTheme.headline6.color),
+                            Theme.of(context).primaryTextTheme.headline6!.color),
                   )),
           attribute: Attributes.link),
       SettingsItem(
           onTaped: () => _setBalanceDetail(context),
-          title: S.current.settings_balance_detail,
+          title: t.settings_balance_detail,
           widget: Observer(
               builder: (_) => Text(
                     settingsStore.balanceDetail.toString(),
@@ -123,15 +124,15 @@ class SettingsFormState extends State<SettingsForm> {
                     style: TextStyle(
                         fontSize: 16.0,
                         color:
-                            Theme.of(context).primaryTextTheme.headline6.color),
+                            Theme.of(context).primaryTextTheme.headline6!.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
-          title: S.current.settings_enable_fiat_currency,
+          title: t.settings_enable_fiat_currency,
           attribute: Attributes.switcher),
       SettingsItem(
           onTaped: () => _setCurrency(context),
-          title: S.current.settings_currency,
+          title: t.settings_currency,
           widget: Observer(
               builder: (_) => Text(
                     settingsStore.fiatCurrency.toString(),
@@ -139,12 +140,12 @@ class SettingsFormState extends State<SettingsForm> {
                     style: TextStyle(
                         fontSize: 16.0,
                         color:
-                            Theme.of(context).primaryTextTheme.headline6.color),
+                            Theme.of(context).primaryTextTheme.headline6!.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
           onTaped: () => _setTransactionPriority(context),
-          title: S.current.settings_fee_priority,
+          title: t.settings_fee_priority,
           widget: Observer(
               builder: (_) => Text(
                     settingsStore.transactionPriority.toString(),
@@ -152,14 +153,14 @@ class SettingsFormState extends State<SettingsForm> {
                     style: TextStyle(
                         fontSize: 16.0,
                         color:
-                            Theme.of(context).primaryTextTheme.headline6.color),
+                            Theme.of(context).primaryTextTheme.headline6!.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
-          title: S.current.settings_save_recipient_address,
+          title: t.settings_save_recipient_address,
           attribute: Attributes.switcher),
       SettingsItem(
-          title: S.current.settings_personal, attribute: Attributes.header),
+          title: t.settings_personal, attribute: Attributes.header),
       SettingsItem(
           onTaped: () {
             Navigator.of(context).pushNamed(Routes.auth,
@@ -172,19 +173,19 @@ class SettingsFormState extends State<SettingsForm> {
                                     Navigator.of(context).pop())
                         : null);
           },
-          title: S.current.settings_change_pin,
+          title: t.settings_change_pin,
           attribute: Attributes.arrow),
       SettingsItem(
           onTaped: () => Navigator.pushNamed(context, Routes.changeLanguage),
-          title: S.current.settings_change_language,
+          title: t.settings_change_language,
           attribute: Attributes.arrow),
       SettingsItem(
-          title: S.current.settings_allow_biometric_authentication,
+          title: t.settings_allow_biometric_authentication,
           attribute: Attributes.switcher),
       SettingsItem(
-          title: S.current.settings_dark_mode, attribute: Attributes.switcher),
+          title: t.settings_dark_mode, attribute: Attributes.switcher),
       SettingsItem(
-          title: S.current.settings_support, attribute: Attributes.header),
+          title: t.settings_support, attribute: Attributes.header),
       SettingsItem(
           onTaped: () => _launchUrl(_emailUrl),
           title: 'Email',
@@ -216,15 +217,15 @@ class SettingsFormState extends State<SettingsForm> {
                 CupertinoPageRoute<void>(
                     builder: (BuildContext context) => DisclaimerPage()));
           },
-          title: S.current.settings_terms_and_conditions,
+          title: t.settings_terms_and_conditions,
           attribute: Attributes.arrow),
       SettingsItem(
           onTaped: () => Navigator.pushNamed(context, Routes.faq),
-          title: S.current.faq,
+          title: t.faq,
           attribute: Attributes.arrow),
       SettingsItem(
           onTaped: () => Navigator.pushNamed(context, Routes.changelog),
-          title: S.current.changelog,
+          title:t.changelog,
           attribute: Attributes.arrow)
     ]);
     setState(() {});
@@ -236,12 +237,12 @@ class SettingsFormState extends State<SettingsForm> {
   TextEditingController searchCurrencyController = TextEditingController();
 
   //TextEditingController searchFeePriorityController = TextEditingController();
-  String decimalFilter;
-  String currencyFilter;
+  String? decimalFilter;
+  String? currencyFilter;
 
   //String feePriorityFilter;
 
-  LocalAuthentication auth;
+  LocalAuthentication? auth;
   List<BiometricType> _availableBiometrics = <BiometricType>[];
 
   @override
@@ -272,7 +273,7 @@ class SettingsFormState extends State<SettingsForm> {
   Future<void> _getAvailableBiometrics() async {
     List<BiometricType> availableBiometrics;
     try {
-      availableBiometrics = await auth.getAvailableBiometrics();
+      availableBiometrics = await auth!.getAvailableBiometrics();
     } on PlatformException catch (e) {
       availableBiometrics = <BiometricType>[];
       print(e);
@@ -325,7 +326,7 @@ class SettingsFormState extends State<SettingsForm> {
           widget: item.widget,
         );
       case Attributes.rawWidget:
-        return SettingRawWidgetListRow(widgetBuilder: item.widgetBuilder);
+        return SettingRawWidgetListRow(widgetBuilder: item.widgetBuilder!);
       default:
         return Offstage();
     }
@@ -342,6 +343,7 @@ class SettingsFormState extends State<SettingsForm> {
   Widget build(BuildContext context) {
     final settingsStore = Provider.of<SettingsStore>(context);
     final _scrollController = ScrollController(keepScrollOffset: true);
+    final t = tr(context);
     return SingleChildScrollView(
         child: Stack(
       children: [
@@ -349,7 +351,7 @@ class SettingsFormState extends State<SettingsForm> {
           children: <Widget>[
             //Nodes Header
             NewNavListHeader(
-              title: S.current.settings_nodes,
+              title: t.settings_nodes,
             ),
             //Current Node
             GestureDetector(
@@ -373,7 +375,7 @@ class SettingsFormState extends State<SettingsForm> {
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        Text(S.current.settings_current_node,
+                        Text(t.settings_current_node,
                             style: TextStyle(
                                 //fontFamily: 'Poppins',
                                 fontWeight: FontWeight.w400,
@@ -383,7 +385,7 @@ class SettingsFormState extends State<SettingsForm> {
                         settingsStore.node == null
                             ? Container()
                             : Observer(builder: (_) {
-                                return Text(settingsStore.node.uri,
+                                return Text(settingsStore.node!.uri,
                                     style: TextStyle(
                                         color: Color(0xff1BB71F),
                                         fontSize: 13));
@@ -418,7 +420,7 @@ class SettingsFormState extends State<SettingsForm> {
             //   size: 15,
             // ),
             //Wallets Header
-            NewNavListHeader(title: S.current.settings_wallets),
+            NewNavListHeader(title: t.settings_wallets),
             Card(
               //  margin: EdgeInsets.only(left: constants.leftPx, right: constants.rightPx, top: 20),
               elevation: 0, //2,
@@ -722,7 +724,7 @@ class SettingsFormState extends State<SettingsForm> {
                           //   _setBalance(context);
                           // }
                         },
-                        title: S.current.settings_display_balance_as,
+                        title: t.settings_display_balance_as,
                         widget: Observer(
                             builder: (_) => Text(
                                   settingsStore.balanceDisplayMode.toString(),
@@ -736,7 +738,7 @@ class SettingsFormState extends State<SettingsForm> {
                                       fontWeight: FontWeight.w400,
                                       color: Theme.of(context)
                                           .primaryTextTheme
-                                          .headline6
+                                          .headline6!
                                           .color),
                                 )),
                       ),
@@ -796,49 +798,49 @@ class SettingsFormState extends State<SettingsForm> {
                                                         FontWeight.bold),
                                               ),
                                             ),
-                                            Expanded(
-                                              child: DraggableScrollbar.rrect(
-                                                padding: EdgeInsets.only(
-                                                    left: 5,
-                                                    right: 5,
-                                                    top: 10,
-                                                    bottom: 10),
-                                                controller: _scrollController,
-                                                heightScrollThumb: 25,
-                                                alwaysVisibleScrollThumb: false,
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .primaryTextTheme
-                                                        .button
-                                                        .backgroundColor,
-                                                child: ListView.builder(
-                                                    itemCount:
-                                                        AmountDetail.all.length,
-                                                    //shrinkWrap: true,
-                                                    controller:
-                                                        _scrollController,
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                            int index) {
-                                                      return decimalFilter ==
-                                                                  null ||
-                                                              decimalFilter ==
-                                                                  ''
-                                                          ? decimalDropDownListItem(
-                                                              settingsStore,
-                                                              index)
-                                                          : '${AmountDetail.all[index]}'
-                                                                  .toLowerCase()
-                                                                  .contains(
-                                                                      decimalFilter
-                                                                          .toLowerCase())
-                                                              ? decimalDropDownListItem(
-                                                                  settingsStore,
-                                                                  index)
-                                                              : Container();
-                                                    }),
-                                              ),
-                                            ),
+                                            // Expanded(
+                                            //   child: DraggableScrollbar.rrect(
+                                            //     padding: EdgeInsets.only(
+                                            //         left: 5,
+                                            //         right: 5,
+                                            //         top: 10,
+                                            //         bottom: 10),
+                                            //     controller: _scrollController,
+                                            //     heightScrollThumb: 25,
+                                            //     alwaysVisibleScrollThumb: false,
+                                            //     backgroundColor:
+                                            //         Theme.of(context)
+                                            //             .primaryTextTheme
+                                            //             .button!
+                                            //             .backgroundColor,
+                                            //     child: ListView.builder(
+                                            //         itemCount:
+                                            //             AmountDetail.all.length,
+                                            //         //shrinkWrap: true,
+                                            //         controller:
+                                            //             _scrollController,
+                                            //         itemBuilder:
+                                            //             (BuildContext context,
+                                            //                 int index) {
+                                            //           return decimalFilter ==
+                                            //                       null ||
+                                            //                   decimalFilter ==
+                                            //                       ''
+                                            //               ? decimalDropDownListItem(
+                                            //                   settingsStore,
+                                            //                   index)
+                                            //               : '${AmountDetail.all[index]}'
+                                            //                       .toLowerCase()
+                                            //                       .contains(
+                                            //                           decimalFilter!
+                                            //                               .toLowerCase())
+                                            //                   ? decimalDropDownListItem(
+                                            //                       settingsStore,
+                                            //                       index)
+                                            //                   : Container();
+                                            //         }),
+                                            //   ),
+                                            // ),
                                           ],
                                         ),
                                         Container(
@@ -870,7 +872,7 @@ class SettingsFormState extends State<SettingsForm> {
                                 );
                               });
                         },
-                        title: S.current.settings_balance_detail,
+                        title: t.settings_balance_detail,
                         widget: Observer(
                             builder: (_) => Text(
                                   settingsStore.balanceDetail.toString(),
@@ -884,13 +886,13 @@ class SettingsFormState extends State<SettingsForm> {
                                       fontWeight: FontWeight.w400,
                                       color: Theme.of(context)
                                           .primaryTextTheme
-                                          .headline6
+                                          .headline6!
                                           .color),
                                 )),
                       ),
                       //Enable fiat currency conversation
                       SettingsSwitchListRow(
-                        title: S.current.settings_enable_fiat_currency,
+                        title: t.settings_enable_fiat_currency,
                         balanceVisibility: balanceVisibility,
                         decimalVisibility: decimalVisibility,
                         currencyVisibility: currencyVisibility,
@@ -1006,7 +1008,7 @@ class SettingsFormState extends State<SettingsForm> {
                                                             : '${FiatCurrency.all[index]}'
                                                                     .toLowerCase()
                                                                     .contains(
-                                                                        currencyFilter
+                                                                        currencyFilter!
                                                                             .toLowerCase())
                                                                 ? currencyDropDownListItem(
                                                                     settingsStore,
@@ -1050,7 +1052,7 @@ class SettingsFormState extends State<SettingsForm> {
                                 );
                               });
                         },
-                        title: S.current.settings_currency,
+                        title: t.settings_currency,
                         widget: Observer(
                             builder: (_) => Text(
                                   settingsStore.fiatCurrency.toString(),
@@ -1064,7 +1066,7 @@ class SettingsFormState extends State<SettingsForm> {
                                       fontWeight: FontWeight.w400,
                                       color: Theme.of(context)
                                           .primaryTextTheme
-                                          .headline6
+                                          .headline6!
                                           .color),
                                 )),
                       ),
@@ -1256,7 +1258,7 @@ class SettingsFormState extends State<SettingsForm> {
                                 );
                               });
                         },
-                        title: S.current.settings_fee_priority,
+                        title: t.settings_fee_priority,
                         widget: Observer(
                             builder: (_) => Text(
                                   settingsStore.transactionPriority.toString(),
@@ -1270,13 +1272,13 @@ class SettingsFormState extends State<SettingsForm> {
                                       fontWeight: FontWeight.w400,
                                       color: Theme.of(context)
                                           .primaryTextTheme
-                                          .headline6
+                                          .headline6!
                                           .color),
                                 )),
                       ),
                       //Save recipient address
                       SettingsSwitchListRow(
-                        title: S.current.settings_save_recipient_address,
+                        title: t.settings_save_recipient_address,
                         balanceVisibility: balanceVisibility,
                         decimalVisibility: decimalVisibility,
                         currencyVisibility: currencyVisibility,
@@ -1300,7 +1302,7 @@ class SettingsFormState extends State<SettingsForm> {
                           border: Border.all(color: Colors.white),
                           color: Theme.of(context)
                               .accentTextTheme
-                              .headline6
+                              .headline6!
                               .backgroundColor, //Color.fromARGB(255, 31, 32, 39),
                           borderRadius: BorderRadius.circular(10)),
                       child: Stack(
@@ -1321,102 +1323,102 @@ class SettingsFormState extends State<SettingsForm> {
                                 height: 1,
                                 color: Theme.of(context).dividerColor,
                               ),
-                              DraggableScrollbar.rrect(
-                                padding: EdgeInsets.only(
-                                    left: 5, right: 5, top: 10, bottom: 10),
-                                controller: _scrollController,
-                                heightScrollThumb: 25,
-                                //alwaysVisibleScrollThumb: true,
-                                backgroundColor: Theme.of(context)
-                                    .primaryTextTheme
-                                    .button
-                                    .backgroundColor,
-                                child: ListView.builder(
-                                    itemCount: BalanceDisplayMode.all.length,
-                                    shrinkWrap: true,
-                                    controller: _scrollController,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return InkWell(
-                                        onTap: () async {
-                                          final settingsStore =
-                                              context.read<SettingsStore>();
-                                          if (balanceVisibility == false) {
-                                            setState(() {
-                                              balanceVisibility = true;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              balanceVisibility = false;
-                                            });
-                                          }
+                              // DraggableScrollbar.rrect(
+                              //   padding: EdgeInsets.only(
+                              //       left: 5, right: 5, top: 10, bottom: 10),
+                              //   controller: _scrollController,
+                              //   heightScrollThumb: 25,
+                              //   //alwaysVisibleScrollThumb: true,
+                              //   backgroundColor: Theme.of(context)
+                              //       .primaryTextTheme
+                              //       .button!
+                              //       .backgroundColor,
+                              //   child: ListView.builder(
+                              //       itemCount: BalanceDisplayMode.all.length,
+                              //       shrinkWrap: true,
+                              //       controller: _scrollController,
+                              //       itemBuilder:
+                              //           (BuildContext context, int index) {
+                              //         return InkWell(
+                              //           onTap: () async {
+                              //             final settingsStore =
+                              //                 context.read<SettingsStore>();
+                              //             if (balanceVisibility == false) {
+                              //               setState(() {
+                              //                 balanceVisibility = true;
+                              //               });
+                              //             } else {
+                              //               setState(() {
+                              //                 balanceVisibility = false;
+                              //               });
+                              //             }
 
-                                          if (BalanceDisplayMode.all[index] !=
-                                              null) {
-                                            await settingsStore
-                                                .setCurrentBalanceDisplayMode(
-                                                    balanceDisplayMode:
-                                                        BalanceDisplayMode
-                                                            .all[index]);
-                                          }
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 20.0, right: 20.0),
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            elevation: settingsStore
-                                                        .balanceDisplayMode ==
-                                                    BalanceDisplayMode
-                                                        .all[index]
-                                                ? 2.0
-                                                : 0.0,
-                                            color: settingsStore
-                                                        .balanceDisplayMode ==
-                                                    BalanceDisplayMode
-                                                        .all[index]
-                                                ? Theme.of(context)
-                                                    .backgroundColor
-                                                : Theme.of(context)
-                                                    .accentTextTheme
-                                                    .headline6
-                                                    .backgroundColor, //Color.fromARGB(255, 31, 32, 39),
-                                            child: Container(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                padding: EdgeInsets.only(
-                                                    top: 15, bottom: 15),
-                                                child: Observer(
-                                                  builder: (_) => Text(
-                                                    BalanceDisplayMode
-                                                        .all[index]
-                                                        .toString(),
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: settingsStore
-                                                                    .balanceDisplayMode !=
-                                                                BalanceDisplayMode
-                                                                    .all[index]
-                                                            ? Colors.grey
-                                                                .withOpacity(
-                                                                    0.6)
-                                                            : Theme.of(context)
-                                                                .primaryTextTheme
-                                                                .headline6
-                                                                .color,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                )),
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                              ),
+                              //             if (BalanceDisplayMode.all[index] !=
+                              //                 null) {
+                              //               await settingsStore
+                              //                   .setCurrentBalanceDisplayMode(
+                              //                       balanceDisplayMode:
+                              //                           BalanceDisplayMode
+                              //                               .all[index]);
+                              //             }
+                              //           },
+                              //           child: Padding(
+                              //             padding: EdgeInsets.only(
+                              //                 left: 20.0, right: 20.0),
+                              //             child: Card(
+                              //               shape: RoundedRectangleBorder(
+                              //                   borderRadius:
+                              //                       BorderRadius.circular(10)),
+                              //               elevation: settingsStore
+                              //                           .balanceDisplayMode ==
+                              //                       BalanceDisplayMode
+                              //                           .all[index]
+                              //                   ? 2.0
+                              //                   : 0.0,
+                              //               color: settingsStore
+                              //                           .balanceDisplayMode ==
+                              //                       BalanceDisplayMode
+                              //                           .all[index]
+                              //                   ? Theme.of(context)
+                              //                       .backgroundColor
+                              //                   : Theme.of(context)
+                              //                       .accentTextTheme
+                              //                       .headline6!
+                              //                       .backgroundColor, //Color.fromARGB(255, 31, 32, 39),
+                              //               child: Container(
+                              //                   width: MediaQuery.of(context)
+                              //                       .size
+                              //                       .width,
+                              //                   padding: EdgeInsets.only(
+                              //                       top: 15, bottom: 15),
+                              //                   child: Observer(
+                              //                     builder: (_) => Text(
+                              //                       BalanceDisplayMode
+                              //                           .all[index]
+                              //                           .toString(),
+                              //                       textAlign: TextAlign.center,
+                              //                       style: TextStyle(
+                              //                           fontSize: 14,
+                              //                           color: settingsStore
+                              //                                       .balanceDisplayMode !=
+                              //                                   BalanceDisplayMode
+                              //                                       .all[index]
+                              //                               ? Colors.grey
+                              //                                   .withOpacity(
+                              //                                       0.6)
+                              //                               : Theme.of(context)
+                              //                                   .primaryTextTheme
+                              //                                   .headline6!
+                              //                                   .color,
+                              //                           fontWeight:
+                              //                               FontWeight.bold),
+                              //                     ),
+                              //                   )),
+                              //             ),
+                              //           ),
+                              //         );
+                              //       }),
+                              // ),
                             ],
                           ),
                           Container(
@@ -1438,7 +1440,7 @@ class SettingsFormState extends State<SettingsForm> {
                                     decoration: BoxDecoration(
                                         color: Theme.of(context)
                                             .accentTextTheme
-                                            .caption
+                                            .caption!
                                             .decorationColor,
                                         shape: BoxShape.circle),
                                     child: Icon(
@@ -1593,16 +1595,16 @@ class SettingsFormState extends State<SettingsForm> {
                               //   ),
                               // ),
                               Expanded(
-                                child: DraggableScrollbar.rrect(
-                                  padding: EdgeInsets.only(
-                                      left: 5, right: 5, top: 10, bottom: 10),
-                                  controller: _scrollController,
-                                  heightScrollThumb: 25,
-                                  alwaysVisibleScrollThumb: false,
-                                  backgroundColor: Theme.of(context)
-                                      .primaryTextTheme
-                                      .button
-                                      .backgroundColor,
+                                child: Scrollbar(
+                                  // padding: EdgeInsets.only(
+                                  //     left: 5, right: 5, top: 10, bottom: 10),
+                                  // controller: _scrollController,
+                                  // heightScrollThumb: 25,
+                                  // alwaysVisibleScrollThumb: false,
+                                  // backgroundColor: Theme.of(context)
+                                  //     .primaryTextTheme
+                                  //     .button!
+                                  //     .backgroundColor,
                                   child: ListView.builder(
                                       itemCount: AmountDetail.all.length,
                                       //shrinkWrap: true,
@@ -1615,7 +1617,7 @@ class SettingsFormState extends State<SettingsForm> {
                                                 settingsStore, index)
                                             : '${AmountDetail.all[index]}'
                                                     .toLowerCase()
-                                                    .contains(decimalFilter
+                                                    .contains(decimalFilter!
                                                         .toLowerCase())
                                                 ? decimalDropDownListItem(
                                                     settingsStore, index)
@@ -1757,7 +1759,7 @@ class SettingsFormState extends State<SettingsForm> {
                           border: Border.all(color: Colors.white),
                           color: Theme.of(context)
                               .accentTextTheme
-                              .headline6
+                              .headline6!
                               .backgroundColor, //Color.fromARGB(255, 31, 32, 39),
                           borderRadius: BorderRadius.circular(10)),
                       child: Stack(
@@ -1792,16 +1794,16 @@ class SettingsFormState extends State<SettingsForm> {
                                 ),
                               ),
                               Expanded(
-                                child: DraggableScrollbar.rrect(
+                                child: RawScrollbar(
                                   padding: EdgeInsets.only(
                                       left: 5, right: 5, top: 10, bottom: 10),
                                   controller: _scrollController,
-                                  heightScrollThumb: 25,
-                                  alwaysVisibleScrollThumb: true,
-                                  backgroundColor: Theme.of(context)
-                                      .primaryTextTheme
-                                      .button
-                                      .backgroundColor,
+                                  // heightScrollThumb: 25,
+                                  // alwaysVisibleScrollThumb: true,
+                                  // backgroundColor: Theme.of(context)
+                                  //     .primaryTextTheme
+                                  //     .button!
+                                  //     .backgroundColor,
                                   child: ListView.builder(
                                       itemCount: FiatCurrency.all.length,
                                       //shrinkWrap: true,
@@ -1814,7 +1816,7 @@ class SettingsFormState extends State<SettingsForm> {
                                                 settingsStore, index)
                                             : '${FiatCurrency.all[index]}'
                                                     .toLowerCase()
-                                                    .contains(currencyFilter
+                                                    .contains(currencyFilter!
                                                         .toLowerCase())
                                                 ? currencyDropDownListItem(
                                                     settingsStore, index)
@@ -1843,7 +1845,7 @@ class SettingsFormState extends State<SettingsForm> {
                                     decoration: BoxDecoration(
                                         color: Theme.of(context)
                                             .accentTextTheme
-                                            .caption
+                                            .caption!
                                             .decorationColor,
                                         shape: BoxShape.circle),
                                     child: Icon(Icons.close)),
@@ -1869,7 +1871,7 @@ class SettingsFormState extends State<SettingsForm> {
                           border: Border.all(color: Colors.white),
                           color: Theme.of(context)
                               .accentTextTheme
-                              .headline6
+                              .headline6!
                               .backgroundColor, //Color.fromARGB(255, 31, 32, 39),
                           borderRadius: BorderRadius.circular(10)),
                       child: Stack(
@@ -1890,16 +1892,16 @@ class SettingsFormState extends State<SettingsForm> {
                                 height: 1,
                                 color: Theme.of(context).dividerColor,
                               ),
-                              DraggableScrollbar.rrect(
-                                padding: EdgeInsets.only(
-                                    left: 5, right: 5, top: 10, bottom: 10),
-                                controller: _scrollController,
-                                heightScrollThumb: 25,
-                                //alwaysVisibleScrollThumb: true,
-                                backgroundColor: Theme.of(context)
-                                    .accentTextTheme
-                                    .headline6
-                                    .backgroundColor, //Color.fromARGB(255, 31, 32, 39),
+                              Scrollbar(
+                                // padding: EdgeInsets.only(
+                                //     left: 5, right: 5, top: 10, bottom: 10),
+                                // controller: _scrollController,
+                                // heightScrollThumb: 25,
+                                // //alwaysVisibleScrollThumb: true,
+                                // backgroundColor: Theme.of(context)
+                                //     .accentTextTheme
+                                //     .headline6!
+                                //     .backgroundColor, //Color.fromARGB(255, 31, 32, 39),
                                 child: ListView.builder(
                                     itemCount:
                                         BeldexTransactionPriority.all.length,
@@ -1952,7 +1954,7 @@ class SettingsFormState extends State<SettingsForm> {
                                                     .backgroundColor
                                                 : Theme.of(context)
                                                     .accentTextTheme
-                                                    .headline6
+                                                    .headline6!
                                                     .backgroundColor, //Color.fromARGB(255, 31, 32, 39),
                                             child: Container(
                                                 width: MediaQuery.of(context)
@@ -1977,7 +1979,7 @@ class SettingsFormState extends State<SettingsForm> {
                                                                     0.6)
                                                             : Theme.of(context)
                                                                 .primaryTextTheme
-                                                                .headline6
+                                                                .headline6!
                                                                 .color,
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -2009,7 +2011,7 @@ class SettingsFormState extends State<SettingsForm> {
                                     decoration: BoxDecoration(
                                         color: Theme.of(context)
                                             .accentTextTheme
-                                            .caption
+                                            .caption!
                                             .decorationColor,
                                         shape: BoxShape.circle),
                                     child: Icon(Icons.close)),
@@ -2018,185 +2020,11 @@ class SettingsFormState extends State<SettingsForm> {
                       ),
                     ),
                   )
-                  /*Visibility(
-                    visible: feePriorityVisibility,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 175,
-                      margin: EdgeInsets.only(top: 240),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 1,
-                                spreadRadius: 1,
-                                offset: Offset(0.0, 2.0))
-                          ],
-                          color: Color.fromARGB(255, 31, 32, 39),
-                          borderRadius: BorderRadius.circular(10)),
-                      child:Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: TextField(
-                              controller: searchFeePriorityController,
-                              decoration: InputDecoration(
-                                hintText: 'Search Fee Priority',
-                                contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10.0)),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: DraggableScrollbar.rrect(
-                              padding:
-                              EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
-                              controller: _scrollController,
-                              heightScrollThumb: 25,
-                              alwaysVisibleScrollThumb: true,
-                              backgroundColor: Theme.of(context)
-                                  .primaryTextTheme
-                                  .button
-                                  .backgroundColor,
-                              child: ListView.builder(
-                                  itemCount: BeldexTransactionPriority.all.length,
-                                  //shrinkWrap: true,
-                                  controller: _scrollController,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return feePriorityFilter == null || feePriorityFilter == ''?InkWell(
-                                      onTap: () async {
-                                        searchFeePriorityController.text='';
-                                        final settingsStore =
-                                        context.read<SettingsStore>();
-                                        if (feePriorityVisibility == false) {
-                                          setState(() {
-                                            feePriorityVisibility = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            feePriorityVisibility = false;
-                                          });
-                                        }
-
-                                        if (BeldexTransactionPriority.all[index] != null) {
-                                          await settingsStore
-                                              .setCurrentTransactionPriority(
-                                              priority:
-                                              BeldexTransactionPriority.all[index]);
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                                        child: Card(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(10)),
-                                          elevation: settingsStore.transactionPriority ==
-                                              BeldexTransactionPriority.all[index]
-                                              ? 2.0
-                                              : 0.0,
-                                          color: settingsStore.transactionPriority ==
-                                              BeldexTransactionPriority.all[index]
-                                              ? Theme.of(context).backgroundColor
-                                              : Color.fromARGB(255, 31, 32, 39),
-                                          child: Container(
-                                              width: MediaQuery.of(context).size.width,
-                                              padding:
-                                              EdgeInsets.only(top: 15, bottom: 15),
-                                              child: Observer(
-                                                builder: (_) => Text(
-                                                  BeldexTransactionPriority.all[index]
-                                                      .toString(),
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: settingsStore
-                                                          .transactionPriority !=
-                                                          BeldexTransactionPriority
-                                                              .all[index]
-                                                          ? Colors.grey.withOpacity(0.6)
-                                                          : Theme.of(context)
-                                                          .primaryTextTheme
-                                                          .headline6
-                                                          .color,
-                                                      fontWeight: FontWeight.bold),
-                                                ),
-                                              )),
-                                        ),
-                                      ),
-                                    ):'${BeldexTransactionPriority.all[index]}'                              .toLowerCase()
-                                        .contains(feePriorityFilter.toLowerCase())?InkWell(
-                                      onTap: () async {
-                                        searchFeePriorityController.text='';
-                                        final settingsStore =
-                                        context.read<SettingsStore>();
-                                        if (feePriorityVisibility == false) {
-                                          setState(() {
-                                            feePriorityVisibility = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            feePriorityVisibility = false;
-                                          });
-                                        }
-
-                                        if (BeldexTransactionPriority.all[index] != null) {
-                                          await settingsStore
-                                              .setCurrentTransactionPriority(
-                                              priority:
-                                              BeldexTransactionPriority.all[index]);
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                                        child: Card(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(10)),
-                                          elevation: settingsStore.transactionPriority ==
-                                              BeldexTransactionPriority.all[index]
-                                              ? 2.0
-                                              : 0.0,
-                                          color: settingsStore.transactionPriority ==
-                                              BeldexTransactionPriority.all[index]
-                                              ? Theme.of(context).backgroundColor
-                                              : Color.fromARGB(255, 31, 32, 39),
-                                          child: Container(
-                                              width: MediaQuery.of(context).size.width,
-                                              padding:
-                                              EdgeInsets.only(top: 15, bottom: 15),
-                                              child: Observer(
-                                                builder: (_) => Text(
-                                                  BeldexTransactionPriority.all[index]
-                                                      .toString(),
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: settingsStore
-                                                          .transactionPriority !=
-                                                          BeldexTransactionPriority
-                                                              .all[index]
-                                                          ? Colors.grey.withOpacity(0.6)
-                                                          : Theme.of(context)
-                                                          .primaryTextTheme
-                                                          .headline6
-                                                          .color,
-                                                      fontWeight: FontWeight.bold),
-                                                ),
-                                              )),
-                                        ),
-                                      ),
-                                    ):Container();
-                                  }),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )*/
                 ],
               ),
             ),
             //Personal Header
-            NewNavListHeader(title: S.current.settings_personal),
+            NewNavListHeader(title: t.settings_personal),
             Card(
               // margin: EdgeInsets.only(left: constants.leftPx, right: constants.rightPx, top: 20),
               elevation: 0, //2,
@@ -2224,7 +2052,7 @@ class SettingsFormState extends State<SettingsForm> {
                     ),
                     child: ListTile(
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
-                      title: Text(S.current.settings_change_pin,
+                      title: Text(t.settings_change_pin,
                           style: TextStyle(
                               fontSize: MediaQuery.of(context).size.height *
                                   0.06 /
@@ -2233,7 +2061,7 @@ class SettingsFormState extends State<SettingsForm> {
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context)
                                   .primaryTextTheme
-                                  .headline6
+                                  .headline6!
                                   .color)),
                       trailing: Icon(
                         Icons.arrow_forward_ios_rounded,
@@ -2278,7 +2106,7 @@ class SettingsFormState extends State<SettingsForm> {
                     ),
                     child: ListTile(
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
-                      title: Text(S.current.change_language,
+                      title: Text(t.change_language,
                           style: TextStyle(
                               fontSize: MediaQuery.of(context).size.height *
                                   0.06 /
@@ -2287,7 +2115,7 @@ class SettingsFormState extends State<SettingsForm> {
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context)
                                   .primaryTextTheme
-                                  .headline6
+                                  .headline6!
                                   .color)),
                       trailing: Icon(
                         Icons.arrow_forward_ios_rounded,
@@ -2307,10 +2135,10 @@ class SettingsFormState extends State<SettingsForm> {
                   //Allow biometric authentication
                   SettingsSwitchListRow(
                     title: Platform.isAndroid
-                        ? S.current.settings_allow_biometric_authentication
+                        ? t.settings_allow_biometric_authentication
                         : _availableBiometrics.contains(BiometricType.face)
                             ? 'Allow face id authentication'
-                            : S.current.settings_allow_biometric_authentication,
+                            : t.settings_allow_biometric_authentication,
                     balanceVisibility: balanceVisibility,
                     decimalVisibility: decimalVisibility,
                     currencyVisibility: currencyVisibility,
@@ -2318,7 +2146,7 @@ class SettingsFormState extends State<SettingsForm> {
                   ),
                   //Dark mode
                   SettingsSwitchListRow(
-                    title: S.current.settings_dark_mode,
+                    title: t.settings_dark_mode,
                     balanceVisibility: balanceVisibility,
                     decimalVisibility: decimalVisibility,
                     currencyVisibility: currencyVisibility,
@@ -2328,7 +2156,7 @@ class SettingsFormState extends State<SettingsForm> {
               ),
             ),
             //Support Header
-            NewNavListHeader(title: S.current.settings_support),
+            NewNavListHeader(title: t.settings_support),
             Card(
               //margin: EdgeInsets.only(left: constants.leftPx, right: constants.rightPx, top: 20),
               elevation: 0, //2,
@@ -2338,70 +2166,6 @@ class SettingsFormState extends State<SettingsForm> {
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                 children: [
-                  //Email
-                  // SettingsLinktListRow(
-                  //   balanceVisibility: balanceVisibility,
-                  //   decimalVisibility: decimalVisibility,
-                  //   currencyVisibility: currencyVisibility,
-                  //   feePriorityVisibility: feePriorityVisibility,
-                  //   onTaped: () {
-                  //     if (balanceVisibility == false &&
-                  //         decimalVisibility == false &&
-                  //         currencyVisibility == false &&
-                  //         feePriorityVisibility == false) {
-                  //       _launchUrl(_emailUrl);
-                  //     }
-                  //   },
-                  //   title: 'Email',
-                  // ),
-                  //Github
-                  // SettingsLinktListRow(
-                  //   balanceVisibility: balanceVisibility,
-                  //   decimalVisibility: decimalVisibility,
-                  //   currencyVisibility: currencyVisibility,
-                  //   feePriorityVisibility: feePriorityVisibility,
-                  //   onTaped: () {
-                  //     if (balanceVisibility == false &&
-                  //         decimalVisibility == false &&
-                  //         currencyVisibility == false &&
-                  //         feePriorityVisibility == false) {
-                  //       _launchUrl(_githubUrl);
-                  //     }
-                  //   },
-                  //   title: 'Github',
-                  // ),
-                  //Telegram
-                  // SettingsLinktListRow(
-                  //   balanceVisibility: balanceVisibility,
-                  //   decimalVisibility: decimalVisibility,
-                  //   currencyVisibility: currencyVisibility,
-                  //   feePriorityVisibility: feePriorityVisibility,
-                  //   onTaped: () {
-                  //     if (balanceVisibility == false &&
-                  //         decimalVisibility == false &&
-                  //         currencyVisibility == false &&
-                  //         feePriorityVisibility == false) {
-                  //       _launchUrl(_telegramUrl);
-                  //     }
-                  //   },
-                  //   title: 'Telegram',
-                  // ),
-                  //Twitter
-                  // SettingsLinktListRow(
-                  //   balanceVisibility: balanceVisibility,
-                  //   decimalVisibility: decimalVisibility,
-                  //   currencyVisibility: currencyVisibility,
-                  //   feePriorityVisibility: feePriorityVisibility,
-                  //   onTaped: () {
-                  //     if (balanceVisibility == false &&
-                  //         decimalVisibility == false &&
-                  //         currencyVisibility == false &&
-                  //         feePriorityVisibility == false) {
-                  //       _launchUrl(_twitterUrl);
-                  //     }
-                  //   },
-                  //   title: 'Twitter',
-                  // ),
                   //Terms and conditions
                   Theme(
                     data: ThemeData(
@@ -2420,7 +2184,7 @@ class SettingsFormState extends State<SettingsForm> {
                     ),
                     child: ListTile(
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
-                      title: Text(S.current.settings_terms_and_conditions,
+                      title: Text(t.settings_terms_and_conditions,
                           style: TextStyle(
                               fontSize: MediaQuery.of(context).size.height *
                                   0.06 /
@@ -2429,7 +2193,7 @@ class SettingsFormState extends State<SettingsForm> {
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context)
                                   .primaryTextTheme
-                                  .headline6
+                                  .headline6!
                                   .color)),
                       trailing: Icon(
                         Icons.arrow_forward_ios_rounded,
@@ -2468,7 +2232,7 @@ class SettingsFormState extends State<SettingsForm> {
                     ),
                     child: ListTile(
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
-                      title: Text(S.current.faq,
+                      title: Text(t.faq,
                           style: TextStyle(
                               fontSize: MediaQuery.of(context).size.height *
                                   0.06 /
@@ -2477,7 +2241,7 @@ class SettingsFormState extends State<SettingsForm> {
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context)
                                   .primaryTextTheme
-                                  .headline6
+                                  .headline6!
                                   .color)),
                       trailing: Icon(
                         Icons.arrow_forward_ios_rounded,
@@ -2512,7 +2276,7 @@ class SettingsFormState extends State<SettingsForm> {
                     ),
                     child: ListTile(
                       contentPadding: EdgeInsets.only(left: 20.0, right: 20.0),
-                      title: Text(S.current.changelog,
+                      title: Text(t.changelog,
                           style: TextStyle(
                               fontSize: MediaQuery.of(context).size.height *
                                   0.06 /
@@ -2521,7 +2285,7 @@ class SettingsFormState extends State<SettingsForm> {
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context)
                                   .primaryTextTheme
-                                  .headline6
+                                  .headline6!
                                   .color)),
                       trailing: Icon(
                         Icons.arrow_forward_ios_rounded,
@@ -2635,7 +2399,7 @@ class SettingsFormState extends State<SettingsForm> {
               child: ListTile(
                 //contentPadding: EdgeInsets.only(left: 60.0),
                 title: Center(
-                  child: Text(S.current.version(settingsStore.currentVersion),
+                  child: Text(t.version(settingsStore.currentVersion!),
                       style:
                           TextStyle(fontSize: 16.0, color: Color(0xff9292A7))),
                 ),
@@ -2663,7 +2427,7 @@ class SettingsFormState extends State<SettingsForm> {
                   border: Border.all(color: Colors.white),
                   color: Theme.of(context)
                       .accentTextTheme
-                      .headline6
+                      .headline6!
                       .backgroundColor, //Color.fromARGB(255, 31, 32, 39),
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
@@ -2680,16 +2444,16 @@ class SettingsFormState extends State<SettingsForm> {
                     height: 1,
                     color: Theme.of(context).dividerColor,
                   ),
-                  DraggableScrollbar.rrect(
-                    padding:
-                        EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
-                    controller: _scrollController,
-                    heightScrollThumb: 25,
-                    //alwaysVisibleScrollThumb: true,
-                    backgroundColor: Theme.of(context)
-                        .primaryTextTheme
-                        .button
-                        .backgroundColor,
+                  Scrollbar(
+                    // padding:
+                    //     EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 10),
+                    // controller: _scrollController,
+                    // heightScrollThumb: 25,
+                    // //alwaysVisibleScrollThumb: true,
+                    // backgroundColor: Theme.of(context)
+                    //     .primaryTextTheme
+                    //     .button!
+                    //     .backgroundColor,
                     child: ListView.builder(
                         itemCount: BalanceDisplayMode.all.length,
                         shrinkWrap: true,
@@ -2730,7 +2494,7 @@ class SettingsFormState extends State<SettingsForm> {
                                     ? Theme.of(context).backgroundColor
                                     : Theme.of(context)
                                         .accentTextTheme
-                                        .headline6
+                                        .headline6!
                                         .backgroundColor, //Color.fromARGB(255, 31, 32, 39),
                                 child: Container(
                                     width: MediaQuery.of(context).size.width,
@@ -2750,7 +2514,7 @@ class SettingsFormState extends State<SettingsForm> {
                                                 ? Colors.grey.withOpacity(0.6)
                                                 : Theme.of(context)
                                                     .primaryTextTheme
-                                                    .headline6
+                                                    .headline6!
                                                     .color,
                                             fontWeight: FontWeight.bold),
                                       ),

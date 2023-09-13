@@ -1,9 +1,9 @@
 
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/screens/nodes/test_node.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
 import 'package:beldex_wallet/src/stores/node_list/node_list_store.dart';
 import 'package:beldex_wallet/src/widgets/beldex_text_field.dart';
@@ -165,7 +165,7 @@ void showHUDLoader(BuildContext context) {
                decoration: InputDecoration(
                 fillColor: settingsStore.isDarkTheme ? Color(0xff333343):Color(0xffFFFFFF),
                 filled: true,
-                hintText: S.of(context).node_address,
+                hintText: tr(context).node_address,
                 hintStyle: TextStyle(
                     color:Color(0xff77778B)
                 ),
@@ -186,7 +186,7 @@ void showHUDLoader(BuildContext context) {
                  )
                ),
                     validator: (value) {
-                         nodeList.validateNodeAddress(value);
+                         nodeList.validateNodeAddress(value!,tr(context));
                          return nodeList.errorMessage;
                         }
               ),
@@ -206,7 +206,7 @@ void showHUDLoader(BuildContext context) {
                decoration: InputDecoration(
                 fillColor: settingsStore.isDarkTheme ? Color(0xff333343):Color(0xffFFFFFF),
                 filled: true,
-                hintText: S.of(context).node_port,
+                hintText: tr(context).node_port,
                 hintStyle: TextStyle(
                   color:settingsStore.isDarkTheme ? Color(0xff77778B) : Color(0xff77778B)
                 ),
@@ -226,7 +226,7 @@ void showHUDLoader(BuildContext context) {
                  )
                ),
                   validator: (value) {
-                        nodeList.validateNodePort(value);
+                        nodeList.validateNodePort(value!,tr(context));
                         return nodeList.errorMessage;
                         }
               ),
@@ -309,7 +309,7 @@ void showHUDLoader(BuildContext context) {
                decoration: InputDecoration(
                 // fillColor: settingsStore.isDarkTheme ? Color(0xff333343):Color(0xffFFFFFF),
                 // filled: true,
-                hintText: '${S.of(context).password} (optional)',
+                hintText: '${tr(context).password} (optional)',
                 hintStyle: TextStyle(
                   color:settingsStore.isDarkTheme ? Color(0xff77778B) : Color(0xff77778B)
                 ),
@@ -388,7 +388,7 @@ void showHUDLoader(BuildContext context) {
                            GestureDetector(
                             onTap: ()async{
                               
-                               if (!_formKey.currentState.validate()) {
+                               if (!_formKey.currentState!.validate()) {
                                         return;  
                               }else{
                                 _loading(true);
@@ -437,7 +437,7 @@ void showHUDLoader(BuildContext context) {
                                padding: const EdgeInsets.all(10.0),
                                child: GestureDetector(
                                  onTap:isNodeChecked ? ()async{
-                                   if (!_formKey.currentState.validate()) {
+                                   if (!_formKey.currentState!.validate()) {
                                         return;  }
 
                                    await nodeList.addNode(

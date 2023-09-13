@@ -1,3 +1,4 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,7 +9,6 @@ import 'package:beldex_wallet/src/screens/restore/widgets/restore_button.dart';
 import 'package:beldex_wallet/src/screens/restore/widgets/image_widget.dart';
 import 'package:beldex_wallet/src/screens/restore/widgets/base_restore_widget.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/stores/seed_language/seed_language_store.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,7 @@ class RestoreWalletOptionsPage extends BasePage {
   static const _aspectRatioImage = 2.086;
 
   @override
-  String get title => S.current.recovery_seed_keys; //restore_seed_keys_restore;
+  String getTitle(AppLocalizations t) => 'Recovery Seed/Key'; //restore_seed_keys_restore;
 
   @override
   Color get backgroundColor => Palette.creamyGrey;
@@ -77,11 +77,11 @@ Widget trailing(BuildContext context){
                                 padding: EdgeInsets.only(right:8.0),
                                 child: SvgPicture.asset('assets/images/new-images/restore_seed.svg',color: settingsStore.isDarkTheme ? Color(0xffAEAEAE) :Color(0xff16161D),),
                               ),
-                              Text(S.of(context).restore_title_from_seed,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color:settingsStore.isDarkTheme ? Color(0xffF7F7F7) :Color(0xff16161D)),),
+                              Text(tr(context).restore_title_from_seed,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color:settingsStore.isDarkTheme ? Color(0xffF7F7F7) :Color(0xff16161D)),),
                             ],
                           ),
                           SizedBox(height: 15),
-                          Text(S.of(context).restore_description_from_seed,style: TextStyle(fontSize: 12,fontWeight: FontWeight.normal),)
+                          Text(tr(context).restore_description_from_seed,style: TextStyle(fontSize: 12,fontWeight: FontWeight.normal),)
                         ],
                       ),
                     ),
@@ -137,11 +137,11 @@ Widget trailing(BuildContext context){
                                 padding: EdgeInsets.only(right:8.0),
                                 child: SvgPicture.asset('assets/images/new-images/restore_key.svg',color: settingsStore.isDarkTheme ? Color(0xffAEAEAE) :Color(0xff16161D),),
                               ),
-                              Text(S.of(context).restore_title_from_keys,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color:settingsStore.isDarkTheme ? Color(0xffF7F7F7) :Color(0xff16161D)),),
+                              Text(tr(context).restore_title_from_keys,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color:settingsStore.isDarkTheme ? Color(0xffF7F7F7) :Color(0xff16161D)),),
                             ],
                           ),
                           SizedBox(height: 10,),
-                          Text(S.of(context).restore_description_from_keys,style: TextStyle(fontSize: 12,fontWeight: FontWeight.normal),)
+                          Text(tr(context).restore_description_from_keys,style: TextStyle(fontSize: 12,fontWeight: FontWeight.normal),)
                         ],
                       ),
                     ),

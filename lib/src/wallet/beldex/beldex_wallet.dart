@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
@@ -29,23 +30,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 const belDexBlockSize = 1000;
 
 class BelDexWallet extends Wallet {
-  BelDexWallet({this.walletInfoSource, this.walletInfo}) {
-    _cachedBlockchainHeight = 0;
-    _name = BehaviorSubject<String>();
-    _address = BehaviorSubject<String>();
-    _syncStatus = BehaviorSubject<SyncStatus>();
-    _onBalanceChange = BehaviorSubject<BelDexBalance>();
-    _account = BehaviorSubject<Account>()..add(Account(id: 0));
+  BelDexWallet({required this.walletInfoSource,required this.walletInfo}) :
+    _cachedBlockchainHeight = 0,
+    _name = BehaviorSubject<String>(),
+    _address = BehaviorSubject<String>(),
+    _syncStatus = BehaviorSubject<SyncStatus>(),
+    _onBalanceChange = BehaviorSubject<BelDexBalance>(),
+    _account = BehaviorSubject<Account>()..add(Account(id: 0)),
     _subaddress = BehaviorSubject<Subaddress>();
-  }
+  
 
   static Future<BelDexWallet> createdWallet(
-      {Box<WalletInfo> walletInfoSource,
-      String name,
+      {required Box<WalletInfo> walletInfoSource,
+     required String name,
       bool isRecovery = false,
       int restoreHeight = 0}) async {
     const type = WalletType.beldex;
-    final id = walletTypeToString(type).toLowerCase() + '_' + name;
+    final id = (walletTypeToString(type)?.toLowerCase() ?? 'unknown' ) + '_' + name;
     final walletInfo = WalletInfo(
         id: id,
         name: name,
@@ -61,16 +62,17 @@ class BelDexWallet extends Wallet {
 
   static Future<BelDexWallet> load(
       Box<WalletInfo> walletInfoSource, String name, WalletType type) async {
-    final id = walletTypeToString(type).toLowerCase() + '_' + name;
+    final id = (walletTypeToString(type)?.toLowerCase() ?? 'unknown' ) + '_' + name;
     final walletInfo = walletInfoSource.values
-        .firstWhere((info) => info.id == id, orElse: () => null);
+        .firstWhere((info) => info.id == id, //orElse: () => 0
+        );
     return await configured(
         walletInfoSource: walletInfoSource, walletInfo: walletInfo);
   }
 
   static Future<BelDexWallet> configured(
-      {@required Box<WalletInfo> walletInfoSource,
-      @required WalletInfo walletInfo}) async {
+      {required Box<WalletInfo> walletInfoSource,
+      required WalletInfo walletInfo}) async {
     final wallet =
     BelDexWallet(walletInfoSource: walletInfoSource, walletInfo: walletInfo);
 
@@ -94,21 +96,25 @@ class BelDexWallet extends Wallet {
   @override
   WalletType getType() => WalletType.beldex;
 
-  @override
-  Observable<SyncStatus> get syncStatus => _syncStatus.stream;
+    @override
+
+  WalletType get walletType => WalletType.beldex;
 
   @override
-  Observable<Balance> get onBalanceChange => _onBalanceChange.stream;
+  Stream<SyncStatus> get syncStatus => _syncStatus.stream;
 
   @override
-  Observable<String> get onNameChange => _name.stream;
+  Stream<Balance> get onBalanceChange => _onBalanceChange.stream;
 
   @override
-  Observable<String> get onAddressChange => _address.stream;
+  Stream<String> get onNameChange => _name.stream;
 
-  Observable<Account> get onAccountChange => _account.stream;
+  @override
+  Stream<String> get onAddressChange => _address.stream;
 
-  Observable<Subaddress> get subaddress => _subaddress.stream;
+  Stream<Account> get onAccountChange => _account.stream;
+
+  Stream<Subaddress> get subaddress => _subaddress.stream;
 
   bool get isRecovery => walletInfo.isRecovery;
 
@@ -117,19 +123,19 @@ class BelDexWallet extends Wallet {
   Box<WalletInfo> walletInfoSource;
   WalletInfo walletInfo;
 
-  beldex_wallet.SyncListener _listener;
-  BehaviorSubject<Account> _account;
-  BehaviorSubject<BelDexBalance> _onBalanceChange;
-  BehaviorSubject<SyncStatus> _syncStatus;
-  BehaviorSubject<String> _name;
-  BehaviorSubject<String> _address;
-  BehaviorSubject<Subaddress> _subaddress;
+  beldex_wallet.SyncListener? _listener;
+  final BehaviorSubject<Account> _account;
+  final BehaviorSubject<BelDexBalance> _onBalanceChange;
+  final BehaviorSubject<SyncStatus> _syncStatus;
+  final BehaviorSubject<String> _name;
+  final BehaviorSubject<String> _address;
+  final BehaviorSubject<Subaddress> _subaddress;
   int _cachedBlockchainHeight;
 
-  TransactionHistory _cachedTransactionHistory;
-  SubaddressList _cachedSubaddressList;
-  AccountList _cachedAccountList;
-  Future<int> _cachedGetNodeHeightOrUpdateRequest;
+  TransactionHistory? _cachedTransactionHistory;
+  SubaddressList? _cachedSubaddressList;
+  AccountList? _cachedAccountList;
+  Future<int>? _cachedGetNodeHeightOrUpdateRequest;
 
   @override
   Future updateInfo() async {
@@ -190,7 +196,7 @@ class BelDexWallet extends Wallet {
       return value;
     });
 
-    return _cachedGetNodeHeightOrUpdateRequest;
+    return _cachedGetNodeHeightOrUpdateRequest!;
   }
 
   @override
@@ -208,19 +214,19 @@ class BelDexWallet extends Wallet {
   TransactionHistory getHistory() {
     _cachedTransactionHistory ??= BeldexTransactionHistory();
 
-    return _cachedTransactionHistory;
+    return _cachedTransactionHistory!;
   }
 
   SubaddressList getSubaddress() {
     _cachedSubaddressList ??= SubaddressList();
 
-    return _cachedSubaddressList;
+    return _cachedSubaddressList!;
   }
 
   AccountList getAccountList() {
     _cachedAccountList ??= AccountList();
 
-    return _cachedAccountList;
+    return _cachedAccountList!;
   }
 
   @override
@@ -233,8 +239,8 @@ class BelDexWallet extends Wallet {
   }
 
   @override
-  Future connectToNode(
-      {Node node, bool useSSL = false, bool isLightWallet = false}) async {
+  Future<void> connectToNode(
+      {required Node node, bool useSSL = false, bool isLightWallet = false}) async {
     try {
       _syncStatus.value = ConnectingSyncStatus();
 
@@ -247,8 +253,8 @@ class BelDexWallet extends Wallet {
 
       await beldex_wallet.setupNode(
           address: node.uri,
-          login: node.login,
-          password: node.password,
+          login: node.login!,
+          password: node.password!,
           useSSL: useSSL,
           isLightWallet: isLightWallet);
       _syncStatus.value = ConnectedSyncStatus();
@@ -308,13 +314,13 @@ class BelDexWallet extends Wallet {
       TransactionCreationCredentials credentials) async {
     final _credentials = credentials as BeldexTransactionCreationCredentials;
     final transactionDescription = await transaction_history.createTransaction(
-        address: _credentials.address,
-        amount: _credentials.amount,
-        priorityRaw: _credentials.priority.serialize(),
+        address: _credentials.address!,
+        amount: _credentials.amount!,
+        priorityRaw: _credentials.priority!.serialize(),
         accountIndex: _account.value.id);
     print('_credentials.address --> ${_credentials.address}');
     print('_credentials.amount --> ${_credentials.amount}');
-    print('_credentials.priority.serialize() --> ${_credentials.priority.serialize()}');
+    print('_credentials.priority.serialize() --> ${_credentials.priority!.serialize()}');
     print('_account.value.id --> ${_account.value.id}');
     print('transactionDescription fee --> ${transactionDescription.fee}');
     print('transactionDescription amount --> ${transactionDescription.amount}');
@@ -336,7 +342,7 @@ class BelDexWallet extends Wallet {
   void setRecoveringFromSeed() =>
       beldex_wallet.setRecoveringFromSeed(isRecovery: true);
 
-  void setRefreshFromBlockHeight({int height}) =>
+  void setRefreshFromBlockHeight({required int height}) =>
       beldex_wallet.setRefreshFromBlockHeight(height: height);
 
   Future setAsRecovered() async {
@@ -347,10 +353,10 @@ class BelDexWallet extends Wallet {
   Future askForUpdateBalance() async {
     final fullBalance = await getFullBalance();
     final unlockedBalance = await getUnlockedBalance();
-    final needToChange = _onBalanceChange.value != null
-        ? _onBalanceChange.value.fullBalance != fullBalance ||
-        _onBalanceChange.value.unlockedBalance != unlockedBalance
-        : true;
+    final needToChange = _onBalanceChange.hasValue
+        ? true : _onBalanceChange.value.fullBalance != fullBalance ||
+        _onBalanceChange.value.unlockedBalance != unlockedBalance;
+        
 
     if (!needToChange) {
       return;
@@ -458,4 +464,6 @@ class BelDexWallet extends Wallet {
       print(e.toString());
     }
   }
+  
+
 }

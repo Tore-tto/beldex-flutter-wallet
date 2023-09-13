@@ -1,3 +1,4 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/routes.dart';
 import 'package:beldex_wallet/src/screens/dashboard/wallet_menu.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
@@ -6,10 +7,9 @@ import 'package:beldex_wallet/src/util/network_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 
 class DashBoardAlertDialog extends StatefulWidget {
-  const DashBoardAlertDialog({Key key}) : super(key: key);
+  const DashBoardAlertDialog({Key? key}) : super(key: key);
 
   @override
   State<DashBoardAlertDialog> createState() => _DashBoardAlertDialogState();
@@ -41,7 +41,7 @@ class _DashBoardAlertDialogState extends State<DashBoardAlertDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              S.of(context).rescan,
+              tr(context).rescan,
               style: TextStyle(
                   fontSize: 18,
                   // fontFamily: 'Poppinsbold',
@@ -59,7 +59,7 @@ class _DashBoardAlertDialogState extends State<DashBoardAlertDialog> {
               shape:
                   RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               child: Text(
-                S.of(context).reconnectWallet,
+                tr(context).reconnectWallet,
                 style: TextStyle(
                     fontSize: 17,
                     color: Colors.white,
@@ -71,7 +71,7 @@ class _DashBoardAlertDialogState extends State<DashBoardAlertDialog> {
             ),
             Observer(builder: (_) {
               final status = syncStore.status;
-              if (status.title() == 'SYNCHRONIZED') {
+              if (status.title(tr(context)) == 'SYNCHRONIZED') {
                 canRescan = true;
               } else {
                 canRescan = false;
@@ -88,7 +88,7 @@ class _DashBoardAlertDialogState extends State<DashBoardAlertDialog> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
                 child: Text(
-                  S.of(context).rescanWallet,
+                  tr(context).rescanWallet,
                   style: TextStyle(
                       fontSize: 17,
                       color:canRescan ? Colors.white : settingsStore.isDarkTheme

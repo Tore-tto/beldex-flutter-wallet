@@ -9,15 +9,15 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InternetConnectivityChecker extends StatefulWidget {
-  const InternetConnectivityChecker({ Key key }) : super(key: key);
+  const InternetConnectivityChecker({ Key? key }) : super(key: key);
 
   @override
   State<InternetConnectivityChecker> createState() => _InternetConnectivityCheckerState();
 }
 
 class _InternetConnectivityCheckerState extends State<InternetConnectivityChecker> {
-ConnectivityResult _connectivityResult;
-StreamSubscription<ConnectivityResult> _connectivitySubscription;
+ConnectivityResult? _connectivityResult;
+StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 
 @override
   void initState() {
@@ -70,7 +70,7 @@ Future<void> _checkConnectivity() async {
 
   @override
   void dispose() {
-    _connectivitySubscription.cancel();
+    _connectivitySubscription!.cancel();
     super.dispose();
   }
 

@@ -6,19 +6,16 @@ import 'package:beldex_wallet/src/wallet/beldex/beldex_wallet.dart';
 import 'package:beldex_wallet/src/wallet/beldex/account.dart';
 import 'package:beldex_wallet/src/wallet/beldex/account_list.dart';
 import 'package:beldex_wallet/src/domain/services/wallet_service.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
+
 
 part 'account_list_store.g.dart';
 
 class AccountListStore = AccountListStoreBase with _$AccountListStore;
 
 abstract class AccountListStoreBase with Store {
-  AccountListStoreBase({@required WalletService walletService}) {
-    accounts = [];
-    isAccountCreating = false;
-
-    if (walletService.currentWallet != null) {
-      _onWalletChanged(walletService.currentWallet);
+  AccountListStoreBase({required WalletService walletService}) {
+      if (walletService.currentWallet != null) {
+      _onWalletChanged(walletService.currentWallet!);
     }
 
     _onWalletChangeSubscription =
@@ -26,20 +23,20 @@ abstract class AccountListStoreBase with Store {
   }
 
   @observable
-  List<Account> accounts;
+  List<Account> accounts=[];
 
   @observable
-  bool isValid;
+  bool isValid = false;
 
   @observable
-  String errorMessage;
+  String? errorMessage;
 
   @observable
-  bool isAccountCreating;
+  bool isAccountCreating = false;
 
-  AccountList _accountList;
-  StreamSubscription<Wallet> _onWalletChangeSubscription;
-  StreamSubscription<List<Account>> _onAccountsChangeSubscription;
+  AccountList _accountList = AccountList();
+  late StreamSubscription<Wallet> _onWalletChangeSubscription;
+  StreamSubscription<List<Account>>? _onAccountsChangeSubscription;
 
 //  @override
 //  void dispose() {
@@ -57,7 +54,7 @@ abstract class AccountListStoreBase with Store {
     accounts = _accountList.getAll();
   }
 
-  Future addAccount({String label}) async {
+  Future addAccount({required String label}) async {
     try {
       isAccountCreating = true;
       await _accountList.addAccount(label: label);
@@ -68,14 +65,14 @@ abstract class AccountListStoreBase with Store {
     }
   }
 
-  Future renameAccount({int index, String label}) async {
+  Future renameAccount({required int index,required String label}) async {
     await _accountList.setLabelSubaddress(accountIndex: index, label: label);
     updateAccountList();
   }
 
   Future _onWalletChanged(Wallet wallet) async {
     if (_onAccountsChangeSubscription != null) {
-      await _onAccountsChangeSubscription.cancel();
+      await _onAccountsChangeSubscription!.cancel();
     }
 
     if (wallet is BelDexWallet) {
@@ -94,6 +91,6 @@ abstract class AccountListStoreBase with Store {
     const pattern = '^[a-zA-Z0-9_]{1,15}\$';
     final regExp = RegExp(pattern);
     isValid = regExp.hasMatch(value);
-    errorMessage = isValid ? null : 'Enter valid name upto 15 characters'; //S.current.error_text_account_name;
+    errorMessage = (isValid ? null : 'Enter valid name upto 15 characters')!; //S.current.error_text_account_name;
   }
 }

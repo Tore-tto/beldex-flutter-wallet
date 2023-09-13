@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class SettingsTextListRow extends StatelessWidget {
-  SettingsTextListRow({@required this.onTaped, this.title, this.widget,this.balanceVisibility,this.decimalVisibility,this.currencyVisibility,this.feePriorityVisibility});
+  SettingsTextListRow({required this.onTaped, this.title, this.widget,this.balanceVisibility,this.decimalVisibility,this.currencyVisibility,this.feePriorityVisibility});
 
-  final VoidCallback onTaped;
-  final String title;
-  final Widget widget;
-  final bool balanceVisibility;
-  final bool decimalVisibility;
-  final bool currencyVisibility;
-  final bool feePriorityVisibility;
+  final VoidCallback? onTaped;
+  final String? title;
+  final Widget? widget;
+  final bool? balanceVisibility;
+  final bool? decimalVisibility;
+  final bool? currencyVisibility;
+  final bool? feePriorityVisibility;
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -31,15 +31,15 @@ class SettingsTextListRow extends StatelessWidget {
           children: <Widget>[
             Flexible(
               child: Text(
-                title,
+                title!,
                 style: TextStyle(
                     fontSize:MediaQuery.of(context).size.height*0.06/3, // 14.0,
                     fontWeight: FontWeight.w400,
                    // fontFamily: 'Poppins',
-                    color: Theme.of(context).primaryTextTheme.headline6.color),
+                    color: Theme.of(context).primaryTextTheme.headline6!.color),
               ),
             ),
-            Flexible(child: widget)
+            Flexible(child: widget!)
           ],
         ),
         onTap: onTaped,

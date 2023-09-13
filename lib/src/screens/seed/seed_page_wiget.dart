@@ -1,19 +1,20 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 // import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:provider/provider.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
+// import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:beldex_wallet/palette.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/widgets/primary_button.dart';
 import 'package:beldex_wallet/src/stores/wallet_seed/wallet_seed_store.dart';
 import 'package:beldex_wallet/src/screens/base_page.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SeedPage extends BasePage {
-  SeedPage({this.onCloseCallback});
+  SeedPage({required this.onCloseCallback});
 
   // static final image = Image.asset('assets/images/seed_image.png');
   static final image =
@@ -29,7 +30,7 @@ class SeedPage extends BasePage {
   bool get isModalBackButton => true;
 
   @override
-  String get title => S.current.seed_title;
+  String getTitle(AppLocalizations t) => 't.current.seed_title';
 
   final VoidCallback onCloseCallback;
 
@@ -38,7 +39,7 @@ class SeedPage extends BasePage {
       onCloseCallback != null ? onCloseCallback() : Navigator.of(context).pop();
 
   @override
-  Widget leading(BuildContext context) {
+  Widget? leading(BuildContext context) {
     return onCloseCallback != null ? Offstage() : super.leading(context);
   }
 
@@ -205,8 +206,7 @@ class SeedPage extends BasePage {
                                                               shape: RoundedRectangleBorder(
                                                                   borderRadius: BorderRadius.circular(15.0) //only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
                                                               ),
-                                                              content: Text(S
-                                                                  .of(context)
+                                                              content: Text(tr(context)
                                                                   .copied,style: TextStyle(color: Color(0xff0EB212),fontWeight:FontWeight.w700,fontSize:15) ,textAlign: TextAlign.center,),
                                                               backgroundColor: Color(0xff0BA70F).withOpacity(0.10), //.fromARGB(255, 46, 113, 43),
                                                               duration: Duration(
@@ -236,10 +236,16 @@ class SeedPage extends BasePage {
                               SizedBox(width: 10,),
                               InkWell(
                                  onTap: () {
-                                              Share.text(
-                                                  S.of(context).seed_share,
-                                                  _seed,
-                                                  'text/plain');
+
+                                    Share.share(
+                                      _seed,
+                                      subject: tr(context).seed_share,
+                                      
+                                    );
+                                              //  Share.text(
+                                              //     S.of(context).seed_share,
+                                              //     _seed,
+                                              //     'text/plain');
                                             },
                                 child: Container(
                                   height: 46,width:MediaQuery.of(context).size.height*0.40/3,
@@ -248,7 +254,7 @@ class SeedPage extends BasePage {
                                     color: Color(0xff2979FB)
                                   ),
                                   child:Center(
-                                    child:Text(S.of(context).save,style:TextStyle(fontSize:16,fontWeight:FontWeight.w800,color:Colors.white))
+                                    child:Text(tr(context).save,style:TextStyle(fontSize:16,fontWeight:FontWeight.w800,color:Colors.white))
                                   )
                                 ),
                               )
@@ -561,7 +567,7 @@ class SeedPage extends BasePage {
                               borderRadius: BorderRadius.circular(10)
                             ),
                             child: Center(
-                              child:Text(S.of(context).continue_text,
+                              child:Text(tr(context).continue_text,
                               style:TextStyle(
                               color: //isCopied ?
                                Color(0xffffffff) ,

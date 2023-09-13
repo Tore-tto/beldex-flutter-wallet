@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/domain/common/contact.dart';
 import 'package:beldex_wallet/src/domain/common/qr_scanner.dart';
 import 'package:beldex_wallet/src/screens/send/confirm_sending.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobx/mobx.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/routes.dart';
 import 'package:beldex_wallet/src/domain/common/balance_display_mode.dart';
@@ -35,11 +35,11 @@ import 'package:provider/provider.dart';
 bool canLoad = false;
 
 class SendPage extends BasePage {
-  SendPage({this.flashMap});
+  SendPage({required this.flashMap});
   //final  bool flashvalue;
   final Map<String, dynamic> flashMap;
   @override
-  String get title => S.current.send;
+  String getTitle(AppLocalizations t) => t.send;
 
   @override
   Widget trailing(BuildContext context) {
@@ -66,7 +66,7 @@ class SendPage extends BasePage {
 class SendForm extends StatefulWidget {
   // final dynamic flashvalue;
   final Map<String, dynamic> flashMap;
-  SendForm({Key key, this.flashMap}) : super(key: key);
+  SendForm({Key? key,required this.flashMap}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => SendFormState();
@@ -80,8 +80,8 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
   bool _effectsInstalled = false;
   final _formKey = GlobalKey<FormState>();
   var controller = StreamController<double>.broadcast();
-  double position;
-  AnimationController animationController;
+  double? position;
+  AnimationController? animationController;
   bool addressValidation = false;
   var addressErrorMessage = "";
   bool amountValidation = false;
@@ -90,7 +90,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
       []; // dispose the reactions we used in this file to avoid the memory leaks
   final List<ReactionDisposer> whenDisposers =
       []; //dispose the when functions we used in this file to avoid the memory leaks
-  ReactionDisposer rdisposer1, rdisposer2, rdisposer3;
+  ReactionDisposer? rdisposer1, rdisposer2, rdisposer3;
   bool isFlashTransaction = false;
   @override
   void initState() {
@@ -152,7 +152,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    animationController.dispose();
+    animationController!.dispose();
     rdisposer1?.call();
     rdisposer2?.call();
     rdisposer3?.call();
@@ -166,10 +166,10 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
         await sendStore.isOpenaliasRecord(_addressController.text);
 
     if (isOpenAlias) {
-      _addressController.text = sendStore.recordAddress;
+      _addressController.text = sendStore.recordAddress!;
 
-      await showSimpleBeldexDialog(context, S.of(context).openalias_alert_title,
-          S.of(context).openalias_alert_content(sendStore.recordName),
+      await showSimpleBeldexDialog(context, tr(context).openalias_alert_title,
+          tr(context).openalias_alert_content(sendStore.recordName!),
           onPressed: (_) => Navigator.of(context).pop());
     }
   }
@@ -234,7 +234,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context)
                                         .primaryTextTheme
-                                        .headline6
+                                        .headline6!
                                         .color),
                               ),
                               SizedBox(
@@ -278,7 +278,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                                       style: TextStyle(
                                         color: Theme.of(context)
                                             .primaryTextTheme
-                                            .caption
+                                            .caption!
                                             .color,
                                         fontSize: 16,
                                         //fontWeight: FontWeight.w600,
@@ -302,7 +302,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(S.of(context).send_beldex_address,
+                      Text(tr(context).send_beldex_address,
                           style: TextStyle(
                               fontSize: 18.0, fontWeight: FontWeight.w700)),
                       GestureDetector(
@@ -333,7 +333,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                       //Beldex Address
                       AddressTextField(
                         controller: _addressController,
-                        placeholder: S.of(context).send_beldex_address,
+                        placeholder: tr(context).send_beldex_address,
                         focusNode: _focusNodeAddress,
                         onURIScanned: (uri) {
                           var address = '';
@@ -341,7 +341,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                           if (uri != null) {
                             address = uri.path;
                             if (uri.queryParameters.isNotEmpty) {
-                              amount = uri.queryParameters[uri.queryParameters.keys.first];
+                              amount = uri.queryParameters[uri.queryParameters.keys.first]!;
                             }
                           }
                           _addressController.text = address;
@@ -352,7 +352,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                           AddressTextFieldOption.qrCode,
                         ],
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             setState(() {
                               addressValidation = true;
                               addressErrorMessage =
@@ -370,7 +370,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                             } else {
                               if (getAddressBasicValidation(value)) {
                                 sendStore.validateAddress(value,
-                                    cryptoCurrency: CryptoCurrency.bdx);
+                                    cryptoCurrency: CryptoCurrency.bdx, t:tr(context));
                                 if (sendStore.errorMessage != null) {
                                   setState(() {
                                     addressValidation = true;
@@ -449,7 +449,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                                       fontWeight: FontWeight.w900,
                                       color: Theme.of(context)
                                           .primaryTextTheme
-                                          .caption
+                                          .caption!
                                           .color),
                                   controller: _cryptoAmountController,
                                   //autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -469,7 +469,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                                       errorStyle:
                                           TextStyle(color: BeldexPalette.red)),
                                   validator: (value) {
-                                    if (value.isEmpty) {
+                                    if (value!.isEmpty) {
                                       setState(() {
                                         amountValidation = true;
                                         amountErrorMessage =
@@ -479,11 +479,11 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                                     } else {
                                       if (getAmountValidation(value)) {
                                         sendStore.validateBELDEX(value,
-                                            balanceStore.unlockedBalance);
+                                            balanceStore.unlockedBalance,tr(context));
                                         if (sendStore.errorMessage != null) {
                                           setState(() {
                                             amountValidation = true;
-                                            amountErrorMessage = S.current
+                                            amountErrorMessage = tr(context)
                                                 .pleaseEnterAValidAmount;
                                           });
                                           return;
@@ -598,7 +598,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                         child: Row(
                           // mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            Text('${S.of(context).send_estimated_fee}   ',
+                            Text('${tr(context).send_estimated_fee}   ',
                                 style: TextStyle(
                                   fontSize: 15,
                                   //fontFamily: 'Poppins',
@@ -622,7 +622,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                       SizedBox(
                         width: double.infinity,
                         child: Text(
-                            S.of(context).send_priority(
+                            tr(context).send_priority(
                                 settingsStore.transactionPriority.toString()),
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -653,30 +653,21 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                     if (!currentFocus.hasPrimaryFocus) {
                       currentFocus.unfocus();
                     }
-                    // await Future.delayed(
-                    //     const Duration(milliseconds: 100), () {});
-                    if (_formKey.currentState.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       if (!addressValidation && !amountValidation) {
-                        var isSuccessful = false;
-
                         await Navigator.of(context).pushNamed(Routes.auth,
                             arguments: (bool isAuthenticatedSuccessfully,
                                 AuthPageState auth) async {
                           print(
                               'inside authentication $isAuthenticatedSuccessfully');
                           if (!isAuthenticatedSuccessfully) {
-                            isSuccessful = false;
                             return;
                           }
                           Navigator.of(auth.context).pop();
                           _startCreatingTransaction(
                               sendStore, _addressController.text,isFlashTransaction);
-                          isSuccessful = true;
                         });
-                        return isSuccessful;
                       }
-                    } else {
-                      return false;
                     }
                   }
                 : null,
@@ -724,14 +715,14 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
         _fiatAmountController.text = amount;
       }
     });
-    reactionDisposers.add(rdisposer1);
+    reactionDisposers.add(rdisposer1!);
 
     rdisposer2 = reaction((_) => sendStore.cryptoAmount, (String amount) {
       if (amount != _cryptoAmountController.text) {
         _cryptoAmountController.text = amount;
       }
     });
-    reactionDisposers.add(rdisposer2);
+    reactionDisposers.add(rdisposer2!);
     _fiatAmountController.addListener(() {
       final fiatAmount = _fiatAmountController.text;
       print('fiat amount ----> $fiatAmount');
@@ -764,9 +755,9 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
           print('inside the transaction created successfully---->');
           await showSimpleConfirmDialog(
               context,
-              S.of(context).confirm_sending,
-              sendStore.pendingTransaction.amount,
-              sendStore.pendingTransaction.fee,
+              tr(context).confirm_sending,
+              sendStore.pendingTransaction!.amount,
+              sendStore.pendingTransaction!.fee,
               _addressController.text, onPressed: (_) async {
             Navigator.of(context).pop();
              await Navigator.push(
@@ -787,8 +778,8 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
           Navigator.of(context).pop();
           await showSimpleSentTrans(
               context,
-              S.of(context).sending,
-              sendStore.pendingTransaction.amount,
+              tr(context).sending,
+              sendStore.pendingTransaction!.amount,
               'fee',
               _addressController.text, onPressed: (_) {
             _addressController.text = '';
@@ -806,7 +797,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
  }
 
 class CommitTransactionLoader extends StatelessWidget {
-  CommitTransactionLoader({Key key,this.sendStore})
+  CommitTransactionLoader({Key? key,required this.sendStore})
       : super(key: key);
 
   final SendStore sendStore;

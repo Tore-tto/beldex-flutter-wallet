@@ -21,7 +21,7 @@ Future showBiometricDialog(BuildContext context,
 
 
 class BiometricDialog extends StatelessWidget {
-   BiometricDialog({ Key key, this.title }) : super(key: key);
+   BiometricDialog({ Key? key, required this.title }) : super(key: key);
 
 final String title;
 
@@ -29,17 +29,17 @@ final String title;
   @override
   Widget build(BuildContext context) {
     return BeldexBioDialog(
-       title: title,
+       title: title,onDismiss: (context){},
     );
   }
 }
 
 class BeldexBioDialog extends StatelessWidget {
-  BeldexBioDialog({this.body, this.onDismiss, this.title,});
+  BeldexBioDialog({this.body, required this.onDismiss, this.title,});
 
   final void Function(BuildContext context) onDismiss;
-  final String body;
-  final String title;
+  final String? body;
+  final String? title;
   void _onDismiss(BuildContext context) {
     if (onDismiss == null) {
       Navigator.of(context).pop();

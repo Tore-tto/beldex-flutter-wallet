@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CreateAccountDialog extends StatefulWidget {
-  CreateAccountDialog({Key key, this.account, this.accList}) : super(key: key);
-  final Account account;
+  CreateAccountDialog({Key? key, this.account,required this.accList}) : super(key: key);
+  final Account? account;
   final List<Account> accList;
 
   @override
@@ -22,7 +22,7 @@ class _CreateAccountDialogState extends State<CreateAccountDialog>
 
   @override
   void initState() {
-    if (widget.account != null) _textController.text = widget.account.label;
+    if (widget.account != null) _textController.text = widget.account!.label;
     WidgetsBinding.instance.addObserver(this);
     getAccList();
     super.initState();
@@ -119,7 +119,7 @@ class _CreateAccountDialogState extends State<CreateAccountDialog>
                           ),
                         ),
                         validator: (value) {
-                          if (!validateInput(value) || value.length > 15) {
+                          if (!validateInput(value!) || value.length > 15) {
                             return 'Enter valid name upto 15 characters';
                           } else if (checkNameAlreadyExist(value)) {
                             return 'Account already exist';
@@ -161,18 +161,18 @@ class _CreateAccountDialogState extends State<CreateAccountDialog>
                         Expanded(
                           child: MaterialButton(
                             onPressed: () {
-                              if (!_formKey.currentState.validate()) {
-                                return null;
+                              if (!_formKey.currentState!.validate()) {
+                                return ;
                               }
                               if (widget.account != null &&
                                   !checkNameAlreadyExist(
                                       _textController.text)) {
                                 accountListStore.renameAccount(
-                                    index: widget.account.id,
+                                    index: widget.account!.id,
                                     label: _textController.text);
                               } else if (checkNameAlreadyExist(
                                   _textController.text)) {
-                                return 'Account already exist';
+                                //return 'Account already exist';
                               } else {
                                 accountListStore.addAccount(
                                     label: _textController.text);

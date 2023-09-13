@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../palette.dart';
 
 class NewNavListHeader extends StatelessWidget {
-  NewNavListHeader({this.title});
+  NewNavListHeader({required this.title});
 
   final String title;
 

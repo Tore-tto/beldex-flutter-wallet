@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/domain/common/fiatCurrencyModel.dart';
 import 'package:beldex_wallet/src/domain/common/fiat_currency.dart';
 import 'package:beldex_wallet/src/domain/common/qr_scanner.dart';
@@ -17,7 +18,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobx/mobx.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:beldex_wallet/routes.dart';
 import 'package:beldex_wallet/src/domain/common/balance_display_mode.dart';
@@ -43,10 +43,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 bool canLoad = false;
 class FlashPage extends BasePage {
 
-  String controller;
+  String? controller;
 
   @override
-  String get title => S.current.send; //wallet_list_title;
+  String getTitle(AppLocalizations t) => t.send; //wallet_list_title;
 
   // @override
   // Widget leading(BuildContext context) {
@@ -117,13 +117,13 @@ class FlashPage extends BasePage {
   bool get resizeToAvoidBottomInset => false;
 
   @override
-  Widget body(BuildContext context) => FlashTransactionForm(controllerValue: controller,);
+  Widget body(BuildContext context) => FlashTransactionForm(controllerValue: controller!,);
 }
 
 class FlashTransactionForm extends StatefulWidget {
 
 final String controllerValue;
-FlashTransactionForm({Key key,@required this.controllerValue}):super(key: key);
+FlashTransactionForm({Key? key,required this.controllerValue}):super(key: key);
 
   @override
   State<StatefulWidget> createState() => FlashTransactionFormState();
@@ -143,9 +143,9 @@ class FlashTransactionFormState extends State<FlashTransactionForm> with TickerP
 
   //
   var controller = StreamController<double>.broadcast();
-  double position;
-  AnimationController animationController;
-  ReactionDisposer rdisposer1,rdisposer2,rdisposer3;
+  double? position;
+  AnimationController? animationController;
+  ReactionDisposer? rdisposer1,rdisposer2,rdisposer3;
   bool addressValidation = false;
   var addressErrorMessage = "";
   bool amountValidation = false;
@@ -187,7 +187,7 @@ if(widget.controllerValue != null || widget.controllerValue != ''){
 
     try {
       final code = await presentQRScanner();
-      final uri = Uri.parse(code);
+      final uri = Uri.parse(code!);
      
       var address = '';
       var amount = '';
@@ -203,7 +203,7 @@ if(widget.controllerValue != null || widget.controllerValue != ''){
                           if (uri != null) {
                             address = uri.path;
                             if(uri.queryParameters[uri.queryParameters.keys.first]!=null){
-                              amount = uri.queryParameters[uri.queryParameters.keys.first];
+                              amount = uri.queryParameters[uri.queryParameters.keys.first]!;
                             }
                           } else {
                             address = uri.toString();
@@ -292,7 +292,7 @@ bool getAddressBasicValidation(String value){
 
   @override
   void dispose() {
-    animationController.dispose();
+    animationController!.dispose();
     rdisposer1?.call();
     rdisposer2?.call();
    rdisposer3?.call();
@@ -308,10 +308,10 @@ bool getAddressBasicValidation(String value){
         await sendStore.isOpenaliasRecord(_addressController.text);
 
     if (isOpenAlias) {
-      _addressController.text = sendStore.recordAddress;
+      _addressController.text = sendStore.recordAddress!;
 
-      await showSimpleBeldexDialog(context, S.of(context).openalias_alert_title,
-          S.of(context).openalias_alert_content(sendStore.recordName),
+      await showSimpleBeldexDialog(context, tr(context).openalias_alert_title,
+          tr(context).openalias_alert_content(sendStore.recordName!),
           onPressed: (_) => Navigator.of(context).pop());
     }
   }
@@ -444,7 +444,7 @@ void showHUDLoader(BuildContext context) {
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context)
                                         .primaryTextTheme
-                                        .headline6
+                                        .headline6!
                                         .color),
                               ),
                               SizedBox(
@@ -496,7 +496,7 @@ void showHUDLoader(BuildContext context) {
                                       style: TextStyle(
                                         color: Theme.of(context)
                                             .primaryTextTheme
-                                            .caption
+                                            .caption!
                                             .color,
                                         fontSize: 16,
                                         //fontWeight: FontWeight.w600,
@@ -521,7 +521,7 @@ void showHUDLoader(BuildContext context) {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(S.of(context).send_beldex_address,
+                      Text(tr(context).send_beldex_address,
                           style: TextStyle(
                               fontSize: 18.0, fontWeight: FontWeight.w700)),
                       GestureDetector(
@@ -677,7 +677,7 @@ void showHUDLoader(BuildContext context) {
                       //Beldex Address
                       AddressTextField(
                         controller: _addressController,
-                        placeholder: S.of(context).send_beldex_address,
+                        placeholder: tr(context).send_beldex_address,
                         focusNode: _focusNodeAddress,
                         onURIScanned: (uri) {
                           var address = '';
@@ -688,7 +688,7 @@ void showHUDLoader(BuildContext context) {
                                     uri.queryParameters.keys.first] !=
                                 null) {
                               amount = uri.queryParameters[
-                                  uri.queryParameters.keys.first];
+                                  uri.queryParameters.keys.first]!;
                             }
                           } else {
                             address = uri.toString();
@@ -714,7 +714,7 @@ void showHUDLoader(BuildContext context) {
 
                             
 
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             setState(() {
                               addressValidation = true;
                               addressErrorMessage =
@@ -731,7 +731,7 @@ void showHUDLoader(BuildContext context) {
                               }else{
                                 if(getAddressBasicValidation(value)){
                             sendStore.validateAddress(value,
-                                cryptoCurrency: CryptoCurrency.bdx);
+                                cryptoCurrency: CryptoCurrency.bdx,t: tr(context));
                             if (sendStore.errorMessage != null) {
                               setState(() {
                                 addressValidation = true;
@@ -813,7 +813,7 @@ void showHUDLoader(BuildContext context) {
                                       fontWeight: FontWeight.w900,
                                       color: Theme.of(context)
                                           .primaryTextTheme
-                                          .caption
+                                          .caption!
                                           .color),
                                   controller: _cryptoAmountController,
                                   //autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -875,7 +875,7 @@ void showHUDLoader(BuildContext context) {
                                       errorStyle:
                                           TextStyle(color: BeldexPalette.red)),
                                   validator: (value) {
-                                    if (value.isEmpty) {
+                                    if (value!.isEmpty) {
                                       setState(() {
                                         amountValidation = true;
                                         amountErrorMessage =
@@ -885,7 +885,7 @@ void showHUDLoader(BuildContext context) {
                                     } else {
                                    if(getAmountValidation(value)){
                                       sendStore.validateBELDEX(
-                                          value, balanceStore.unlockedBalance);
+                                          value, balanceStore.unlockedBalance,tr(context));
                                       if (sendStore.errorMessage != null) {
                                         setState(() {
                                           amountValidation = true;
@@ -1224,7 +1224,7 @@ void showHUDLoader(BuildContext context) {
                         child: Row(
                          // mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            Text('${S.of(context).send_estimated_fee}   ',
+                            Text('${tr(context).send_estimated_fee}   ',
                                 style: TextStyle(
                                   fontSize: 15,
                                   //fontFamily: 'Poppins',
@@ -1250,7 +1250,7 @@ void showHUDLoader(BuildContext context) {
                       SizedBox(
                         width: double.infinity,
                         child: Text(
-                            S.of(context).send_priority(
+                            tr(context).send_priority(
                              BeldexTransactionPriority.flash.toString()),
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -1567,7 +1567,7 @@ bottomSection:
                                     }
                                     // await Future.delayed(
                                     //     const Duration(milliseconds: 100), () {});
-                                    if (_formKey.currentState.validate()) {
+                                    if (_formKey.currentState!.validate()) {
                                       if (!addressValidation &&
                                           !amountValidation) {
                                         var isSuccessful = false;
@@ -1586,16 +1586,17 @@ bottomSection:
                                          print('create transaction ---> going to');
                                           await sendStore.createTransaction(
                                               address: _addressController.text,
-                                              tPriority: BeldexTransactionPriority.flash
+                                              tPriority: BeldexTransactionPriority.flash,
+                                            t:tr(context)
                                               );
                                            print('create transaction ---> reached');
                                           _loading(false);
                                           isSuccessful = true;
                                         });
-                                        return isSuccessful;
+                                       // return isSuccessful;
                                       }
                                     } else {
-                                      return false;
+                                     // return false;
                                     }
                                   }
                                 : null,
@@ -1756,9 +1757,9 @@ bottomSection:
         WidgetsBinding.instance.addPostFrameCallback((_) {
           print('inside the transaction created successfully---->');
         showSimpleConfirmDialog(context,
-         S.of(context).confirm_sending,
-          sendStore.pendingTransaction.amount,
-          sendStore.pendingTransaction.fee,
+         tr(context).confirm_sending,
+          sendStore.pendingTransaction!.amount,
+          sendStore.pendingTransaction!.fee,
           _addressController.text,
           onPressed: (_)async{
             Navigator.of(context).pop();
@@ -1776,7 +1777,7 @@ bottomSection:
       if (state is TransactionCommitted) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
            print('inside the transaction commiteed ---->');
-          showSimpleSentTrans( context, S.of(context).sending, sendStore.pendingTransaction.amount,'fee',_addressController.text,
+          showSimpleSentTrans( context, tr(context).sending, sendStore.pendingTransaction!.amount,'fee',_addressController.text,
               onPressed: (_) {
             _addressController.text = '';
             _cryptoAmountController.text = '';

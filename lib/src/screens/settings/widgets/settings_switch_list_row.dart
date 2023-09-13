@@ -1,6 +1,6 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:beldex_wallet/src/widgets/standart_switch.dart';
 import 'package:beldex_wallet/theme_changer.dart';
@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class SettingsSwitchListRow extends StatelessWidget {
   SettingsSwitchListRow(
-      {@required this.title, @required this.balanceVisibility,@required this.decimalVisibility,@required this.currencyVisibility,@required this.feePriorityVisibility});
+      {required this.title, required this.balanceVisibility,required this.decimalVisibility,required this.currencyVisibility,required this.feePriorityVisibility});
 
   final String title;
   bool balanceVisibility = false;
@@ -17,11 +17,11 @@ class SettingsSwitchListRow extends StatelessWidget {
   bool currencyVisibility = false;
   bool feePriorityVisibility = false;
 
-  Widget _getSwitch(BuildContext context) {
+  Widget? _getSwitch(BuildContext context) {
     final settingsStore = Provider.of<SettingsStore>(context);
     final _themeChanger = Provider.of<ThemeChanger>(context);
 
-    if (title == S.of(context).settings_save_recipient_address) {
+    if (title == tr(context).settings_save_recipient_address) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.shouldSaveRecipientAddress,
@@ -38,7 +38,7 @@ class SettingsSwitchListRow extends StatelessWidget {
               }));
     }
 
-    if (title == S.of(context).settings_allow_biometric_authentication) {
+    if (title == tr(context).settings_allow_biometric_authentication) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.allowBiometricAuthentication,
@@ -73,7 +73,7 @@ class SettingsSwitchListRow extends StatelessWidget {
               }));
     }
 
-    if (title == S.of(context).settings_dark_mode) {
+    if (title == tr(context).settings_dark_mode) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.isDarkTheme,
@@ -91,7 +91,7 @@ class SettingsSwitchListRow extends StatelessWidget {
               }));
     }
 
-    if (title == S.of(context).settings_enable_fiat_currency) {
+    if (title == tr(context).settings_enable_fiat_currency) {
       return Observer(
           builder: (_) => StandartSwitch(
               value: settingsStore.enableFiatCurrency,
@@ -122,7 +122,7 @@ class SettingsSwitchListRow extends StatelessWidget {
                   fontSize:MediaQuery.of(context).size.height*0.06/3, //14.0,
                   fontWeight: FontWeight.w500,
                   //fontFamily: 'Poppins',
-                  color: Theme.of(context).primaryTextTheme.headline6.color)),
+                  color: Theme.of(context).primaryTextTheme.headline6!.color)),
           trailing: _getSwitch(context)),
     );
   }

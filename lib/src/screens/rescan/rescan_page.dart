@@ -1,3 +1,4 @@
+import 'package:beldex_wallet/l10n.dart';
 import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:beldex_wallet/src/wallet/beldex/get_height_by_date.dart';
 import 'package:beldex_wallet/src/widgets/nospaceformatter.dart';
@@ -11,7 +12,6 @@ import 'package:beldex_wallet/src/screens/base_page.dart';
 import 'package:beldex_wallet/src/widgets/blockchain_height_widget.dart';
 import 'package:beldex_wallet/src/widgets/primary_button.dart';
 import 'package:beldex_wallet/src/stores/rescan/rescan_wallet_store.dart';
-import 'package:beldex_wallet/generated/l10n.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //blockheight widget's property
@@ -24,7 +24,7 @@ final _formKey = GlobalKey<FormState>();
 class RescanPage extends BasePage {
   final blockchainKey = GlobalKey<_BlockHeightSwapingWidgetState>();
   @override
-  String get title => '${S.current.rescan} wallet';
+  String getTitle(AppLocalizations t) => '${t.rescan} wallet';
 
   @override
   Widget trailing(BuildContext context) {
@@ -51,9 +51,9 @@ class RescanPage extends BasePage {
       bottomSection: Observer(
           builder: (_) => LoadingPrimaryButton(
               isLoading: rescanWalletStore.state == RescanWalletState.rescaning,
-              text: S.of(context).rescan,
+              text: tr(context).rescan,
               onPressed: () async {
-                if(_formKey.currentState.validate()){
+                if(_formKey.currentState!.validate()){
                   print('block height ---> $height');
                   await rescanWalletStore.rescanCurrentWallet(
                  restoreHeight:height);
@@ -63,9 +63,9 @@ class RescanPage extends BasePage {
                   return null;
                 }
               },
-              color: Theme.of(context).primaryTextTheme.button.backgroundColor,
+              color: Theme.of(context).primaryTextTheme.button!.backgroundColor!,
               borderColor:
-                  Theme.of(context).primaryTextTheme.button.backgroundColor)),
+                  Theme.of(context).primaryTextTheme.button!.backgroundColor!)),
     );
   }
 
@@ -76,7 +76,7 @@ class RescanPage extends BasePage {
 }
 
 class BlockHeightSwapingWidget extends StatefulWidget {
-  const BlockHeightSwapingWidget({Key key}) : super(key: key);
+  const BlockHeightSwapingWidget({Key? key}) : super(key: key);
 
   @override
   State<BlockHeightSwapingWidget> createState() =>
@@ -143,7 +143,7 @@ restoreHeightController.text = '';
                                     ? Color(0xff77778B)
                                     : Color(0xff77778B)),
                             hintText:
-                                S.of(context).widgets_restore_from_blockheight,
+                                tr(context).widgets_restore_from_blockheight,
                             /*focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                                 color: BeldexPalette.teal, width: 2.0)),
@@ -153,7 +153,7 @@ restoreHeightController.text = '';
                           ),
                           validator: (value) {
                             final pattern = RegExp(r'^(?!.*\s)\d+$');
-                            if (!pattern.hasMatch(value)) {
+                            if (!pattern.hasMatch(value!)) {
                               return 'Enter valid height without space';
                             } else {
                               return null;
@@ -212,11 +212,11 @@ restoreHeightController.text = '';
                                               ? Color(0xff77778B)
                                               : Color(0xff77778B)),
                                       hintText:
-                                          S.of(context).widgets_restore_from_date,
+                                          tr(context).widgets_restore_from_date,
                                     ),
                                     controller: dateController,
                                     validator: (value) {
-                                      if (value.isEmpty) {
+                                      if (value!.isEmpty) {
                                         return 'Date should not be empty';
                                       } else {
                                         return null;
@@ -257,8 +257,8 @@ restoreHeightController.text = '';
                       children: [
                         Text(
                             isRestoreByHeight
-                                ? S.of(context).widgets_restore_from_date
-                                : S.of(context).widgets_restore_from_blockheight,
+                                ? tr(context).widgets_restore_from_date
+                                : tr(context).widgets_restore_from_blockheight,
                             style: TextStyle(
                                 color: Color(0xffffffff),
                                 fontSize: 14,
