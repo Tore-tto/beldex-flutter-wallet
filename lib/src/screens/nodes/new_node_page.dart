@@ -388,7 +388,7 @@ void showHUDLoader(BuildContext context) {
                            GestureDetector(
                             onTap: ()async{
                               
-                               if (!_formKey.currentState!.validate()) {
+                               if (!(_formKey.currentState?.validate() ?? false)) {
                                         return;  
                               }else{
                                 _loading(true);
@@ -437,7 +437,7 @@ void showHUDLoader(BuildContext context) {
                                padding: const EdgeInsets.all(10.0),
                                child: GestureDetector(
                                  onTap:isNodeChecked ? ()async{
-                                   if (!_formKey.currentState!.validate()) {
+                                   if (!(_formKey.currentState?.validate() ?? false)) {
                                         return;  }
 
                                    await nodeList.addNode(

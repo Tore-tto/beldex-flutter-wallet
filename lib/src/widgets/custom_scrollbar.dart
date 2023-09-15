@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class CustomScrollbar extends SingleChildRenderObjectWidget {
-  final ScrollController? controller;
+  final ScrollController controller;
   final Widget? child;
   final double? strokeWidth;
   final EdgeInsets? padding;
@@ -12,7 +12,7 @@ class CustomScrollbar extends SingleChildRenderObjectWidget {
 
   const CustomScrollbar({
     Key? key,
-    this.controller,
+    required this.controller,
     this.child,
     this.strokeWidth,
     this.padding,
@@ -23,7 +23,7 @@ class CustomScrollbar extends SingleChildRenderObjectWidget {
   @override
   RenderObject createRenderObject(BuildContext context) {
     return RenderCustomScrollbar(
-      controller: controller!,
+      controller: controller,
       strokeWidth: strokeWidth ?? 16,
       padding:
       padding ?? const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
@@ -51,22 +51,22 @@ class CustomScrollbar extends SingleChildRenderObjectWidget {
 }
 
 class RenderCustomScrollbar extends RenderShiftedBox {
-  final ScrollController? controller;
-  Offset? _thumbPoint = Offset(0, 0);
-  EdgeInsets? padding;
+  final ScrollController controller;
+  Offset _thumbPoint = Offset(0, 0);
+  EdgeInsets padding;
   double? strokeWidth;
   Color? trackColor;
   Color? thumbColor;
 
   RenderCustomScrollbar({
     RenderBox? child,
-    this.padding,
-    this.controller,
+    required this.padding,
+    required this.controller,
     this.strokeWidth,
     this.trackColor,
     this.thumbColor,
   }) : super(child) {
-    controller!.addListener(_updateThumbPoint);
+    controller.addListener(_updateThumbPoint);
   }
 
   void _updateThumbPoint() {
@@ -76,12 +76,12 @@ class RenderCustomScrollbar extends RenderShiftedBox {
   }
 
   double _getHorizontalOffset() {
-    return size.width - padding!.right - strokeWidth! / 2;
+    return size.width - padding.right - strokeWidth! / 2;
   }
 
   double _getThumbVerticalOffset() {
     var scrollExtent = _getScrollExtent();
-    var scrollPosition = controller!.position;
+    var scrollPosition = controller.position;
     var scrollOffset =
     ((scrollPosition.pixels - scrollPosition.minScrollExtent) /
         scrollExtent)
@@ -90,11 +90,11 @@ class RenderCustomScrollbar extends RenderShiftedBox {
   }
 
   double _getHeightWithPadding() {
-    return size.height - padding!.vertical;
+    return size.height - padding.vertical;
   }
 
   double _getScrollExtent() {
-    return controller!.position.maxScrollExtent;
+    return controller.position.maxScrollExtent;
   }
 
   double _getThumbHeight() {
@@ -129,7 +129,7 @@ class RenderCustomScrollbar extends RenderShiftedBox {
       ..strokeCap = StrokeCap.round
       ..color = trackColor!
       ..strokeWidth = strokeWidth!;
-    final startPoint = Offset(width, offset.dy + padding!.top);
+    final startPoint = Offset(width, offset.dy + padding.top);
     final endPoint = Offset(width, startPoint.dy + _getHeightWithPadding());
     context.canvas.drawLine(startPoint, endPoint, trackPaint);
   }
@@ -141,7 +141,7 @@ class RenderCustomScrollbar extends RenderShiftedBox {
       ..color = thumbColor!
       ..strokeCap = StrokeCap.round;
     final startPoint =
-    Offset(width, (_thumbPoint!.dy + offset.dy + padding!.top));
+    Offset(width, (_thumbPoint.dy + offset.dy + padding.top));
     final endPoint = Offset(width, startPoint.dy + _getThumbHeight());
     context.canvas.drawLine(startPoint, endPoint, paintThumb);
   }
@@ -150,7 +150,7 @@ class RenderCustomScrollbar extends RenderShiftedBox {
     var canvas = context.canvas;
     canvas.save();
     canvas.translate(size.width - 6,
-        (_thumbPoint!.dy + _getThumbHeight() * 0.45 + offset.dy + padding!.top));
+        (_thumbPoint.dy + _getThumbHeight() * 0.45 + offset.dy + padding.top));
     canvas.rotate(1.5708);
     TextSpan span = TextSpan(
         text: _getPercent(),
@@ -166,7 +166,7 @@ class RenderCustomScrollbar extends RenderShiftedBox {
     if (_getScrollExtent() == 0) {
       return '100 %';
     }
-    return (controller!.position.pixels / _getScrollExtent() * 100)
+    return (controller.position.pixels / _getScrollExtent() * 100)
         .toStringAsFixed(0) +
         ' %';
   }
@@ -175,13 +175,13 @@ class RenderCustomScrollbar extends RenderShiftedBox {
   void performLayout() {
     size = constraints.biggest;
     if (child == null) return;
-    child!.layout(constraints.copyWith(maxWidth: _getChildMaxWidth()),
+    child?.layout(constraints.copyWith(maxWidth: _getChildMaxWidth()),
         parentUsesSize: !constraints.isTight);
-    final BoxParentData childParentData = child!.parentData as BoxParentData;
+    final childParentData = child?.parentData as BoxParentData;
     childParentData.offset = Offset.zero;
   }
 
   double _getChildMaxWidth() {
-    return constraints.maxWidth - padding!.horizontal - strokeWidth!;
+    return constraints.maxWidth - padding.horizontal - strokeWidth!;
   }
 }

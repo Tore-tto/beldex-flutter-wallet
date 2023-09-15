@@ -189,15 +189,14 @@ class AddSubAddress extends StatelessWidget {
             width: 250,
             child: LoadingPrimaryButton(
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
+                  if (_formKey.currentState?.validate() ?? false) {
                     await subaddressCreationStore.add(label: _labelController.text);
                     Navigator.of(context).pop();
                   }
                 },
                 text:'Create', //S.of(context).new_subaddress_create,
-                color: Theme.of(context).primaryTextTheme.button!.backgroundColor!,
-                borderColor:
-                Theme.of(context).primaryTextTheme.button!.backgroundColor!,
+                color: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
+                borderColor: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
                 isLoading: subaddressCreationStore.state is SubaddressIsCreating),
           ),
         )

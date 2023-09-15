@@ -43,7 +43,7 @@ class WalletListService {
       .toList();
 
   Future create(String name, String language) async {
-    if (await walletsManager!.isWalletExit(name)) {
+    if (await walletsManager?.isWalletExit(name) ?? false) {
       throw WalletIsExistException(name);
     }
 
@@ -54,13 +54,15 @@ class WalletListService {
     final password = Uuid().v4();
     await saveWalletPassword(password: password, walletName: name);
 
-    final wallet = await walletsManager!.create(name, password, language);
+    final wallet = await walletsManager?.create(name, password, language);
 
-    await onWalletChange(wallet);
+    if(wallet !=null) {
+      await onWalletChange(wallet);
+    }
   }
 
   Future restoreFromSeed(String name, String seed, int restoreHeight) async {
-    if (await walletsManager!.isWalletExit(name)) {
+    if (await walletsManager?.isWalletExit(name) ?? false) {
       throw WalletIsExistException(name);
     }
 
@@ -71,15 +73,16 @@ class WalletListService {
     final password = Uuid().v4();
     await saveWalletPassword(password: password, walletName: name);
 
-    final wallet = await walletsManager!.restoreFromSeed(
+    final wallet = await walletsManager?.restoreFromSeed(
         name, password, seed, restoreHeight);
-
-    await onWalletChange(wallet);
+    if(wallet !=null) {
+      await onWalletChange(wallet);
+    }
   }
 
   Future restoreFromKeys(String name, String language, int restoreHeight,
       String address, String viewKey, String spendKey) async {
-    if (await walletsManager!.isWalletExit(name)) {
+    if (await walletsManager?.isWalletExit(name) ?? false) {
       throw WalletIsExistException(name);
     }
 
@@ -90,10 +93,12 @@ class WalletListService {
     final password = Uuid().v4();
     await saveWalletPassword(password: password, walletName: name);
 
-    final wallet = await walletsManager!.restoreFromKeys(
+    final wallet = await walletsManager?.restoreFromKeys(
         name, password, language, restoreHeight, address, viewKey, spendKey);
 
-    await onWalletChange(wallet);
+    if(wallet !=null) {
+      await onWalletChange(wallet);
+    }
    
   SharedPreferences prefs = await SharedPreferences.getInstance();
    
@@ -110,9 +115,11 @@ class WalletListService {
       print('after close the wallet service of current wallet');
     }
       final password = await getWalletPassword(walletName: name);
-      final wallet = await walletsManager!.openWallet(name, password);
-      print('the wallet password and wallet name is $password ---- ${wallet.name}');
-      await onWalletChange(wallet);
+      final wallet = await walletsManager?.openWallet(name, password);
+      print('the wallet password and wallet name is $password ---- ${wallet?.name}');
+      if(wallet!=null) {
+        await onWalletChange(wallet);
+      }
 
 
 
@@ -138,7 +145,9 @@ class WalletListService {
         print('the current wallet is ${walletService.currentWallet}');
         final walletName = await wallet.getName();
         print('the name of wallet is $walletName');
-        await sharedPreferences.setString('current_wallet_name', walletName);
+        if(walletName!=null) {
+          await sharedPreferences.setString('current_wallet_name', walletName);
+        }
         print('-------');
       //}
 
@@ -149,7 +158,7 @@ class WalletListService {
   }
 
   Future remove(WalletDescription wallet) async =>
-      await walletsManager!.remove(wallet);
+      await walletsManager?.remove(wallet);
 
   Future<String> getWalletPassword({required String walletName}) async {
     final key = generateStoreKeyFor(

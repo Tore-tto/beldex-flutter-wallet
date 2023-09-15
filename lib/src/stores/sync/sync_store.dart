@@ -11,7 +11,7 @@ class SyncStore = SyncStoreBase with _$SyncStore;
 
 abstract class SyncStoreBase with Store {
   SyncStoreBase(
-      {SyncStatus syncStatus = const NotConnectedSyncStatus(),
+      {SyncStatus syncStatus = const NotConnectedSyncStatus(0),
       required WalletService walletService}) :
     status = syncStatus
 {
@@ -26,7 +26,7 @@ abstract class SyncStoreBase with Store {
   @observable
   SyncStatus status;
 
-  StreamSubscription<Wallet>? _onWalletChangeSubscription;
+  late StreamSubscription<Wallet> _onWalletChangeSubscription;
   StreamSubscription<SyncStatus>? _onSyncStatusChangeSubscription;
 
 //  @override

@@ -11,7 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Future showSimpleConfirmDialog(BuildContext context, String title, String body,String fee,String address,
+Future showSimpleConfirmDialog(BuildContext context, String? title, String? body,String? fee,String address,
     {String? buttonText,
     required void Function(BuildContext context) onPressed,
     void Function(BuildContext context)? onDismiss}) {
@@ -25,7 +25,7 @@ Future showSimpleConfirmDialog(BuildContext context, String title, String body,S
 
 
 
-Future showSimpleSentTrans(BuildContext context, String title, String body,String fee,String address,
+Future showSimpleSentTrans(BuildContext context, String title, String? body,String fee,String address,
     {String? buttonText,
     required void Function(BuildContext context) onPressed,
     void Function(BuildContext context)? onDismiss}) {
@@ -403,7 +403,7 @@ class SendTransactionSuccessfully extends StatefulWidget {
       {this.buttonText, this.onPressed, this.onDismiss,});// : super(key: key);
 
       final String title;
-  final String body;
+  final String? body;
   final String fee;
   final String address;
   final String? buttonText;
@@ -551,9 +551,9 @@ class ConfirmSending extends StatelessWidget {
   const ConfirmSending(this.title, this.body, this.fee,this.address,
       {this.buttonText, this.onPressed, this.onDismiss,});// : super(key: key);
 
-      final String title;
-  final String body;
-  final String fee;
+      final String? title;
+  final String? body;
+  final String? fee;
   final String address;
   final String? buttonText;
   final void Function(BuildContext context)? onPressed;
@@ -586,7 +586,7 @@ class ConfirmSending extends StatelessWidget {
                         children: [
                              Padding(
                                padding: const EdgeInsets.only(bottom:10.0),
-                               child: Text(title,style:TextStyle(fontSize:18,fontWeight: FontWeight.w800)),
+                               child: Text(title ?? "",style:TextStyle(fontSize:18,fontWeight: FontWeight.w800)),
                              ),
                              Container(
                               height:50,
@@ -606,7 +606,7 @@ class ConfirmSending extends StatelessWidget {
                                   ),
                                   Expanded(child: Container(
                                      padding: const EdgeInsets.all(10.0),
-                                    child: Text(body,style: TextStyle(fontSize:18,fontWeight:FontWeight.bold,fontFamily: 'Poppinsbold'),),
+                                    child: Text(body ?? "",style: TextStyle(fontSize:18,fontWeight:FontWeight.bold,fontFamily: 'Poppinsbold'),),
                                   )),
                                   Container(
                                     width:70,

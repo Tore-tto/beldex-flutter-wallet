@@ -9,7 +9,7 @@ class TransactionDescription extends HiveObject {
   static const boxName = 'TransactionDescriptions';
 
   @HiveField(0)
-  String id;
+  String? id;
 
   @HiveField(1)
   String recipientAddress;

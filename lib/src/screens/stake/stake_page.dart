@@ -75,10 +75,10 @@ class StakePageBodyState extends State<StakePageBody> {
                   )),
             );
           }
-          final allStakes = snapshot.data;
-          final stakeColor = allStakes!.isEmpty
-              ? Theme.of(context).primaryTextTheme.button!.backgroundColor
-              : Theme.of(context).accentTextTheme.caption!.decorationColor;
+          final allStakes = snapshot.data!;
+          final stakeColor = allStakes.isEmpty
+              ? Theme.of(context).primaryTextTheme.button?.backgroundColor
+              : Theme.of(context).accentTextTheme.caption?.decorationColor;
           var totalAmountStaked = 0;
           for (final stake in allStakes) {
             totalAmountStaked += stake.amount;

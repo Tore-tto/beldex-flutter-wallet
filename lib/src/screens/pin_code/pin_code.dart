@@ -83,7 +83,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
 
   void calculateAspectRatio() {
     final renderBox =
-        _gridViewKey.currentContext!.findRenderObject() as RenderBox;
+        _gridViewKey.currentContext?.findRenderObject() as RenderBox;
     final cellWidth = renderBox.size.width / 3;
     final cellHeight = renderBox.size.height / 4;
 
@@ -94,12 +94,11 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
     setState(() {});
   }
 
-  LocalAuthentication? auth;
+  LocalAuthentication auth = LocalAuthentication();
   List<BiometricType> _availableBiometrics = <BiometricType>[];
 
   @override
   void initState() {
-    auth = LocalAuthentication();
     //-->
    // getSetupArrow();
     _getAvailableBiometrics();
@@ -111,7 +110,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
   Future<void> _getAvailableBiometrics() async {
     List<BiometricType> availableBiometrics;
     try {
-      availableBiometrics = await auth!.getAvailableBiometrics();
+      availableBiometrics = await auth.getAvailableBiometrics();
     } on PlatformException catch (e) {
       availableBiometrics = <BiometricType>[];
       print(e);
@@ -357,7 +356,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
             style: TextStyle(
                 fontSize: 19,
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).primaryTextTheme.caption!.color)),
+                color: Theme.of(context).primaryTextTheme.caption?.color)),
         Spacer(flex: 1),
         Container(
           width: 190,
@@ -419,7 +418,7 @@ class PinCodeState<T extends PinCodeWidget> extends State<T> {
                           fontSize: 17.0,
                           fontWeight: FontWeight.w800,
                           color:
-                              Theme.of(context).primaryTextTheme.caption!.color),
+                              Theme.of(context).primaryTextTheme.caption?.color),
                     ),
                     Icon(Icons.keyboard_arrow_right,
                         color: settingsStore.isDarkTheme

@@ -46,7 +46,7 @@ class DashboardPage extends BasePage {
           decoration: BoxDecoration(),
           child: SvgPicture.asset(
             'assets/images/new-images/refresh.svg',
-            color: Theme.of(context).primaryTextTheme.caption!.color,
+            color: Theme.of(context).primaryTextTheme.caption?.color,
             width: 23,
             height: 23,
           )),
@@ -63,7 +63,7 @@ class DashboardPage extends BasePage {
           style: TextStyle(
               fontSize: 24.0 - (12 - 8) * 2.0,
               fontWeight: FontWeight.bold,
-              color: Theme.of(context).primaryTextTheme.headline6!.color),
+              color: Theme.of(context).primaryTextTheme.headline6?.color),
         );
       },
     );
@@ -437,7 +437,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                         reconnect = true;
                         if (networkStatus == NetworkStatus.online &&
                             reconnect) {
-                          walletStore.reconnect();
+                          //walletStore.reconnect();
                           reconnect = false;
                         }
                       }
@@ -466,7 +466,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                             ? BeldexPalette.red
                                             : BeldexPalette.belgreen //teal
                                         )),
-                                statusText == 'SYNCHRONIZED'
+                                statusText == tr(context).sync_status_synchronized
                                     ? GestureDetector(
                                         onTap: () async {
                                           await showDialog<void>(
@@ -641,7 +641,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
 
                             final syncS = status.title(tr(context));
                             return InkWell(
-                              onTap: syncS == 'SYNCHRONIZED'
+                              onTap: syncS == tr(context).sync_status_synchronized
                                   ? () {
                                       Navigator.of(context, rootNavigator: true)
                                           .pushNamed(Routes.send);
@@ -652,7 +652,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                 height: 46,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
-                                  color: syncS == 'SYNCHRONIZED'
+                                  color: syncS == tr(context).sync_status_synchronized
                                       ? Color(0xff0BA70F)
                                       : settingsStore.isDarkTheme
                                           ? Color(0xff333343)
@@ -667,7 +667,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                         width: 20,
                                         child: SvgPicture.asset(
                                           'assets/images/new-images/send.svg',
-                                          color: syncS == 'SYNCHRONIZED'
+                                          color: syncS == tr(context).sync_status_synchronized
                                               ? Colors.white
                                               : settingsStore.isDarkTheme
                                                   ? Color(0xff6C6C78)
@@ -678,7 +678,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                       child: Text(
                                         tr(context).send,
                                         style: TextStyle(
-                                            color: syncStatus == 'SYNCHRONIZED'
+                                            color: syncStatus == tr(context).sync_status_synchronized
                                                 ? Colors.white
                                                 : settingsStore.isDarkTheme
                                                     ? Color(0xff6C6C78)
@@ -759,7 +759,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
 
                             final syncSt = status.title(tr(context));
                             return GestureDetector(
-                              onTap: syncSt == 'SYNCHRONIZED'
+                              onTap: syncSt == tr(context).sync_status_synchronized
                                   ? (){
                                     //  final isFlash = true;
                                     // Navigator.pushNamed(
@@ -791,7 +791,7 @@ class DashboardPageBodyState extends State<DashboardPageBody> {
                                     ),
                                     child: SvgPicture.asset(
                                       'assets/images/new-images/flashqr.svg',
-                                      color: syncSt == 'SYNCHRONIZED'
+                                      color: syncSt == tr(context).sync_status_synchronized
                                           ? Color(0xff222222)
                                           : Color(0xffD9D9D9),
                                     )),

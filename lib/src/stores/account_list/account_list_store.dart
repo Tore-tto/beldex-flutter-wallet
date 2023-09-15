@@ -72,7 +72,7 @@ abstract class AccountListStoreBase with Store {
 
   Future _onWalletChanged(Wallet wallet) async {
     if (_onAccountsChangeSubscription != null) {
-      await _onAccountsChangeSubscription!.cancel();
+      await _onAccountsChangeSubscription?.cancel();
     }
 
     if (wallet is BelDexWallet) {

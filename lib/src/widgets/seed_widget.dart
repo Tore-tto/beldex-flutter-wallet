@@ -82,7 +82,7 @@ class SeedWidgetState extends State<SeedWidget> {
   String? errorMessage;
   int maxWordCount = 25;
   int wordCount = 0;
-  List<MnemoticItem>? currentMnemotics;
+  List<MnemoticItem> currentMnemotics = [];
   bool isCurrentMnemoticValid = false;
   String? _errorMessage;
   String _errorMessage1 = '';
@@ -146,7 +146,7 @@ class SeedWidgetState extends State<SeedWidget> {
   }
 
   void editTextOfSelectedMnemotic(String text) {
-    setState(() => selectedItem!.changeText(text));
+    setState(() => selectedItem?.changeText(text));
     selectedItem = null;
     _seedController.text = '';
 
@@ -203,7 +203,7 @@ class SeedWidgetState extends State<SeedWidget> {
 
       var isValid = true;
 
-      for (final word in currentMnemotics!) {
+      for (final word in currentMnemotics) {
         isValid = word.isCorrect();
 
         if (!isValid) {
@@ -218,10 +218,10 @@ class SeedWidgetState extends State<SeedWidget> {
   void saveCurrentMnemoticToItems() {
     setState(() {
       if (selectedItem != null) {
-        selectedItem!.changeText(currentMnemotics!.first.text.trim());
+        selectedItem?.changeText(currentMnemotics.first.text.trim());
         selectedItem = null;
       } else {
-        items.addAll(currentMnemotics!);
+        items.addAll(currentMnemotics);
         //_seedController.text = items.join(', ');
       }
 
@@ -232,7 +232,7 @@ class SeedWidgetState extends State<SeedWidget> {
 
   void showErrorIfExist() {
     setState(() => _errorMessage =
-        !isCurrentMnemoticValid! ? tr(context).incorrect_seed : null);
+        !isCurrentMnemoticValid ? tr(context).incorrect_seed : null);
   }
 
   bool isSeedValid() {
@@ -433,7 +433,7 @@ class SeedWidgetState extends State<SeedWidget> {
                                   onTap: () async {
                                     await Clipboard.getData('text/plain').then(
                                         (clipboard) =>
-                                            replaceText(clipboard!.text!));
+                                            replaceText(clipboard?.text ?? ""));
                                     setState(() {
                                       wordCount = _seedController.text
                                           .split(' ')

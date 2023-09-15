@@ -246,19 +246,19 @@ class SlideToActState extends State<SlideToAct> with TickerProviderStateMixin {
 
   /// Call this method to revert the animations
   Future reset() async {
-    await _checkAnimationController!.reverse().orCancel;
+    await _checkAnimationController?.reverse().orCancel;
 
     submitted = false;
 
-    await _shrinkAnimationController!.reverse().orCancel;
+    await _shrinkAnimationController?.reverse().orCancel;
 
-    await _resizeAnimationController!.reverse().orCancel;
+    await _resizeAnimationController?.reverse().orCancel;
 
     await _cancelAnimation();
   }
 
   Future _checkAnimation() async {
-    _checkAnimationController!.reset();
+    _checkAnimationController?.reset();
 
     final animation = Tween<double>(
       begin: 0,
@@ -275,11 +275,11 @@ class SlideToActState extends State<SlideToAct> with TickerProviderStateMixin {
         });
       }
     });
-    await _checkAnimationController!.forward().orCancel;
+    await _checkAnimationController?.forward().orCancel;
   }
 
   Future _shrinkAnimation() async {
-    _shrinkAnimationController!.reset();
+    _shrinkAnimationController?.reset();
 
     final diff = _initialContainerWidth! - widget.height;
     final animation = Tween<double>(
@@ -301,11 +301,11 @@ class SlideToActState extends State<SlideToAct> with TickerProviderStateMixin {
     setState(() {
       submitted = true;
     });
-    await _shrinkAnimationController!.forward().orCancel;
+    await _shrinkAnimationController?.forward().orCancel;
   }
 
   Future _resizeAnimation() async {
-    _resizeAnimationController!.reset();
+    _resizeAnimationController?.reset();
 
     final animation = Tween<double>(
       begin: 0,
@@ -322,11 +322,11 @@ class SlideToActState extends State<SlideToAct> with TickerProviderStateMixin {
         });
       }
     });
-    await _resizeAnimationController!.forward().orCancel;
+    await _resizeAnimationController?.forward().orCancel;
   }
 
   Future _cancelAnimation() async {
-    _cancelAnimationController!.reset();
+    _cancelAnimationController?.reset();
     final animation = Tween<double>(
       begin: 0,
       end: 1,
@@ -342,7 +342,7 @@ class SlideToActState extends State<SlideToAct> with TickerProviderStateMixin {
         });
       }
     });
-    await _cancelAnimationController!.forward().orCancel;
+    await _cancelAnimationController?.forward().orCancel;
   }
 
   @override
@@ -369,12 +369,12 @@ class SlideToActState extends State<SlideToAct> with TickerProviderStateMixin {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final containerBox =
-          _containerKey.currentContext!.findRenderObject() as RenderBox;
+          _containerKey.currentContext?.findRenderObject() as RenderBox;
       _containerWidth = containerBox.size.width;
       _initialContainerWidth = _containerWidth;
 
       final sliderBox =
-          _sliderKey.currentContext!.findRenderObject() as RenderBox;
+          _sliderKey.currentContext?.findRenderObject() as RenderBox;
       final sliderWidth = sliderBox.size.width;
 
       _maxDx =
@@ -384,10 +384,10 @@ class SlideToActState extends State<SlideToAct> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _cancelAnimationController!.dispose();
-    _checkAnimationController!.dispose();
-    _shrinkAnimationController!.dispose();
-    _resizeAnimationController!.dispose();
+    _cancelAnimationController?.dispose();
+    _checkAnimationController?.dispose();
+    _shrinkAnimationController?.dispose();
+    _resizeAnimationController?.dispose();
     super.dispose();
   }
 }

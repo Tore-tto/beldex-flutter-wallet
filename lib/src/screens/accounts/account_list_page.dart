@@ -203,7 +203,7 @@ class AccountListPage extends BasePage {
                       child: Text(
                         'Do you want to change your\n primary account?',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18,color: Theme.of(context).primaryTextTheme.caption!.color),
+                        style: TextStyle(fontSize: 18,color: Theme.of(context).primaryTextTheme.caption?.color),
                       ),
                     ),
                     SizedBox(

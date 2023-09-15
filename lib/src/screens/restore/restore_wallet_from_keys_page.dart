@@ -278,8 +278,7 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
           width: double.infinity,
           child: LoadingPrimaryButton(
             onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                if (_formKey1.currentState!.validate()) {
+              if ((_formKey.currentState?.validate() ?? false) && (_formKey1.currentState?.validate() ?? false)) {
                   await walletRestorationStore.restoreFromKeys(
                       name: _nameController.text,
                       language: seedLanguageStore.selectedSeedLanguage,
@@ -288,13 +287,11 @@ class _RestoreFromKeysFromState extends State<RestoreFromKeysFrom> {
                       spendKey: _spendKeyController.text,
                       restoreHeight: height);
                   restoreHeights(height);
-                }
               }
             },
             text: tr(context).restore_recover,
-            color: Theme.of(context).primaryTextTheme.button!.backgroundColor!,
-            borderColor:
-                Theme.of(context).primaryTextTheme.button!.backgroundColor!,
+            color: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
+            borderColor: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
             isLoading: walletRestorationStore.state is WalletIsRestoring,
           ),
         );
@@ -447,7 +444,7 @@ class _BlockHeightSwapingWidgetState extends State<BlockHeightSwapingWidget> {
                                     ),
                                     controller: dateController,
                                     validator: (value) {
-                                      if (value!.isEmpty) {
+                                      if (value?.isEmpty !=null) {
                                         return 'Date should not be empty';
                                       } else {
                                         return null;

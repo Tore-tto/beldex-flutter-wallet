@@ -93,9 +93,9 @@ mixin _$SendStore on SendStoreBase, Store {
 
   @override
   Future<dynamic> createStake(
-      {required String address, String? amount, required dynamic t}) {
-    return _$createStakeAsyncAction
-        .run(() => super.createStake(address: address, amount: amount, t: t));
+      {required String address, String? amount, required AppLocalizations l10n}) {
+    return _$createStakeAsyncAction.run(
+        () => super.createStake(address: address, amount: amount, l10n: l10n));
   }
 
   late final _$createTransactionAsyncAction =
@@ -103,10 +103,10 @@ mixin _$SendStore on SendStoreBase, Store {
 
   @override
   Future<dynamic> createTransaction(
-      {String? address,
+      {required String address,
       String? amount,
       BeldexTransactionPriority? tPriority,
-      required dynamic t}) {
+      required AppLocalizations t}) {
     return _$createTransactionAsyncAction.run(() => super.createTransaction(
         address: address, amount: amount, tPriority: tPriority, t: t));
   }
@@ -141,7 +141,7 @@ mixin _$SendStore on SendStoreBase, Store {
       ActionController(name: 'SendStoreBase', context: context);
 
   @override
-  void setSendAll(dynamic t) {
+  void setSendAll(AppLocalizations t) {
     final _$actionInfo = _$SendStoreBaseActionController.startAction(
         name: 'SendStoreBase.setSendAll');
     try {

@@ -53,28 +53,27 @@ bool isConnectedSync() => beldex_wallet.isConnectedNative() != 0;
 
 bool setupNodeSync(
     {required String address,
-    String? login,
-    String? password,
-    bool useSSL = false,
-    bool isLightWallet = false}) {
- final addressPointer = address.toNativeUtf8();
+      String? login,
+      String? password,
+      bool useSSL = false,
+      bool isLightWallet = false}) {
+  final addressPointer = address.toNativeUtf8();
   final loginPointer = (login ?? '').toNativeUtf8();
   final passwordPointer = (password ?? '').toNativeUtf8();
 
   final isSetupNode = beldex_wallet.setupNodeNative(
-          addressPointer,
-          loginPointer,
-          passwordPointer,
-          _boolToInt(useSSL),
-          _boolToInt(isLightWallet));
+      addressPointer,
+      loginPointer,
+      passwordPointer,
+      _boolToInt(useSSL),
+      _boolToInt(isLightWallet));
 
   calloc.free(addressPointer);
   calloc.free(loginPointer);
   calloc.free(passwordPointer);
 
-  if (isSetupNode.good) {
-    throw SetupWalletException(
-        message: isSetupNode.errorString());
+  if (!isSetupNode.good) {
+    throw SetupWalletException(message: isSetupNode.errorString());
   }
 
   return true;
@@ -107,7 +106,7 @@ String getPublicSpendKey() =>
 class SyncListener {
   SyncListener(this.onNewBlock, this.onNewTransaction);
 
-  void Function(int, int, double, bool) onNewBlock;
+  void Function(int, int, bool) onNewBlock;
   void Function() onNewTransaction;
 
   Timer? _updateSyncInfoTimer;
@@ -152,14 +151,6 @@ class SyncListener {
       if (syncHeight < 0 || bchHeight < syncHeight) {
         return;
       }
-      final track = bchHeight - _initialSyncHeight;
-      final diff = track - (bchHeight - syncHeight);
-      final ptc = diff <= 0 ? 0.0 : diff / track;
-      final left = bchHeight - syncHeight;
-
-      if (syncHeight < 0 || left < 0) {
-        return;
-      }
 
       final refreshing = isRefreshing();
       print('refreshing --> $refreshing');
@@ -169,21 +160,16 @@ class SyncListener {
         }
       }
 
-      // 1. Actual new height; 2. Blocks left to finish; 3. Progress in percents; 4. true
-      print('synHeight, left, ptc, refreshing --> $syncHeight, $left, $ptc, $refreshing');
-     /* if(left==0){
-        onNewBlock?.call(syncHeight, left, ptc, false);
-      }else{
-        onNewBlock?.call(syncHeight, left, ptc, refreshing);
-      }*/
-      onNewBlock.call(syncHeight, left, ptc, refreshing);
+      // 1. Actual new height; 2. Blocks left to finish; 3. Progress in percents;
+      print('synHeight, left, ptc, refreshing --> $syncHeight, $bchHeight, $refreshing');
+      onNewBlock.call(syncHeight, bchHeight, refreshing);
     });
   }
 
   void stop() => _updateSyncInfoTimer?.cancel();
 }
 
-SyncListener setListeners(void Function(int, int, double, bool) onNewBlock,
+SyncListener setListeners(void Function(int, int, bool) onNewBlock,
     void Function() onNewTransaction) {
   final listener = SyncListener(onNewBlock, onNewTransaction);
   beldex_wallet.setListenerNative();
@@ -219,14 +205,14 @@ void startRefresh() => startRefreshSync();
 
 Future setupNode(
         {required String address,
-       String? login,
-       String? password,
+      /* String? login,
+       String? password,*/
         bool useSSL = false,
         bool isLightWallet = false}) =>
     compute<Map<String, Object>, void>(_setupNodeSync, {
       'address': address,
-      'login': login!,
-      'password': password!,
+      /*'login': login!,
+      'password': password!,*/
       'useSSL': useSSL,
       'isLightWallet': isLightWallet
     });

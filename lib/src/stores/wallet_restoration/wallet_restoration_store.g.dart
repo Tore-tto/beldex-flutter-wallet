@@ -120,11 +120,11 @@ mixin _$WalletRestorationStore on WalletRestorationStoreBase, Store {
   }
 
   @override
-  void validateSeed(List<MnemoticItem>? seed, dynamic t) {
+  void validateSeed(List<MnemoticItem>? seed, AppLocalizations l10n) {
     final _$actionInfo = _$WalletRestorationStoreBaseActionController
         .startAction(name: 'WalletRestorationStoreBase.validateSeed');
     try {
-      return super.validateSeed(seed, t);
+      return super.validateSeed(seed, l10n);
     } finally {
       _$WalletRestorationStoreBaseActionController.endAction(_$actionInfo);
     }

@@ -71,7 +71,7 @@ class _DashBoardAlertDialogState extends State<DashBoardAlertDialog> {
             ),
             Observer(builder: (_) {
               final status = syncStore.status;
-              if (status.title(tr(context)) == 'SYNCHRONIZED') {
+              if (status.title(tr(context)) == tr(context).sync_status_synchronized) {
                 canRescan = true;
               } else {
                 canRescan = false;

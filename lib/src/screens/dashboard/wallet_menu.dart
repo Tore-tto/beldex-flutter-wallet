@@ -59,22 +59,20 @@ class WalletMenu {
 }
 
 Future showReconnectConfirmDialog(BuildContext context, String title, String body,
-    {String? buttonText,
+    {
     required void Function(BuildContext context) onPressed,
     required void Function(BuildContext context) onDismiss}) {
   return showDialog<void>(
-      builder: (_) => AlertReconnectConfirmDialog(title, body,
-          buttonText: buttonText!, onDismiss: onDismiss, onPressed: onPressed),
+      builder: (_) => AlertReconnectConfirmDialog(title, body, onDismiss: onDismiss, onPressed: onPressed),
       context: context);
 }
 
 
 class AlertReconnectConfirmDialog extends StatefulWidget {
   const AlertReconnectConfirmDialog(this.title, this.body,
-      {this.buttonText, required this.onPressed, required this.onDismiss,});
+      {required this.onPressed, required this.onDismiss,});
  final String title;
   final String body;
-  final String? buttonText;
   final void Function(BuildContext context) onPressed;
   final void Function(BuildContext context) onDismiss;
   @override

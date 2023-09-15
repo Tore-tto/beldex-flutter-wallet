@@ -1,83 +1,65 @@
 import 'package:beldex_wallet/l10n.dart';
+import 'dart:math';
 
 abstract class SyncStatus {
-  const SyncStatus();
+  const SyncStatus(this.currHeight, this.targetHeight);
+  final int currHeight;
+  final int targetHeight;
 
-  double progress();
+  double progress() => targetHeight > 0 ? currHeight / targetHeight : 0.0;
 
   String title(AppLocalizations t);
 }
 
 class SyncingSyncStatus extends SyncStatus {
-  SyncingSyncStatus(this.blocksLeft, this.ptc);
-
-  final double ptc;
-  final int blocksLeft;
+  const SyncingSyncStatus(int currHeight, int targetHeight) : super(currHeight, targetHeight);
 
   @override
-  double progress() => ptc;
-
-  @override
-  String title(AppLocalizations t){
-    if(blocksLeft == 1 || blocksLeft == 0) {
-      return '$blocksLeft block remaining';
-    }else{
-      return t.blocks_remaining('$blocksLeft');
-    }
-  }
-
-  @override
-  String toString() => '$blocksLeft';
+  String title(AppLocalizations t) => t.sync_status_synchronizing(currHeight, targetHeight);
 }
 
 class SyncedSyncStatus extends SyncStatus {
-  @override
-  double progress() => 1.0;
+  const SyncedSyncStatus(int height) : super(height, height);
 
   @override
   String title(AppLocalizations t) => t.sync_status_synchronized;
 }
 
 class NotConnectedSyncStatus extends SyncStatus {
-  const NotConnectedSyncStatus();
+  const NotConnectedSyncStatus(int currHeight) : super(currHeight, 0);
 
   @override
-  double progress() => 0.0;
-
-  @override
-  String title(AppLocalizations t) => t.sync_status_not_connected;
+  String title(AppLocalizations t) => t.sync_status_not_connected(currHeight);
 }
 
 class StartingSyncStatus extends SyncStatus {
-  @override
-  double progress() => 0.0;
+  const StartingSyncStatus(int currHeight) : super(currHeight, 0);
 
   @override
-  String title(AppLocalizations t) => t.sync_status_starting_sync;
+  String title(AppLocalizations t) => t.sync_status_starting_sync(currHeight);
 }
 
 class FailedSyncStatus extends SyncStatus {
-  @override
-  double progress() => 1.0;
+  const FailedSyncStatus(int currHeight) : super(currHeight, 0);
 
   @override
-  String title(AppLocalizations t) => t.sync_status_failed_connect;
+  String title(AppLocalizations t) => t.sync_status_failed_connect(currHeight);
 }
+
 
 class ConnectingSyncStatus extends SyncStatus {
-  @override
-  double progress() => 0.0;
+  const ConnectingSyncStatus(int currHeight) : super(currHeight, 0);
 
   @override
-  String title(AppLocalizations t) => t.sync_status_connecting;
+  String title(AppLocalizations t) => t.sync_status_connecting(currHeight);
 }
 
+
 class ConnectedSyncStatus extends SyncStatus {
-  @override
-  double progress() => 0.0;
+  const ConnectedSyncStatus(int currHeight) : super(currHeight, 0);
 
   @override
-  String title(AppLocalizations t) =>t.sync_status_connected;
+  String title(AppLocalizations t) => t.sync_status_connected(currHeight);
 }
 
 

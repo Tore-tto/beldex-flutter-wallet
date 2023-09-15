@@ -54,7 +54,7 @@ abstract class SubaddressListStoreBase with Store {
 
   Future<void> _onWalletChanged(Wallet wallet) async {
     if (_onSubaddressesChangeSubscription != null) {
-      await _onSubaddressesChangeSubscription!.cancel();
+      await _onSubaddressesChangeSubscription?.cancel();
     }
 
     if (wallet is BelDexWallet) {

@@ -65,14 +65,14 @@ class WalletMenu {
                         Text(
                           'You are about to delete\n your wallet!',
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 19,fontWeight:FontWeight.w800 ,color: Theme.of(context).primaryTextTheme.caption!.color,),
+                          style: TextStyle(fontSize: 19,fontWeight:FontWeight.w800 ,color: Theme.of(context).primaryTextTheme.caption?.color,),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top:8.0),
                           child: Text(tr(context).makeSureToBackupOfYournrecoverySeedWalletAddressnandPrivate,
                            // 'Make sure to take a backup of your Mnemonic seed, wallet address and private keys',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 16,color: Theme.of(context).primaryTextTheme.caption!.color),
+                            style: TextStyle(fontSize: 16,color: Theme.of(context).primaryTextTheme.caption?.color),
                           ),
                         ),
                         SizedBox(

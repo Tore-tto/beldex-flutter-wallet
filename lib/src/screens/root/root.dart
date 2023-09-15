@@ -47,9 +47,9 @@ class RootState extends State<Root> with WidgetsBindingObserver {
         if (isQrScannerShown) return;
 
         if (!_isInactive! &&
-                _authenticationStore!.state ==
+                _authenticationStore?.state ==
                     AuthenticationState.authenticated ||
-            _authenticationStore!.state == AuthenticationState.active) {
+            _authenticationStore?.state == AuthenticationState.active) {
           setState(() => _isInactive = true);
         }
 
@@ -91,7 +91,7 @@ class RootState extends State<Root> with WidgetsBindingObserver {
     }
 
     return Observer(builder: (_) {
-      final state = _authenticationStore!.state;
+      final state = _authenticationStore?.state;
       if (state == AuthenticationState.denied)  return WelcomePage();
 
       if (state == AuthenticationState.readyToLogin) {
@@ -118,7 +118,7 @@ class RootState extends State<Root> with WidgetsBindingObserver {
             settingsStore: settingsStore,
             walletService: walletService,
             callback: () =>
-                _authenticationStore!.state = AuthenticationState.authenticated);
+                _authenticationStore?.state = AuthenticationState.authenticated);
       }
 
       return Container(color: Colors.white);

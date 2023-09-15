@@ -107,7 +107,7 @@ class ShowKeysPage extends BasePage {
                               child: Text(value,
                                   style: TextStyle(
                                     fontFamily: 'Poppins',
-                                      fontSize: 13.0, color: Theme.of(context).primaryTextTheme.caption!.color,)),
+                                      fontSize: 13.0, color: Theme.of(context).primaryTextTheme.caption?.color,)),
                             ),
                             Flexible(
                               flex:1,

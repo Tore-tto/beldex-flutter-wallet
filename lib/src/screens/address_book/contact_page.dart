@@ -366,7 +366,7 @@ bool _checkName(String enteredName) {
              SizedBox(width: 5,),
              GestureDetector(
               onTap: coinVisibility ? null:() async {
-                    if (!_formKey.currentState!.validate()) {return; }
+                    if (!(_formKey.currentState?.validate() ?? false)) {return; }
                   // if(validateInput(_contactNameController.text)){
                   //   return '';
                   // }
@@ -382,8 +382,8 @@ bool _checkName(String enteredName) {
                         
                        
                       } else {
-                        widget.contact!.name = _contactNameController.text;
-                        widget.contact!.address = _addressController.text;
+                        widget.contact?.name = _contactNameController.text;
+                        widget.contact?.address = _addressController.text;
                         // widget.contact!
                         //     .updateCryptoCurrency(currency: _selectedCrypto);
 
@@ -436,7 +436,7 @@ bool _checkName(String enteredName) {
                                                 },
                                                 child: Text(
                                                   tr(context).ok,
-                                                  style: TextStyle(color: Theme.of(context).primaryTextTheme.caption!.color,),
+                                                  style: TextStyle(color: Theme.of(context).primaryTextTheme.caption?.color,),
                                                 ),
                                               ),
                                             ),

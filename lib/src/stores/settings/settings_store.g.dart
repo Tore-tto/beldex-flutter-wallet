@@ -230,9 +230,8 @@ mixin _$SettingsStore on SettingsStoreBase, Store {
       AsyncAction('SettingsStoreBase.setCurrentNode', context: context);
 
   @override
-  Future<dynamic> setCurrentNode({required Node node}) {
-    return _$setCurrentNodeAsyncAction
-        .run(() => super.setCurrentNode(node: node));
+  Future<dynamic> setCurrentNode(Node node) {
+    return _$setCurrentNodeAsyncAction.run(() => super.setCurrentNode(node));
   }
 
   late final _$setCurrentFiatCurrencyAsyncAction =

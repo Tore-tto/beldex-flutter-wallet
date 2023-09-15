@@ -11,14 +11,14 @@ part 'node_list_store.g.dart';
 class NodeListStore = NodeListBase with _$NodeListStore;
 
 abstract class NodeListBase with Store {
-  NodeListBase({required this.nodesSource}) {
-    nodes = ObservableList<Node>();
+  NodeListBase({required this.nodesSource}) :
+        nodes = ObservableList<Node>() {
     _onNodesChangeSubscription = nodesSource.watch().listen((e) => update());
     update();
   }
 
   @observable
-  ObservableList<Node>? nodes;
+  ObservableList<Node> nodes;
 
   @observable
   bool isValid = false;
@@ -40,8 +40,7 @@ abstract class NodeListBase with Store {
 //  }
 
   @action
-  void update() =>
-      nodes!.replaceRange(0, nodes!.length, nodesSource.values.toList());
+  void update() => nodes.replaceRange(0, nodes.length, nodesSource.values.toList());
 
   @action
   Future addNode(
@@ -75,7 +74,7 @@ abstract class NodeListBase with Store {
         '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\$|^[0-9a-zA-Z.]+\$';
     final regExp = RegExp(pattern);
     isValid = regExp.hasMatch(value);
-    errorMessage = (isValid ? null : t.error_text_node_address)!;
+    errorMessage = (isValid ? null : t.error_text_node_address);
   }
 
   void validateNodePort(String value,AppLocalizations t) {
@@ -93,6 +92,6 @@ abstract class NodeListBase with Store {
       isValid = false;
     }
 
-    errorMessage = (isValid ? null : t.error_text_node_port)!;
+    errorMessage = (isValid ? null : t.error_text_node_port);
   }
 }

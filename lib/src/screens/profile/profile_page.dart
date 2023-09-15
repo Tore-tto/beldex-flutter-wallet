@@ -71,7 +71,7 @@ class ProfilePageBodyState extends State<ProfilePageBody> {
                 currencyVisibility: false,
                 feePriorityVisibility: false,
                 leading: SvgPicture.asset('assets/images/new-images/swallet.svg',width: 25,height: 25,
-                    color: Theme.of(context).primaryTextTheme.headline6!.color),
+                    color: Theme.of(context).primaryTextTheme.headline6?.color),
                 text: t.wallets,
                 onTap: (){
                     Navigator.of(context).pop();
@@ -82,7 +82,7 @@ class ProfilePageBodyState extends State<ProfilePageBody> {
                 currencyVisibility: false,
                 feePriorityVisibility: false,
                 leading: SvgPicture.asset('assets/images/new-images/settingsnut.svg',width: 25,height: 25,
-                    color:Theme.of(context).primaryTextTheme.headline6!.color
+                    color:Theme.of(context).primaryTextTheme.headline6?.color
                     ),
                 text: t.walletSettings,
                 onTap: () =>
@@ -109,7 +109,7 @@ class ProfilePageBodyState extends State<ProfilePageBody> {
                 currencyVisibility: false,
                 feePriorityVisibility: false,
                 leading: SvgPicture.asset('assets/images/new-images/settingsaddbook.svg',width: 25,height: 25,
-                    color: Theme.of(context).primaryTextTheme.headline6!.color),
+                    color: Theme.of(context).primaryTextTheme.headline6?.color),
                 text: t.address_book,
                 onTap: () =>
                     Navigator.of(context).pushNamed(Routes.addressBook)),
@@ -119,7 +119,7 @@ class ProfilePageBodyState extends State<ProfilePageBody> {
                 currencyVisibility: false,
                 feePriorityVisibility: false,
                 leading: SvgPicture.asset('assets/images/new-images/settingsaccount.svg',width: 25,height: 25,
-                    color: Theme.of(context).primaryTextTheme.headline6!.color),
+                    color: Theme.of(context).primaryTextTheme.headline6?.color),
                 text:t.accounts,
                 onTap: () =>
                     Navigator.of(context).pushNamed(Routes.accountList)),
@@ -131,7 +131,7 @@ class ProfilePageBodyState extends State<ProfilePageBody> {
             //NewNavListHeader(title: S.current.dangerzone),
             NewNavListArrow(
                 leading: Icon(Icons.vpn_key_rounded,
-                    color: Theme.of(context).primaryTextTheme.headline6!.color),
+                    color: Theme.of(context).primaryTextTheme.headline6?.color),
                 text: t.show_keys,
                 onTap: () => Navigator.of(context).pushNamed(Routes.auth,
                     arguments: (bool isAuthenticatedSuccessfully,
@@ -142,7 +142,7 @@ class ProfilePageBodyState extends State<ProfilePageBody> {
                             : null)),
             NewNavListArrow(
                 leading: SvgPicture.asset('assets/images/new-images/settingsseed.svg',width: 25,height: 25,
-                    color: Theme.of(context).primaryTextTheme.headline6!.color),
+                    color: Theme.of(context).primaryTextTheme.headline6?.color),
                 text: t.show_seed,
                 onTap: () => Navigator.of(context).pushNamed(Routes.auth,
                     arguments: (bool isAuthenticatedSuccessfully,

@@ -25,7 +25,7 @@ class RestoreButton extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
       decoration: BoxDecoration(
-          color: Theme.of(context).accentTextTheme.headline5!.backgroundColor,
+          color: Theme.of(context).accentTextTheme.headline5?.backgroundColor,
           borderRadius: BorderRadius.all(Radius.circular(20.0)),
           boxShadow: [
             BoxShadow(
@@ -63,7 +63,7 @@ class RestoreButton extends StatelessWidget {
                       description,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Theme.of(context).accentTextTheme.subtitle1!.color,
+                        color: Theme.of(context).accentTextTheme.subtitle1?.color,
                       ),
                       maxLines: 2,
                     )

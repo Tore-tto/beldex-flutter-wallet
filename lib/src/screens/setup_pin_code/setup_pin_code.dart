@@ -57,9 +57,9 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
     title = tr(context).enterYourPin;
   }
 
-  bool isEnteredOriginalPin() => _originalPin!.isNotEmpty;
+  bool isEnteredOriginalPin() => _originalPin.isNotEmpty;
   Function(BuildContext)? onPinCodeSetup;
-  List<int?>? _originalPin = [];
+  List<int?> _originalPin = [];
   UserStore? _userStore;
   SettingsStore? _settingsStore;
 
@@ -70,17 +70,17 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
       state.title = tr(context).enter_your_pin_again;
       state.clear();
     } else {
-      if (listEquals<int>(state.pin.cast<int>(), _originalPin!.cast<int>())) {
+      if (listEquals<int>(state.pin.cast<int>(), _originalPin.cast<int>())) {
         final String pin = state.pin.fold('', (ac, val) => ac + '$val');
-        _userStore!.set(password: pin);
-        _settingsStore!.setDefaultPinLength(pinLength: state.pinLength);
+        _userStore?.set(password: pin);
+        _settingsStore?.setDefaultPinLength(pinLength: state.pinLength);
                          showDialog<void>(
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
               return Dialog(
                 elevation: 0,
-                backgroundColor:_settingsStore!.isDarkTheme? Color(0xff272733) : Color(0xffFFFFFF), //Theme.of(context).cardTheme.color,
+                backgroundColor:_settingsStore?.isDarkTheme ?? false ? Color(0xff272733) : Color(0xffFFFFFF), //Theme.of(context).cardTheme.color,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0)), //this right here
                 child: Container(
@@ -158,7 +158,7 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
             builder: (BuildContext context) {
               return Dialog(
                 elevation: 0,
-                backgroundColor:_settingsStore!.isDarkTheme? Color(0xff272733) : Color(0xffFFFFFF),//Colors.black,
+                backgroundColor:_settingsStore?.isDarkTheme ?? false ? Color(0xff272733) : Color(0xffFFFFFF),//Colors.black,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0)), //this right here
                 child: Container(

@@ -163,7 +163,7 @@ class AuthPageState extends State<AuthPage> {
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 22,
-                color: Theme.of(context).primaryTextTheme.caption!.color,
+                color: Theme.of(context).primaryTextTheme.caption?.color,
               ),
             ),
           ),
@@ -173,7 +173,7 @@ class AuthPageState extends State<AuthPage> {
         resizeToAvoidBottomInset: false,
         body: PinCode(
           (pin, _) =>
-              authStore.auth(password: pin.fold('', (ac, val) => ac + '$val'), t: tr(context)),
+              authStore.auth(password: pin.fold('', (ac, val) => ac + '$val'), l10n: tr(context)),
           false,
           _pinCodeKey,
           refresh,

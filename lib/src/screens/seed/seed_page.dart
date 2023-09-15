@@ -91,8 +91,6 @@ class _SeedDisplayWidgetState extends State<SeedDisplayWidget> {
 
 @override
   void dispose() {
-    setState(() {
-          });
     isCopied = false;
     super.dispose();
   }
@@ -107,381 +105,383 @@ class _SeedDisplayWidgetState extends State<SeedDisplayWidget> {
     String _isSeed;
    
  
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 30.0),
-          child: Container(
-            child: 
-            Observer(builder: (_){
-                _isSeed = walletSeedStore.seed;
-           
-           return Center(
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 30.0),
+            child: Container(
               child: 
-             _isSeed == '' || _isSeed == null ?
-              Padding(
-               padding: EdgeInsets.only(top:MediaQuery.of(context).size.height*1/3),
-               child: Container(
-                child: //Text('You can\'t view the seed because you\'ve restored using keys',textAlign: TextAlign.center,)
-                RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                              text: 'Note : ',
-                              style: TextStyle(  
-                                color: Color(0xffFF3131),
-                                //fontFamily: 'Poppins',
-                                 fontSize:15,
-                                 fontWeight: FontWeight.w400
-                              ),
-                              children:[
-                                TextSpan(text:'You can\'t view the seed because you\'ve restored using keys',style: TextStyle(
-                                 // fontFamily: 'Poppins',
-                                  fontSize:15,
-                                  fontWeight: FontWeight.w400,
-                                  color:settingsStore.isDarkTheme ? Color(0xffD9D9D9) : Color(0xff909090)))
-                              ]
-                            ),
-                      
-                            ),
-
-               ),
-             ) 
+              Observer(builder: (_){
+                  _isSeed = walletSeedStore.seed;
              
-             : Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                 /* Image.asset(
-                    'assets/images/avatar4.png',
-                    height: 70,
-                    width: 70,
-                    fit: BoxFit.cover,
-                  ),*/ //image,
-                  SizedBox(height:MediaQuery.of(context).size.height*0.20/3),
-                  Container(
-                    //margin: EdgeInsets.only(left: 10.0, top: 15.0, right: 10.0,bottom: 90.0),
-                    child: Observer(builder: (_) {
-                      _seed = walletSeedStore.seed;
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          // Row(
-                          //   children: <Widget>[
-                          //     Expanded(
-                          //         child: Container(
-                          //       padding: EdgeInsets.only(bottom: 10.0),
-                          //       margin: EdgeInsets.only(bottom: 10.0),
-                          //       child: Text(
-                          //         walletSeedStore.name ?? '',
-                          //         textAlign: TextAlign.center,
-                          //         style: TextStyle(
-                          //             fontSize: 18.0,
-                          //             fontWeight: FontWeight.bold,
-                          //             color: Theme.of(context).primaryTextTheme.caption.color,//Theme.of(context).primaryTextTheme.button.color
-                          //         ),
-                          //       ),
-                          //     ))
-                          //   ],
-                          // ),
-                          Padding(
-                            padding: const EdgeInsets.only(left:10.0,right:10.0),
-                            child: RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                              text: 'Note : ',
-                              style: TextStyle(  
-                                color: Color(0xffFF3131),
-                                //fontFamily: 'Poppins',
-                                 fontSize:15,
-                                 fontWeight: FontWeight.w400
+             return Center(
+                child: 
+               _isSeed == '' || _isSeed == null ?
+                Padding(
+                 padding: EdgeInsets.only(top:MediaQuery.of(context).size.height*1/3),
+                 child: Container(
+                  child: //Text('You can\'t view the seed because you\'ve restored using keys',textAlign: TextAlign.center,)
+                  RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                text: 'Note : ',
+                                style: TextStyle(  
+                                  color: Color(0xffFF3131),
+                                  //fontFamily: 'Poppins',
+                                   fontSize:15,
+                                   fontWeight: FontWeight.w400
+                                ),
+                                children:[
+                                  TextSpan(text:'You can\'t view the seed because you\'ve restored using keys',style: TextStyle(
+                                   // fontFamily: 'Poppins',
+                                    fontSize:15,
+                                    fontWeight: FontWeight.w400,
+                                    color:settingsStore.isDarkTheme ? Color(0xffD9D9D9) : Color(0xff909090)))
+                                ]
                               ),
-                              children:[
-                                TextSpan(text:'Never share your seed to anyone! Check your surroundings to ensure no one is overlooking',style: TextStyle(
-                                 // fontFamily: 'Poppins',
-                                  fontSize:15,
-                                  fontWeight: FontWeight.w400,
-                                  color:settingsStore.isDarkTheme ? Color(0xffD9D9D9) : Color(0xff909090)))
-                              ]
-                            ),
-                      
-                            ),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height*0.10/3,
-                          ),
-                         Container(
-                           child:Text(walletSeedStore.name, style: TextStyle(fontWeight:FontWeight.w800,fontSize:20,),maxLines: 1,overflow: TextOverflow.ellipsis,)
-                         ),
-                         SizedBox(height: 15,),
-                         Container(
-                          height:MediaQuery.of(context).size.height*0.50/3,
-                         padding:EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: settingsStore.isDarkTheme ? Color(0xff272733) : Color(0xffEDEDED),
-                            borderRadius: BorderRadius.circular(10.0)
-                          ),
-                          child:Text(walletSeedStore.seed,textAlign: TextAlign.center,style:TextStyle(
-                            fontSize:15, color:settingsStore.isDarkTheme ? Color(0xffE2E2E2): Color(0xff373737)))
-                         ),
-                         //SizedBox(height:15),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height*0.10/3,
-                          ),
-                         Padding(
-                           padding: const EdgeInsets.all(15.0),
-                           child: widget.onCloseCallback != null
-                           ? Row(
-                            children: [
-                              // Observer(builder: (_){
-                              //   return
-                                 InkWell(
-                                onTap: !isCopied ? (){
-                                  setState(() {
-                                         isCopied = true;                              
-                                                                    });
-                                  
-                                   print(' copied value $isCopied');
-                                   Clipboard.setData(
-                                                  ClipboardData(text: _seed));
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                             margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.30/3,
-                                                             left: MediaQuery.of(context).size.height*0.30/3,
-                                                             right: MediaQuery.of(context).size.height*0.30/3
-                                                             ),
-                                                              elevation:0, //5,
-                                                              behavior: SnackBarBehavior.floating,
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius: BorderRadius.circular(15.0) //only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
-                                                              ),
-                                                              content: Text(
-                                                                  tr(context)
-                                                                  .copied,style: TextStyle(color: Color(0xff0EB212),fontWeight:FontWeight.w700,fontSize:15) ,textAlign: TextAlign.center,),
-                                                              backgroundColor: Color(0xff0BA70F).withOpacity(0.10), //.fromARGB(255, 46, 113, 43),
-                                                              duration: Duration(
-                                                                  milliseconds: 1500),));
-                                }:null,
-                                child: Container(
-                                  height: 46,width:MediaQuery.of(context).size.height*0.60/3,
-                                  decoration: BoxDecoration(   
-                                    borderRadius: BorderRadius.circular(10),
-                                    color:isCopied ? settingsStore.isDarkTheme ? Color(0xff272733) : Color(0xffE8E8E8)  : Color(0xff0BA70F)
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [ 
-                                      Text('Copy seed',style:TextStyle(fontSize:16,fontWeight:FontWeight.w800,color: isCopied ? settingsStore.isDarkTheme ? Color(0xff6C6C78) : Color(0xffB2B2B6) : Colors.white,)),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left:8.0),
-                                        child: Icon(Icons.copy,color:  isCopied ? settingsStore.isDarkTheme ? Color(0xff6C6C78) : Color(0xffB2B2B6) : Colors.white,),
-                                      )
-                                  ],),
-                                ),
+                        
                               ),
-                             
-                           
-                              
-                              
-                              SizedBox(width: 10,),
-                             InkWell(
-                                 onTap:() {
-                                        Share.share(
-                                         _seed,
-                                        subject: tr(context).seed_share,
-                                        );
-                                              // Share.text(
-                                              //     S.of(context).seed_share,
-                                              //     _seed,
-                                              //     'text/plain');
-                                            },
-                                child: Container(
-                                  height: 46,width:MediaQuery.of(context).size.height*0.40/3,
-                                  decoration: BoxDecoration(   
-                                    borderRadius: BorderRadius.circular(10),
-                                    color:  Color(0xff2979FB) //(0xffE8E8E8)
-                                  ),
-                                  child:Center(
-                                    child:Text(tr(context).save,style:TextStyle(fontSize:16,fontWeight:FontWeight.w800,color: Colors.white))
-                                  )
-                                ),
-                              )
-                            ],
-                           ):
-                           Row(
-                            children: [
-                              // Observer(builder: (_){
-                              //   return
-                                 InkWell(
-                                onTap: (){
-                                  setState(() {
-                                         isCopied = true;                              
-                                                                    });
-                                  
-                                   print(' copied value $isCopied');
-                                   Clipboard.setData(
-                                                  ClipboardData(text: _seed));
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                             margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.30/3,
-                                                             left: MediaQuery.of(context).size.height*0.30/3,
-                                                             right: MediaQuery.of(context).size.height*0.30/3
-                                                             ),
-                                                              elevation:0, //5,
-                                                              behavior: SnackBarBehavior.floating,
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius: BorderRadius.circular(15.0) //only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
-                                                              ),
-                                                              content: Text(
-                                                                  tr(context)
-                                                                  .copied,style: TextStyle(color: Color(0xff0EB212),fontWeight:FontWeight.w700,fontSize:15) ,textAlign: TextAlign.center,),
-                                                              backgroundColor: Color(0xff0BA70F).withOpacity(0.10), //.fromARGB(255, 46, 113, 43),
-                                                              duration: Duration(
-                                                                  milliseconds: 1500),));
-                                },
-                                child: Container(
-                                  height: 46,width:MediaQuery.of(context).size.height*0.60/3,
-                                  decoration: BoxDecoration(   
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Color(0xff0BA70F)
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [ 
-                                      Text('Copy seed',style:TextStyle(fontSize:16,fontWeight:FontWeight.w800,color: Colors.white,)),
-                                      Padding(
-                                        padding: const EdgeInsets.only(left:8.0),
-                                        child: Icon(Icons.copy,color: Colors.white,),
-                                      )
-                                  ],),
-                                ),
-                              ),
-                             
-                           
-                              
-                              
-                              SizedBox(width: 10,),
-                              InkWell(
-                                 onTap:() {  
-                                  Share.share(
-                                    _seed,
-                                    subject: tr(context).seed_share
-                                  );
-                                              // Share.text(
-                                              //     S.of(context).seed_share,
-                                              //     _seed,
-                                              //     'text/plain');
-                                            },
-                                child: Container(
-                                  height: 46,width:MediaQuery.of(context).size.height*0.40/3,
-                                  decoration: BoxDecoration(   
-                                    borderRadius: BorderRadius.circular(10),
-                                    color:  Color(0xff2979FB) //(0xffE8E8E8)
-                                  ),
-                                  child:Center(
-                                    child:Text(tr(context).save,style:TextStyle(fontSize:16,fontWeight:FontWeight.w800,color: Colors.white))
-                                  )
-                                ),
-                              )
-                            ],
-                           ),
-                         ),
-                        ],
-                      );
-                    }),
-                  ),
-                SizedBox(
-                  height:MediaQuery.of(context).size.height*0.54/3,
+
                  ),
+               ) 
                
-            widget.onCloseCallback != null && !isCopied ?  Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Copy and save the seed to continue',style: TextStyle(fontSize:15),),
-              ): Container(),
-
-
-
-               widget.onCloseCallback != null
-                      ? 
-               
-                 InkWell(
-                        onTap: isCopied ? () {
-                          widget.onCloseCallback != null ? widget.onCloseCallback!() : Navigator.of(context).pop();
-                        } : null,
-                        child: Container(
-                            width: MediaQuery.of(context).size.width*2.6/3, //290,
-                            padding: EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: isCopied ? 
-                              Color(0xff0BA70F) : settingsStore.isDarkTheme ? Color(0xff272733) : Color(0xffE8E8E8) , //,
-                              borderRadius: BorderRadius.circular(10)
+               : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                   /* Image.asset(
+                      'assets/images/avatar4.png',
+                      height: 70,
+                      width: 70,
+                      fit: BoxFit.cover,
+                    ),*/ //image,
+                    SizedBox(height:MediaQuery.of(context).size.height*0.20/3),
+                    Container(
+                      //margin: EdgeInsets.only(left: 10.0, top: 15.0, right: 10.0,bottom: 90.0),
+                      child: Observer(builder: (_) {
+                        _seed = walletSeedStore.seed;
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            // Row(
+                            //   children: <Widget>[
+                            //     Expanded(
+                            //         child: Container(
+                            //       padding: EdgeInsets.only(bottom: 10.0),
+                            //       margin: EdgeInsets.only(bottom: 10.0),
+                            //       child: Text(
+                            //         walletSeedStore.name ?? '',
+                            //         textAlign: TextAlign.center,
+                            //         style: TextStyle(
+                            //             fontSize: 18.0,
+                            //             fontWeight: FontWeight.bold,
+                            //             color: Theme.of(context).primaryTextTheme.caption.color,//Theme.of(context).primaryTextTheme.button.color
+                            //         ),
+                            //       ),
+                            //     ))
+                            //   ],
+                            // ),
+                            Padding(
+                              padding: const EdgeInsets.only(left:10.0,right:10.0),
+                              child: RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                text: 'Note : ',
+                                style: TextStyle(  
+                                  color: Color(0xffFF3131),
+                                  //fontFamily: 'Poppins',
+                                   fontSize:15,
+                                   fontWeight: FontWeight.w400
+                                ),
+                                children:[
+                                  TextSpan(text:'Never share your seed to anyone! Check your surroundings to ensure no one is overlooking',style: TextStyle(
+                                   // fontFamily: 'Poppins',
+                                    fontSize:15,
+                                    fontWeight: FontWeight.w400,
+                                    color:settingsStore.isDarkTheme ? Color(0xffD9D9D9) : Color(0xff909090)))
+                                ]
+                              ),
+                        
+                              ),
                             ),
-                            child: Center(
-                              child:Text(tr(context).continue_text,
-                              style:TextStyle(
-                              color: isCopied ?
-                               Color(0xffffffff) 
-                              :  settingsStore.isDarkTheme ? Color(0xff6C6C78) : Color(0xffB2B2B6) ,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold
-                              
-                              )
-                              )
-                            )
-                            // PrimaryButton(
-                            //     onPressed: () => onClose(context),
-                            //     text: S.of(context).restore_next,
-                            //     color: Theme.of(context)
-                            //         .primaryTextTheme
-                            //         .button
-                            //         .backgroundColor,
-                            //     borderColor: Palette.darkGrey),
-                          ),
-                      )
-               
-                  // onCloseCallback != null
-                  //     ? 
-
-                      
-                     : InkWell(
-                        onTap: () {
-                         Navigator.of(context).pop();
-                        },
-                        child: Container(
-                            width: MediaQuery.of(context).size.width*2.6/3, //290,
-                            padding: EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: 
-                              Color(0xff0BA70F)  , //,
-                              borderRadius: BorderRadius.circular(10)
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height*0.10/3,
                             ),
-                            child: Center(
-                              child:Text(tr(context).ok,
-                              style:TextStyle(
-                              color: 
-                               Color(0xffffffff), 
+                           Container(
+                             child:Text(walletSeedStore.name, style: TextStyle(fontWeight:FontWeight.w800,fontSize:20,),maxLines: 1,overflow: TextOverflow.ellipsis,)
+                           ),
+                           SizedBox(height: 15,),
+                           Container(
+                            height:MediaQuery.of(context).size.height*0.50/3,
+                           padding:EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: settingsStore.isDarkTheme ? Color(0xff272733) : Color(0xffEDEDED),
+                              borderRadius: BorderRadius.circular(10.0)
+                            ),
+                            child:Text(walletSeedStore.seed,textAlign: TextAlign.center,style:TextStyle(
+                              fontSize:15, color:settingsStore.isDarkTheme ? Color(0xffE2E2E2): Color(0xff373737)))
+                           ),
+                           //SizedBox(height:15),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height*0.10/3,
+                            ),
+                           Padding(
+                             padding: const EdgeInsets.all(15.0),
+                             child: widget.onCloseCallback != null
+                             ? Row(
+                              children: [
+                                // Observer(builder: (_){
+                                //   return
+                                   InkWell(
+                                  onTap: !isCopied ? (){
+                                    setState(() {
+                                           isCopied = true;                              
+                                                                      });
+                                    
+                                     print(' copied value $isCopied');
+                                     Clipboard.setData(
+                                                    ClipboardData(text: _seed));
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                               margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.30/3,
+                                                               left: MediaQuery.of(context).size.height*0.30/3,
+                                                               right: MediaQuery.of(context).size.height*0.30/3
+                                                               ),
+                                                                elevation:0, //5,
+                                                                behavior: SnackBarBehavior.floating,
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius: BorderRadius.circular(15.0) //only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
+                                                                ),
+                                                                content: Text(
+                                                                    tr(context)
+                                                                    .copied,style: TextStyle(color: Color(0xff0EB212),fontWeight:FontWeight.w700,fontSize:15) ,textAlign: TextAlign.center,),
+                                                                backgroundColor: Color(0xff0BA70F).withOpacity(0.10), //.fromARGB(255, 46, 113, 43),
+                                                                duration: Duration(
+                                                                    milliseconds: 1500),));
+                                  }:null,
+                                  child: Container(
+                                    height: 46,width:MediaQuery.of(context).size.height*0.60/3,
+                                    decoration: BoxDecoration(   
+                                      borderRadius: BorderRadius.circular(10),
+                                      color:isCopied ? settingsStore.isDarkTheme ? Color(0xff272733) : Color(0xffE8E8E8)  : Color(0xff0BA70F)
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [ 
+                                        Text('Copy seed',style:TextStyle(fontSize:16,fontWeight:FontWeight.w800,color: isCopied ? settingsStore.isDarkTheme ? Color(0xff6C6C78) : Color(0xffB2B2B6) : Colors.white,)),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left:8.0),
+                                          child: Icon(Icons.copy,color:  isCopied ? settingsStore.isDarkTheme ? Color(0xff6C6C78) : Color(0xffB2B2B6) : Colors.white,),
+                                        )
+                                    ],),
+                                  ),
+                                ),
+                               
                              
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold
-                              
+                                
+                                
+                                SizedBox(width: 10,),
+                               InkWell(
+                                   onTap:() {
+                                          Share.share(
+                                           _seed,
+                                          subject: tr(context).seed_share,
+                                          );
+                                                // Share.text(
+                                                //     S.of(context).seed_share,
+                                                //     _seed,
+                                                //     'text/plain');
+                                              },
+                                  child: Container(
+                                    height: 46,width:MediaQuery.of(context).size.height*0.40/3,
+                                    decoration: BoxDecoration(   
+                                      borderRadius: BorderRadius.circular(10),
+                                      color:  Color(0xff2979FB) //(0xffE8E8E8)
+                                    ),
+                                    child:Center(
+                                      child:Text(tr(context).save,style:TextStyle(fontSize:16,fontWeight:FontWeight.w800,color: Colors.white))
+                                    )
+                                  ),
+                                )
+                              ],
+                             ):
+                             Row(
+                              children: [
+                                // Observer(builder: (_){
+                                //   return
+                                   InkWell(
+                                  onTap: (){
+                                    setState(() {
+                                           isCopied = true;                              
+                                                                      });
+                                    
+                                     print(' copied value $isCopied');
+                                     Clipboard.setData(
+                                                    ClipboardData(text: _seed));
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                               margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.30/3,
+                                                               left: MediaQuery.of(context).size.height*0.30/3,
+                                                               right: MediaQuery.of(context).size.height*0.30/3
+                                                               ),
+                                                                elevation:0, //5,
+                                                                behavior: SnackBarBehavior.floating,
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius: BorderRadius.circular(15.0) //only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
+                                                                ),
+                                                                content: Text(
+                                                                    tr(context)
+                                                                    .copied,style: TextStyle(color: Color(0xff0EB212),fontWeight:FontWeight.w700,fontSize:15) ,textAlign: TextAlign.center,),
+                                                                backgroundColor: Color(0xff0BA70F).withOpacity(0.10), //.fromARGB(255, 46, 113, 43),
+                                                                duration: Duration(
+                                                                    milliseconds: 1500),));
+                                  },
+                                  child: Container(
+                                    height: 46,width:MediaQuery.of(context).size.height*0.60/3,
+                                    decoration: BoxDecoration(   
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Color(0xff0BA70F)
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [ 
+                                        Text('Copy seed',style:TextStyle(fontSize:16,fontWeight:FontWeight.w800,color: Colors.white,)),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left:8.0),
+                                          child: Icon(Icons.copy,color: Colors.white,),
+                                        )
+                                    ],),
+                                  ),
+                                ),
+                               
+                             
+                                
+                                
+                                SizedBox(width: 10,),
+                                InkWell(
+                                   onTap:() {  
+                                    Share.share(
+                                      _seed,
+                                      subject: tr(context).seed_share
+                                    );
+                                                // Share.text(
+                                                //     S.of(context).seed_share,
+                                                //     _seed,
+                                                //     'text/plain');
+                                              },
+                                  child: Container(
+                                    height: 46,width:MediaQuery.of(context).size.height*0.40/3,
+                                    decoration: BoxDecoration(   
+                                      borderRadius: BorderRadius.circular(10),
+                                      color:  Color(0xff2979FB) //(0xffE8E8E8)
+                                    ),
+                                    child:Center(
+                                      child:Text(tr(context).save,style:TextStyle(fontSize:16,fontWeight:FontWeight.w800,color: Colors.white))
+                                    )
+                                  ),
+                                )
+                              ],
+                             ),
+                           ),
+                          ],
+                        );
+                      }),
+                    ),
+                  SizedBox(
+                    height:MediaQuery.of(context).size.height*0.54/3,
+                   ),
+                 
+              widget.onCloseCallback != null && !isCopied ?  Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Copy and save the seed to continue',style: TextStyle(fontSize:15),),
+                ): Container(),
+
+
+
+                 widget.onCloseCallback != null
+                        ? 
+                 
+                   InkWell(
+                          onTap: isCopied ? () {
+                            widget.onCloseCallback != null ? widget.onCloseCallback!() : Navigator.of(context).pop();
+                          } : null,
+                          child: Container(
+                              width: MediaQuery.of(context).size.width*2.6/3, //290,
+                              padding: EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: isCopied ? 
+                                Color(0xff0BA70F) : settingsStore.isDarkTheme ? Color(0xff272733) : Color(0xffE8E8E8) , //,
+                                borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Center(
+                                child:Text(tr(context).continue_text,
+                                style:TextStyle(
+                                color: isCopied ?
+                                 Color(0xffffffff) 
+                                :  settingsStore.isDarkTheme ? Color(0xff6C6C78) : Color(0xffB2B2B6) ,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold
+                                
+                                )
+                                )
                               )
+                              // PrimaryButton(
+                              //     onPressed: () => onClose(context),
+                              //     text: S.of(context).restore_next,
+                              //     color: Theme.of(context)
+                              //         .primaryTextTheme
+                              //         .button
+                              //         .backgroundColor,
+                              //     borderColor: Palette.darkGrey),
+                            ),
+                        )
+                 
+                    // onCloseCallback != null
+                    //     ? 
+
+                        
+                       : InkWell(
+                          onTap: () {
+                           Navigator.of(context).pop();
+                          },
+                          child: Container(
+                              width: MediaQuery.of(context).size.width*2.6/3, //290,
+                              padding: EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: 
+                                Color(0xff0BA70F)  , //,
+                                borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Center(
+                                child:Text(tr(context).ok,
+                                style:TextStyle(
+                                color: 
+                                 Color(0xffffffff), 
+                               
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold
+                                
+                                )
+                                )
                               )
-                            )
-                            // PrimaryButton(
-                            //     onPressed: () => onClose(context),
-                            //     text: S.of(context).restore_next,
-                            //     color: Theme.of(context)
-                            //         .primaryTextTheme
-                            //         .button
-                            //         .backgroundColor,
-                            //     borderColor: Palette.darkGrey),
-                          ),
-                      )
-                ],
-              ),
-            );
+                              // PrimaryButton(
+                              //     onPressed: () => onClose(context),
+                              //     text: S.of(context).restore_next,
+                              //     color: Theme.of(context)
+                              //         .primaryTextTheme
+                              //         .button
+                              //         .backgroundColor,
+                              //     borderColor: Palette.darkGrey),
+                            ),
+                        )
+                  ],
+                ),
+              );
    },)
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

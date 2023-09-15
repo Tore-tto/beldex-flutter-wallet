@@ -16,7 +16,7 @@ class CryptoCurrencyAdapter extends TypeAdapter<CryptoCurrency> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CryptoCurrency(title: '',raw: 0);
+    return CryptoCurrency(title: 'BDX', raw: 0);
   }
 
   @override

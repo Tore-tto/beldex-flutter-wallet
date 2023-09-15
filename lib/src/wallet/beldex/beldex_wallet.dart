@@ -63,9 +63,21 @@ class BelDexWallet extends Wallet {
   static Future<BelDexWallet> load(
       Box<WalletInfo> walletInfoSource, String name, WalletType type) async {
     final id = (walletTypeToString(type)?.toLowerCase() ?? 'unknown' ) + '_' + name;
-    final walletInfo = walletInfoSource.values
-        .firstWhere((info) => info.id == id, //orElse: () => 0
-        );
+    //final walletInfo = walletInfoSource.values.firstWhere((info) => info.id == id,); //orElse: () => 0
+    print('Loading wallet $id');
+
+    var walletInfo = walletInfoSource.values.firstWhere((info) => info.id == id,);
+    if (walletInfo == null) {
+      walletInfo = WalletInfo(
+          id: id,
+          name: name,
+          type: type,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
+          // We don't know what these were, so use conservative values:
+          isRecovery: false,
+          restoreHeight: 0);
+      await walletInfoSource.add(walletInfo);
+    }
     return await configured(
         walletInfoSource: walletInfoSource, walletInfo: walletInfo);
   }
@@ -78,10 +90,7 @@ class BelDexWallet extends Wallet {
 
     if (walletInfo.isRecovery) {
       wallet.setRecoveringFromSeed();
-
-      if (walletInfo.restoreHeight != null) {
-        wallet.setRefreshFromBlockHeight(height: walletInfo.restoreHeight);
-      }
+      wallet.setRefreshFromBlockHeight(height: walletInfo.restoreHeight);
     }
 
     return wallet;
@@ -242,24 +251,25 @@ class BelDexWallet extends Wallet {
   Future<void> connectToNode(
       {required Node node, bool useSSL = false, bool isLightWallet = false}) async {
     try {
-      _syncStatus.value = ConnectingSyncStatus();
+      _syncStatus.value = ConnectingSyncStatus(getCurrentHeight());
 
       // Check if node is online to avoid crash
       final nodeIsOnline = await node.isOnline();
       if (!nodeIsOnline) {
-        _syncStatus.value = FailedSyncStatus();
+        _syncStatus.value = FailedSyncStatus(getCurrentHeight());
         return;
       }
 
       await beldex_wallet.setupNode(
           address: node.uri,
-          login: node.login!,
-          password: node.password!,
+          /*login: node.login!,
+          password: node.password!,*/
           useSSL: useSSL,
           isLightWallet: isLightWallet);
-      _syncStatus.value = ConnectedSyncStatus();
+      _syncStatus.value = ConnectedSyncStatus(getCurrentHeight());
     } catch (e) {
-      _syncStatus.value = FailedSyncStatus();
+      print('Error -> failed');
+      _syncStatus.value = FailedSyncStatus(getCurrentHeight());
       print(e);
     }
   }
@@ -275,13 +285,13 @@ class BelDexWallet extends Wallet {
     await prefs.setInt('currentHeight', getCurrentHeight() ?? 0);
     try {
       print('Starting from height try');
-      _syncStatus.value = StartingSyncStatus();
+      _syncStatus.value = StartingSyncStatus(getCurrentHeight());
       beldex_wallet.startRefresh();
       _setListeners();
       _listener?.start();
     } catch (e) {
       print('Starting from height catch');
-      _syncStatus.value = FailedSyncStatus();
+      _syncStatus.value = FailedSyncStatus(getCurrentHeight());
       print(e);
       rethrow;
     }
@@ -314,13 +324,13 @@ class BelDexWallet extends Wallet {
       TransactionCreationCredentials credentials) async {
     final _credentials = credentials as BeldexTransactionCreationCredentials;
     final transactionDescription = await transaction_history.createTransaction(
-        address: _credentials.address!,
+        address: _credentials.address,
         amount: _credentials.amount!,
-        priorityRaw: _credentials.priority!.serialize(),
+        priorityRaw: _credentials.priority.serialize(),
         accountIndex: _account.value.id);
     print('_credentials.address --> ${_credentials.address}');
     print('_credentials.amount --> ${_credentials.amount}');
-    print('_credentials.priority.serialize() --> ${_credentials.priority!.serialize()}');
+    print('_credentials.priority.serialize() --> ${_credentials.priority.serialize()}');
     print('_account.value.id --> ${_account.value.id}');
     print('transactionDescription fee --> ${transactionDescription.fee}');
     print('transactionDescription amount --> ${transactionDescription.amount}');
@@ -333,10 +343,10 @@ class BelDexWallet extends Wallet {
 
   @override
   Future rescan({int restoreHeight = 0}) async {
-    _syncStatus.value = StartingSyncStatus();
+    _syncStatus.value = StartingSyncStatus(getCurrentHeight());
     setRefreshFromBlockHeight(height: restoreHeight);
     beldex_wallet.rescanBlockchainAsync();
-    _syncStatus.value = StartingSyncStatus();
+    _syncStatus.value = StartingSyncStatus(getCurrentHeight());
   }
 
   void setRecoveringFromSeed() =>
@@ -353,17 +363,14 @@ class BelDexWallet extends Wallet {
   Future askForUpdateBalance() async {
     final fullBalance = await getFullBalance();
     final unlockedBalance = await getUnlockedBalance();
-    final needToChange = _onBalanceChange.hasValue
+    final needToChange = !_onBalanceChange.hasValue
         ? true : _onBalanceChange.value.fullBalance != fullBalance ||
         _onBalanceChange.value.unlockedBalance != unlockedBalance;
-        
 
-    if (!needToChange) {
-      return;
+    if (needToChange) {
+      _onBalanceChange.add(BelDexBalance(
+          fullBalance: fullBalance, unlockedBalance: unlockedBalance));
     }
-
-    _onBalanceChange.add(BelDexBalance(
-        fullBalance: fullBalance, unlockedBalance: unlockedBalance));
   }
 
   Future askForUpdateTransactionHistory() async {
@@ -385,33 +392,27 @@ class BelDexWallet extends Wallet {
   beldex_wallet.SyncListener setListeners() =>
       beldex_wallet.setListeners(_onNewBlock, _onNewTransaction);
 
-  Future _onNewBlock(int height, int blocksLeft, double ptc, bool isRefreshing) async {
+  Future _onNewBlock(int height, int target, bool isRefreshing) async {
     try {
-      print('blockLeft --> $blocksLeft, $ptc');
+      print('blockLeft --> $height, $target');
       if (isRefreshing) {
-        _syncStatus.add(SyncingSyncStatus(blocksLeft, ptc));
+        _syncStatus.add(SyncingSyncStatus(height, target));
           print('isRefreshingNew if $isRefreshing');
       } else {
         print('isRefreshingNew else $isRefreshing');
         await askForUpdateTransactionHistory();
         await askForUpdateBalance();
-
-        if (blocksLeft < 100) {
-          print('isRefreshingNew else if $isRefreshing');
-          _syncStatus.add(SyncedSyncStatus());
+        if (target-height <=2) {
+          _syncStatus.add(SyncedSyncStatus(height));
           await beldex_wallet.store();
 
           if (walletInfo.isRecovery) {
             await setAsRecovered();
           }
         }
-
-        if (blocksLeft <= 1) {
-          beldex_wallet.setRefreshFromBlockHeight(height: height);
-        }
       }
     } catch (e) {
-      print(e.toString());
+      print('Error ${e.toString()}');
     }
   }
 

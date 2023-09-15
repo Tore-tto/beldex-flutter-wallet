@@ -45,7 +45,9 @@ class AccountFormState extends State<AccountForm> {
 
   @override
   void initState() {
-    if (widget.account != null) _textController.text = widget.account!.label;
+    if (widget.account != null) {
+      _textController.text = widget.account?.label ?? "";
+    }
     super.initState();
   }
 
@@ -85,7 +87,7 @@ class AccountFormState extends State<AccountForm> {
             width: 250,
             child: LoadingPrimaryButton(
                   onPressed: () async {
-                    if (!_formKey.currentState!.validate()) {
+                    if (!(_formKey.currentState?.validate() ?? false)) {
                       return;
                     }
 
@@ -99,10 +101,8 @@ class AccountFormState extends State<AccountForm> {
                     Navigator.of(context).pop(_textController.text);
                   },
                   text: widget.account != null ? 'Rename' : tr(context).add,
-                  color:
-                      Theme.of(context).primaryTextTheme.button!.backgroundColor!,
-                  borderColor:
-                      Theme.of(context).primaryTextTheme.button!.backgroundColor!,
+                  color: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
+                  borderColor: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
                   isLoading: accountListStore.isAccountCreating,
                 ),
           )),

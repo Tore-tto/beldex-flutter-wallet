@@ -14,6 +14,8 @@ import 'package:beldex_wallet/src/widgets/primary_button.dart';
 import 'package:beldex_wallet/src/widgets/scollable_with_bottom_section.dart';
 import 'package:provider/provider.dart';
 
+import '../../stores/settings/settings_store.dart';
+
 class NewSubaddressPage extends BasePage {
   @override
   String getTitle(AppLocalizations t) => t.receive;
@@ -73,6 +75,7 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
   Widget build(BuildContext context) {
     final subaddressCreationStore =
         Provider.of<SubadrressCreationStore>(context);
+    final settingsStore = Provider.of<SettingsStore>(context);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -98,15 +101,14 @@ class NewSubaddressFormState extends State<NewSubaddressForm> {
             width: 250,
             child: LoadingPrimaryButton(
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
+                  if (_formKey.currentState?.validate() ?? false) {
                     await subaddressCreationStore.add(label: _labelController.text);
                     Navigator.of(context).pop();
                   }
                 },
                 text: tr(context).new_subaddress_create,
-                color: Theme.of(context).primaryTextTheme.button!.backgroundColor!,
-                borderColor:
-                Theme.of(context).primaryTextTheme.button!.backgroundColor!,
+                color: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
+                borderColor: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
                 isLoading: subaddressCreationStore.state is SubaddressIsCreating),
           ),
         )

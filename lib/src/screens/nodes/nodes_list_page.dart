@@ -237,14 +237,14 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
           SizedBox(height: 10,),
           Expanded(child: Observer(builder: (context) {
             return ListView.builder(
-                itemCount: nodeList.nodes?.length,
+                itemCount: nodeList.nodes.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final node = nodeList.nodes![index];
+                  final node = nodeList.nodes[index];
 
                   return Observer(builder: (_) {
                     final isCurrent = settings.node == null
                         ? false
-                        : node.key == settings.node!.key;
+                        : node.key == settings.node?.key;
 
                     final content = Card(
                         margin: EdgeInsets.only(left: constants.leftPx,right: constants.rightPx,top: 20),
@@ -283,7 +283,7 @@ class NodeListPageBodyState extends State<NodeListPageBody> {
                                   tr(context).change_current_node(node.uri),
                                   onPressed: (context) async {
                                 Navigator.of(context).pop();
-                                await settings.setCurrentNode(node: node);
+                                await settings.setCurrentNode(node);
                               });
                             }
                           },

@@ -6,11 +6,11 @@ const double _kScrollbarThickness = 12.0;
 
 class MyScrollbar extends StatefulWidget {
   final ScrollableWidgetBuilder builder;
-  final ScrollController? scrollController;
+  final ScrollController scrollController;
 
   const MyScrollbar({
     Key? key,
-    this.scrollController,
+    required this.scrollController,
     required this.builder,
   })  : assert(builder != null),
         super(key: key);
@@ -21,15 +21,15 @@ class MyScrollbar extends StatefulWidget {
 
 class _MyScrollbarState extends State<MyScrollbar> {
   ScrollbarPainter? _scrollbarPainter;
-  ScrollController? _scrollController;
+  ScrollController _scrollController = ScrollController();
   Orientation? _orientation;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = widget.scrollController ?? ScrollController();
+    _scrollController = widget.scrollController;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updateScrollPainter(_scrollController!.position);
+      _updateScrollPainter(_scrollController.position);
     });
   }
 
@@ -40,7 +40,7 @@ class _MyScrollbarState extends State<MyScrollbar> {
   }
   @override
   void dispose() {
-    _scrollbarPainter!.dispose();
+    _scrollbarPainter?.dispose();
     super.dispose();
   }
 
@@ -57,7 +57,7 @@ class _MyScrollbarState extends State<MyScrollbar> {
     );
   }
   bool _updateScrollPainter(ScrollMetrics position) {
-    _scrollbarPainter!.update(
+    _scrollbarPainter?.update(
       position,
       position.axisDirection,
     );
@@ -67,7 +67,7 @@ class _MyScrollbarState extends State<MyScrollbar> {
   @override
   void didUpdateWidget(MyScrollbar oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _updateScrollPainter(_scrollController!.position);
+    _updateScrollPainter(_scrollController.position);
   }
 
   @override
@@ -77,7 +77,7 @@ class _MyScrollbarState extends State<MyScrollbar> {
         _orientation ??= orientation;
         if (orientation != _orientation) {
           _orientation = orientation;
-          _updateScrollPainter(_scrollController!.position);
+          _updateScrollPainter(_scrollController.position);
         }
         return NotificationListener<ScrollNotification>(
           onNotification: (notification) =>

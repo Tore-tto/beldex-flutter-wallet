@@ -5,12 +5,11 @@ import 'package:provider/provider.dart';
 import 'new_nav_list_trailing.dart';
 
 class NewNavListArrow extends StatelessWidget {
-  NewNavListArrow({this.text, this.leading, this.onTap,this.size, this.balanceVisibility,this.decimalVisibility,this.currencyVisibility,this.feePriorityVisibility});
+  NewNavListArrow({this.text, this.leading, this.onTap,this.balanceVisibility,this.decimalVisibility,this.currencyVisibility,this.feePriorityVisibility});
 
   final String? text;
   final Widget? leading;
   final GestureTapCallback? onTap;
-  final double? size;
   final bool? balanceVisibility;
   final bool? decimalVisibility;
   final bool? currencyVisibility;
@@ -19,10 +18,10 @@ class NewNavListArrow extends StatelessWidget {
   Widget build(BuildContext context) {
     final settingsStore = Provider.of<SettingsStore>(context);
     return NewNavListTrailing(
-      balanceVisibility: balanceVisibility!,
-      decimalVisibility: decimalVisibility!,
-        currencyVisibility: currencyVisibility!,
-        feePriorityVisibility: feePriorityVisibility!,
+      balanceVisibility: balanceVisibility ?? false,
+      decimalVisibility: decimalVisibility ?? false,
+        currencyVisibility: currencyVisibility ?? false,
+        feePriorityVisibility: feePriorityVisibility ?? false,
         leading: Container(
            height:43.0,width:43.0,
             padding: EdgeInsets.all(11.0),
@@ -35,7 +34,6 @@ class NewNavListArrow extends StatelessWidget {
         trailing: Icon(Icons.arrow_forward_ios_rounded,
             color: settingsStore.isDarkTheme ? Color(0xff3F3F4D): Color(0xff3F3F4D), // Theme.of(context).primaryTextTheme.headline6.color,
             size: 20),
-        onTap: onTap!,
-    size: size!,);
+        onTap: onTap!,);
   }
 }

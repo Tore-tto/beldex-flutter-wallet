@@ -130,7 +130,7 @@ class BlockchainHeightState extends State<BlockchainHeightWidget> {
                             
                             controller: dateController,
                             validator: (value) {
-                              if(value!.isEmpty){
+                              if(value?.isEmpty !=null){
                                 return 'Date should not be empty';
                               }else{
                                return null;

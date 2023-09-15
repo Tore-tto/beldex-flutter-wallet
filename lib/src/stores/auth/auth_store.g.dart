@@ -44,8 +44,9 @@ mixin _$AuthStore on AuthStoreBase, Store {
       AsyncAction('AuthStoreBase.auth', context: context);
 
   @override
-  Future<dynamic> auth({required String password, required dynamic t}) {
-    return _$authAsyncAction.run(() => super.auth(password: password, t: t));
+  Future<dynamic> auth({required String password, required AppLocalizations l10n}) {
+    return _$authAsyncAction
+        .run(() => super.auth(password: password, l10n: l10n));
   }
 
   late final _$AuthStoreBaseActionController =

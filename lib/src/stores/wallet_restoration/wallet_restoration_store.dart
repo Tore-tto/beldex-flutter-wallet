@@ -81,12 +81,12 @@ abstract class WalletRestorationStoreBase with Store {
   }
 
   @action
-  void validateSeed(List<MnemoticItem>? seed,AppLocalizations t) {
+  void validateSeed(List<MnemoticItem>? seed,AppLocalizations l10n) {
     final _seed = seed ?? this.seed;
     var isValid = _seed != null ? _seed.length == 25 : false;
 
  if(_seed == null || _seed.length != 25){
-  errorMessage = t.wallet_restoration_store_incorrect_seed_length;
+  errorMessage = l10n.wallet_restoration_store_incorrect_seed_length;
   return ;
  }
 
@@ -123,7 +123,7 @@ abstract class WalletRestorationStoreBase with Store {
     const pattern = r'^(?=.{1,15}$)[a-zA-Z0-9]+$';
     final regExp = RegExp(pattern);
     isValid = regExp.hasMatch(value);
-    errorMessage = (isValid ? null : t.enterAValidNameUpto15Characters)!;
+    errorMessage = (isValid ? null : t.enterAValidNameUpto15Characters);
   }
 
   void validateAddress(String value, {CryptoCurrency? cryptoCurrency,required AppLocalizations t}) {

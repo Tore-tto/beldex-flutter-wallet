@@ -59,7 +59,7 @@ Widget trailing(BuildContext context){
                   style: TextStyle(
                     fontSize: 30.0,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryTextTheme.caption!.color,
+                    color: Theme.of(context).primaryTextTheme.caption?.color,
                   ),
                   textScaleFactor: textScaleFactor,
                   textAlign: TextAlign.center,
@@ -71,7 +71,7 @@ Widget trailing(BuildContext context){
                     tr(context).never_give_your(item),
                     style: TextStyle(
                       fontSize: 22.0,
-                      color: Theme.of(context).primaryTextTheme.caption!.color,
+                      color: Theme.of(context).primaryTextTheme.caption?.color,
                     ),
                     textScaleFactor: textScaleFactor,
                     textAlign: TextAlign.center,
@@ -82,7 +82,7 @@ Widget trailing(BuildContext context){
                     tr(context).important,
                     style: TextStyle(
                       fontSize: 16.0,
-                      color: Theme.of(context).primaryTextTheme.caption!.color,
+                      color: Theme.of(context).primaryTextTheme.caption?.color,
                     ),
                     textScaleFactor: textScaleFactor,
                     textAlign: TextAlign.center,

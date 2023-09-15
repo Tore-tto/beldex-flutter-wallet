@@ -27,7 +27,7 @@ abstract class BasePage extends StatelessWidget {
   void onClose(BuildContext context) => Navigator.of(context).pop();
 
   Widget? leading(BuildContext context) {
-    if (ModalRoute.of(context)!.isFirst) {
+    if (ModalRoute.of(context)?.isFirst ?? false) {
       return null;
     }
     final settingsStore = Provider.of<SettingsStore>(context);
@@ -68,13 +68,13 @@ abstract class BasePage extends StatelessWidget {
                 fontSize: 23.0,
                 fontWeight: FontWeight.w700,
                 //fontFamily: 'Poppins',
-                color: Theme.of(context).primaryTextTheme.caption!.color),
+                color: Theme.of(context).primaryTextTheme.caption?.color),
           );
   }
 
   Widget? trailing(BuildContext context) {
     final settingsStore = Provider.of<SettingsStore>(context);
-    if (ModalRoute.of(context)!.isFirst) {
+    if (ModalRoute.of(context)?.isFirst ?? false) {
       return null;
     }
 

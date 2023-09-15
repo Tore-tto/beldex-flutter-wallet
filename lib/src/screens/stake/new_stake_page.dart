@@ -28,7 +28,6 @@ import 'package:beldex_wallet/src/stores/wallet/wallet_store.dart';
 import 'package:beldex_wallet/src/widgets/beldex_text_field.dart';
 import 'package:beldex_wallet/src/widgets/scollable_with_bottom_section.dart';
 //import 'package:beldex_wallet/src/widgets/slide_to_act.dart';
-//import 'package:beldex_wallet/src/widgets/swipe_detector.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 import 'package:beldex_wallet/src/util/constants.dart' as constants;
@@ -80,7 +79,7 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
 
   @override
   void dispose(){
-    animationController!.dispose();
+    animationController?.dispose();
     super.dispose();
   }
 
@@ -287,7 +286,7 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
                         padding: const EdgeInsets.only(left: 25.0),
                         child: TextFormField(
                             style: TextStyle(
-                                fontSize: 18.0, color: Theme.of(context).primaryTextTheme.caption!.color),
+                                fontSize: 18.0, color: Theme.of(context).primaryTextTheme.caption?.color),
                             controller: _cryptoAmountController,
                             keyboardType: TextInputType.numberWithOptions(
                                 signed: false, decimal: true),
@@ -342,11 +341,11 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
         bottomSection: Observer(builder: (_) {
           return NewSlideToAct(
             text: tr(context).stake_beldex,
-            outerColor: Theme.of(context).primaryTextTheme.subtitle2!.color,
+            outerColor: Theme.of(context).primaryTextTheme.subtitle2?.color,
             innerColor: BeldexPalette.teal,
             onFutureSubmit: syncStore.status is SyncedSyncStatus
                 ? () async {
-                    if (_formKey.currentState!.validate()) {
+                    if (_formKey.currentState?.validate() ?? false) {
                       var isSuccessful = false;
 
                       await Navigator.of(context).pushNamed(Routes.auth,
@@ -358,7 +357,7 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
                         }
 
                         await sendStore.createStake(
-                            address: _addressController.text, t: tr(context));
+                            address: _addressController.text, l10n: tr(context));
 
                         Navigator.of(auth.context).pop();
                         isSuccessful = true;
@@ -574,8 +573,8 @@ class NewStakeFormState extends State<NewStakeForm> with TickerProviderStateMixi
                 return AlertDialog(
                   title: Text(tr(context).confirm_sending),
                   content: Text(tr(context).commit_transaction_amount_fee(
-                      sendStore.pendingTransaction!.amount,
-                      sendStore.pendingTransaction!.fee)),
+                      sendStore.pendingTransaction?.amount ?? "",
+                      sendStore.pendingTransaction?.fee ?? "")),
                   actions: <Widget>[
                     TextButton(
                         onPressed: () {

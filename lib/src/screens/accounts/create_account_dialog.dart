@@ -161,7 +161,7 @@ class _CreateAccountDialogState extends State<CreateAccountDialog>
                         Expanded(
                           child: MaterialButton(
                             onPressed: () {
-                              if (!_formKey.currentState!.validate()) {
+                              if (!(_formKey.currentState?.validate() ?? false)) {
                                 return ;
                               }
                               if (widget.account != null &&

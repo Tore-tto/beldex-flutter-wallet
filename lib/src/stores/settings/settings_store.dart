@@ -79,7 +79,7 @@ abstract class SettingsStoreBase with Store {
             sharedPreferences.getInt(currentBalanceDetailKey) ?? 0) ??
         AmountDetail.ultra;
     final shouldSaveRecipientAddress =
-        sharedPreferences.getBool(shouldSaveRecipientAddressKey);
+        sharedPreferences.getBool(shouldSaveRecipientAddressKey) ?? false;
     final allowBiometricAuthentication =
         sharedPreferences.getBool(allowBiometricAuthenticationKey) ?? false;
     final enableFiatCurrency =
@@ -101,7 +101,7 @@ abstract class SettingsStoreBase with Store {
         initialTransactionPriority: currentTransactionPriority,
         initialBalanceDisplayMode: currentBalanceDisplayMode,
         initialBalanceDetail: currentBalanceDetail,
-        initialSaveRecipientAddress: shouldSaveRecipientAddress!,
+        initialSaveRecipientAddress: shouldSaveRecipientAddress,
         allowBiometricAuthenticationKey: allowBiometricAuthentication,
         enableFiatCurrencyKey: enableFiatCurrency,
         initialDarkTheme: savedDarkTheme,
@@ -148,7 +148,7 @@ abstract class SettingsStoreBase with Store {
 
 
   final SharedPreferences _sharedPreferences;
-  final Box<Node>? _nodes;
+  final Box<Node> _nodes;
   late String currentVersion;
 
   @action
@@ -184,9 +184,9 @@ abstract class SettingsStoreBase with Store {
     }
   }
   @action
-  Future setCurrentNode({required Node node}) async {
+  Future setCurrentNode(Node node) async {
     this.node = node;
-    await _sharedPreferences.setInt(currentNodeIdKey, node.key as int);
+    await _sharedPreferences.setInt(currentNodeIdKey, this.node!.key as int);
   }
 
   @action
@@ -223,11 +223,11 @@ abstract class SettingsStoreBase with Store {
   Future setSaveRecipientAddress(
       {required bool shouldSaveRecipientAddress}) async {
     this.shouldSaveRecipientAddress = shouldSaveRecipientAddress;
-    await _sharedPreferences!.setBool(
+    await _sharedPreferences.setBool(
         shouldSaveRecipientAddressKey, shouldSaveRecipientAddress);
   }
 
-  Future loadSettings() async => node = (await _fetchCurrentNode())!;
+  Future loadSettings() async => node = await _fetchCurrentNode();
 
   @action
   Future setDefaultPinLength({required int pinLength}) async {
@@ -235,14 +235,16 @@ abstract class SettingsStoreBase with Store {
     await _sharedPreferences.setInt(currentPinLength, pinLength);
   }
 
-  Future<Node?> _fetchCurrentNode() async {
-    final id = _sharedPreferences!.getInt(currentNodeIdKey);
-    return _nodes!.get(id);
+  Future<Node> _fetchCurrentNode() async {
+    final id = _sharedPreferences.getInt(currentNodeIdKey);
+    print('Error -> $id');
+    print('Error -> 1 ${_nodes.get(id)}');
+    return _nodes.get(id)!;
   }
 
   Future setCurrentNodeToDefault() async {
     await changeCurrentNodeToDefault(
-        sharedPreferences: _sharedPreferences, nodes: _nodes!);
+        sharedPreferences: _sharedPreferences, nodes: _nodes);
     await loadSettings();
   }
 

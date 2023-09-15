@@ -59,18 +59,18 @@ abstract class SendStoreBase with Store {
   String get lastRecipientAddress => _lastRecipientAddress!;
 
   @action
-  Future createStake({required String address, String? amount,required AppLocalizations t}) async {
+  Future createStake({required String address, String? amount,required AppLocalizations l10n}) async {
     state = CreatingTransaction();
     
     try {
       final _amount = amount ??
-          (cryptoAmount == t.all
+          (cryptoAmount == l10n.all
               ? null
               : cryptoAmount.replaceAll(',', '.'));
       final credentials = BeldexStakeTransactionCreationCredentials(
-          address: address!, amount: _amount!);
+          address: address, amount: _amount!);
 
-      _pendingTransaction = await walletService!.createStake(credentials);
+      _pendingTransaction = await walletService.createStake(credentials);
       state = TransactionCreatedSuccessfully();
     } catch (e) {
       state = SendingFailed(error: e.toString());
@@ -78,7 +78,7 @@ abstract class SendStoreBase with Store {
   }
 
   @action
-  Future createTransaction({String? address, String? amount, BeldexTransactionPriority? tPriority,required AppLocalizations t}) async {
+  Future createTransaction({required String address, String? amount, BeldexTransactionPriority? tPriority,required AppLocalizations t}) async {
     state = CreatingTransaction();
 
     try {
@@ -87,17 +87,17 @@ abstract class SendStoreBase with Store {
               ? null
               : cryptoAmount.replaceAll(',', '.'));
       final credentials = BeldexTransactionCreationCredentials(
-          address: address!,
-          amount: _amount!,
-          priority: tPriority ?? settingsStore!.transactionPriority);
+          address: address,
+          amount: _amount,
+          priority: tPriority ?? settingsStore.transactionPriority);
 
       print('createTransaction address--> $address');
       print('createTransaction amount--> $_amount');
-      print('createTransaction priority --> ${settingsStore!.transactionPriority}');
+      print('createTransaction priority --> ${settingsStore.transactionPriority}');
       print('createTransaction --> ${credentials.address}, ${credentials.amount}, ${credentials.priority}');
 
-      _pendingTransaction = await walletService!.createTransaction(credentials);
-      print('createTransaction _pendingTransaction --> ${_pendingTransaction!.amount}, ${_pendingTransaction!.fee}');
+      _pendingTransaction = await walletService.createTransaction(credentials);
+      print('createTransaction _pendingTransaction --> ${_pendingTransaction?.amount}, ${_pendingTransaction?.fee}');
       state = TransactionCreatedSuccessfully();
       print('createTransaction state try --> $state');
       _lastRecipientAddress = address;
@@ -117,13 +117,13 @@ abstract class SendStoreBase with Store {
       return;
     }
     try {
-      final transactionId = _pendingTransaction!.hash;
+      final transactionId = _pendingTransaction?.hash;
       state = TransactionCommitting();
-      await _pendingTransaction!.commit();
+      await _pendingTransaction?.commit();
       state = TransactionCommitted();
 
-      if (settingsStore!.shouldSaveRecipientAddress && _lastRecipientAddress != null) {
-        await transactionDescriptions!.add(TransactionDescription(
+      if (settingsStore.shouldSaveRecipientAddress && _lastRecipientAddress != null) {
+        await transactionDescriptions?.add(TransactionDescription(
             id: transactionId, recipientAddress: _lastRecipientAddress!));
       }
     } catch (e) {
@@ -165,7 +165,7 @@ abstract class SendStoreBase with Store {
   Future _calculateFiatAmount() async {
     final symbol = PriceStoreBase.generateSymbolForFiat(
         fiat: settingsStore.fiatCurrency);
-    final price = priceStore!.prices[symbol] ?? 0;
+    final price = priceStore.prices[symbol] ?? 0;
 
     try {
       final amount = double.parse(cryptoAmount) * price;
@@ -178,8 +178,8 @@ abstract class SendStoreBase with Store {
   @action
   Future _calculateCryptoAmount() async {
     final symbol = PriceStoreBase.generateSymbolForFiat(
-        fiat: settingsStore!.fiatCurrency,);
-    final price = priceStore!.prices[symbol] ?? 0;
+        fiat: settingsStore.fiatCurrency,);
+    final price = priceStore.prices[symbol] ?? 0;
 
     try {
       final amount = double.parse(fiatAmount) / price;
@@ -206,7 +206,7 @@ abstract class SendStoreBase with Store {
         '^[0-9a-zA-Z]{95}\$|^[0-9a-zA-Z]{34}\$|^[0-9a-zA-Z]{42}\$|^[0-9a-zA-Z]{56}\$|^[0-9a-zA-Z]{59}\$|^[0-9a-zA-Z_]{64}\$|^[0-9a-zA-Z_]{65}\$|^[0-9a-zA-Z]{92}\$|^[0-9a-zA-Z]{105}\$|^[0-9a-zA-Z]{106}\$';
     final regExp = RegExp(pattern);
     isValid = regExp.hasMatch(value);
-    if (isValid! && cryptoCurrency != null) {
+    if (isValid && cryptoCurrency != null) {
       switch (cryptoCurrency) {
         case CryptoCurrency.bdx:
         case CryptoCurrency.xmr:

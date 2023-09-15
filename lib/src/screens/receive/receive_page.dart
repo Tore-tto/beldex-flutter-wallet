@@ -76,12 +76,12 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
   Future<Uint8List?> _capturePng() async {
     try {
       final boundary =
-          _globalKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+          _globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
       final image = await boundary.toImage(
         pixelRatio: 3.0,
       );
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      final pngBytes = byteData!.buffer.asUint8List();
+      final pngBytes = byteData?.buffer.asUint8List();
       setState(() {});
       return pngBytes;
     } catch (e) {
@@ -122,7 +122,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
 
   void _hideOverlay() {
     if (overlayEntry != null) {
-      overlayEntry!.remove();
+      overlayEntry?.remove();
       overlayEntry = null;
       setState(() {
         _isOverlayVisible = false;
@@ -136,7 +136,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
     final subAddressListStore = Provider.of<SubaddressListStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
     amountController.addListener(() {
-      if (_formKey.currentState!.validate()) {
+      if (_formKey.currentState?.validate() ?? false) {
         walletStore.onChangedAmountValue(amountController.text);
       } else {
         walletStore.onChangedAmountValue('');
@@ -147,7 +147,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
       onWillPop: () async {
         if (overlayEntry != null) {
           // checking whether the overlayentry is alive (for dropdown list) and reove on user clicks backbutton.
-          overlayEntry!.remove();
+          overlayEntry?.remove();
           overlayEntry = null;
           return false;
         }
@@ -612,8 +612,8 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
     bool isCurrent;
     dynamic label;
     setState(() {
-      for (var i = 0; i < subAddressListStore.subaddresses!.length; i++) {
-        subaddress = subAddressListStore.subaddresses![i];
+      for (var i = 0; i < subAddressListStore.subaddresses.length; i++) {
+        subaddress = subAddressListStore.subaddresses[i];
         isCurrent = walletStore.subaddress.address == subaddress.address;
         label = subaddress.label ?? subaddress.address;
         if (isCurrent) {
@@ -629,7 +629,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
     final subAddressListStore = Provider.of<SubaddressListStore>(context);
     final walletStore = Provider.of<WalletStore>(context);
     final settingsStore = Provider.of<SettingsStore>(context);
-    return subAddressListStore.subaddresses!.length <= 1
+    return subAddressListStore.subaddresses.length <= 1
         ? Container()
         : Material(
             color: Colors.transparent,
@@ -637,7 +637,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
               behavior: HitTestBehavior.translucent,
               onTap: () {
                 if (overlayEntry != null) {
-                  overlayEntry!.remove();
+                  overlayEntry?.remove();
                   overlayEntry = null;
                 }
               },
@@ -662,12 +662,12 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
                         return ListView.builder(
                             padding: EdgeInsets.zero,
                             shrinkWrap: true,
-                            itemCount: subAddressListStore.subaddresses!.length,
+                            itemCount: subAddressListStore.subaddresses.length,
                             itemBuilder: (BuildContext context, int i) {
                               // print("data inside listview ${exitData[index]}");
                               return Observer(builder: (context) {
                                 final subaddress =
-                                    subAddressListStore.subaddresses![i];
+                                    subAddressListStore.subaddresses[i];
                                 final isCurrent =
                                     walletStore.subaddress.address ==
                                         subaddress.address;
@@ -677,7 +677,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
                                 return InkWell(
                                   onTap: () async {
                                     if (overlayEntry != null) {
-                                      overlayEntry!.remove();
+                                      overlayEntry?.remove();
                                       overlayEntry = null;
                                     }
                                     final prefs =
@@ -798,10 +798,10 @@ class NewBeldexTextField extends StatelessWidget {
 
 class SubAddressDropDownList extends StatefulWidget {
   final SettingsStore? settingsStore;
-  final WalletStore? walletStore;
-  final SubaddressListStore? subaddressListStore;
+  final WalletStore walletStore;
+  final SubaddressListStore subaddressListStore;
   const SubAddressDropDownList(
-      {Key? key, this.settingsStore, this.walletStore, this.subaddressListStore})
+      {Key? key, this.settingsStore, required this.walletStore, required this.subaddressListStore})
       : super(key: key);
 
   @override
@@ -817,7 +817,7 @@ final _controller = ScrollController(keepScrollOffset: true);
     // final settingsStore = Provider.of<SettingsStore>(context);
     return AlertDialog(
       insetPadding: EdgeInsets.all(8),
-      backgroundColor:widget.settingsStore!.isDarkTheme
+      backgroundColor:widget.settingsStore?.isDarkTheme ?? false
                   ? Color(0xff272733)
                   : Color(0xffFFFFFF) ,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -836,7 +836,7 @@ final _controller = ScrollController(keepScrollOffset: true);
           width: double.maxFinite,
           height: MediaQuery.of(context).size.height * 0.80 / 3,
           decoration: BoxDecoration(
-              color: widget.settingsStore!.isDarkTheme
+              color: widget.settingsStore?.isDarkTheme ?? false
                   ? Color(0xff272733)
                   : Color(0xffFFFFFF),
              borderRadius: BorderRadius.circular(10)     
@@ -851,20 +851,20 @@ final _controller = ScrollController(keepScrollOffset: true);
                     controller: _controller,
                       shrinkWrap: true,
                      // physics: NeverScrollableScrollPhysics(),
-                      itemCount: widget.subaddressListStore!.subaddresses!.length,
+                      itemCount: widget.subaddressListStore?.subaddresses.length,
                       itemBuilder: (context, i) {
                         return Observer(builder: (_) {
-                          final subaddress = widget.subaddressListStore!.subaddresses[i];
-                          final isCurrent = widget.walletStore!.subaddress.address ==
+                          final subaddress = widget.subaddressListStore.subaddresses[i];
+                          final isCurrent = widget.walletStore.subaddress.address ==
                               subaddress.address;
-                          final label = subaddress.label.isNotEmpty
+                          final label = subaddress.label.isNotEmpty !=null
                               ? subaddress.label
                               : subaddress.address;
                           return InkWell(
                             onTap:isCurrent ? null : () async {
                               //  widget.walletStore.setSubaddress(subaddress),
                               final prefs = await SharedPreferences.getInstance();
-                              widget.walletStore!.setSubaddress(subaddress);
+                              widget.walletStore?.setSubaddress(subaddress);
                               Navigator.pop(context);
                               await prefs.setString(
                                   'currentSubAddress', label.toString());

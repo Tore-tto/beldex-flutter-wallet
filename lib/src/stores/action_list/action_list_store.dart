@@ -142,24 +142,27 @@ abstract class ActionListBase with Store {
 //  }
 
   Future _updateTransactionsList() async {
-    if(_history == null)
-    return;
+    if(_history == null) {
+      return;
+    }
     // await _history.refresh();
-    final _transactions = await _history!.getAll();
-    await _setTransactions(_transactions);
+    final _transactions = await _history?.getAll();
+    if(_transactions !=null) {
+      await _setTransactions(_transactions);
+    }
   }
 
   Future _onWalletChanged(Wallet wallet) async {
     if (_onTransactionsChangeSubscription != null) {
-      await _onTransactionsChangeSubscription!.cancel();
+      await _onTransactionsChangeSubscription?.cancel();
     }
 
     if (_onAccountChangeSubscription != null) {
-      await _onAccountChangeSubscription!.cancel();
+      await _onAccountChangeSubscription?.cancel();
     }
 
     _history = wallet.getHistory();
-    _onTransactionsChangeSubscription = _history!.transactions
+    _onTransactionsChangeSubscription = _history?.transactions
         .listen((transactions) => _setTransactions(transactions));
 
     if (wallet is BelDexWallet) {

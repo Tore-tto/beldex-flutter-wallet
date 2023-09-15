@@ -34,10 +34,10 @@ class _ExpandedSectionState extends State<ExpandedSection>
   }
 
   void _runExpandCheck() {
-    if (widget.expand!) {
-      expandController!.forward();
+    if (widget.expand) {
+      expandController?.forward();
     } else {
-      expandController!.reverse();
+      expandController?.reverse();
     }
   }
 
@@ -49,7 +49,7 @@ class _ExpandedSectionState extends State<ExpandedSection>
 
   @override
   void dispose() {
-    expandController!.dispose();
+    expandController?.dispose();
     super.dispose();
   }
 

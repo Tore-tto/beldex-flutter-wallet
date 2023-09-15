@@ -260,9 +260,9 @@ class SimpleBeldexDialog extends StatelessWidget {
               PrimaryButton(
                   text: buttonText ?? tr(context).ok,
                   color:
-                      Theme.of(context).primaryTextTheme.button!.backgroundColor!,
+                      Theme.of(context).primaryTextTheme.button?.backgroundColor,
                   borderColor:
-                      Theme.of(context).primaryTextTheme.button!.backgroundColor!,
+                      Theme.of(context).primaryTextTheme.button?.backgroundColor,
                   onPressed: () {
                     if (onPressed != null) onPressed!(context);
                   })

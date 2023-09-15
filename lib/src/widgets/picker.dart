@@ -48,7 +48,7 @@ class Picker<Item extends Object> extends StatelessWidget {
                             : Divider(
                                 height: 1,
                                 thickness: 2,
-                                color: Theme.of(context).accentTextTheme.headline5!.decorationColor,//Color.fromRGBO(235, 238, 242, 1.0)
+                                color: Theme.of(context).accentTextTheme.headline5?.decorationColor,//Color.fromRGBO(235, 238, 242, 1.0)
                         ),
                         itemBuilder: (_, index) {
                           if (index == 0) {

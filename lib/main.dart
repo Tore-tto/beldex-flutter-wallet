@@ -136,7 +136,7 @@ void main() async {
           margin:
             EdgeInsets.only(top: 50, left: 20, right: 20, bottom: 20),
           child: Text(
-            'Error:\n${e.toString()}',
+            'Error:--\n${e.toString()}',
             style: TextStyle(fontSize: 22),
           )
         )

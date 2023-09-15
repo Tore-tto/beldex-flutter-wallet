@@ -70,7 +70,7 @@ Future<void> _checkConnectivity() async {
 
   @override
   void dispose() {
-    _connectivitySubscription!.cancel();
+    _connectivitySubscription?.cancel();
     super.dispose();
   }
 

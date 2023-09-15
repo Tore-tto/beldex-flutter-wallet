@@ -129,10 +129,9 @@ class _RestoreFromSeedDetailsFormState
                                     hintText: tr(context).enterWalletName_,
                                 errorStyle: TextStyle(height: 0.1)
                                 ),
-                                onChanged: (val)=> _formKey.currentState!.validate(),
+                                onChanged: (val)=> _formKey.currentState?.validate(),
                                 validator: (value) {
-                                  walletRestorationStore
-                                      .validateWalletName(value!,tr(context));
+                                  walletRestorationStore.validateWalletName(value ?? '',tr(context));
                                   return walletRestorationStore.errorMessage;
                                 },
                             ),
@@ -154,26 +153,20 @@ class _RestoreFromSeedDetailsFormState
               //  if(blockheightValue.isNotEmpty && numberRegex.hasMatch(blockheightValue)){
                  
               //  }
-              if (_formKey.currentState!.validate()) {
-               if(_formKey2.currentState!.validate()){
+              if ((_formKey.currentState?.validate() ?? false) && (_formKey2.currentState?.validate() ?? false)) {
                  walletRestorationStore.restoreFromSeed(
                     name: _nameController.text,
                     restoreHeight: height);
                      restoreHeights(height);
-               }
-                
-                 
-                
-               
               }else{
                 return ;
               }
             },
             isLoading: walletRestorationStore.state is WalletIsRestoring,
             text: tr(context).restore_recover,
-            color: Theme.of(context).primaryTextTheme.button!.backgroundColor!,
-            borderColor:
-                Theme.of(context).primaryTextTheme.button!.backgroundColor!);
+            color: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
+            borderColor: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor
+        );
       }),
     );
   }
@@ -313,7 +306,7 @@ restoreHeightController.text = '';
                                     ),
                                     controller: dateController,
                                     validator: (value) {
-                                      if (value!.isEmpty) {
+                                      if (value?.isEmpty !=null) {
                                         return 'Date should not be empty';
                                       } else {
                                         return null;

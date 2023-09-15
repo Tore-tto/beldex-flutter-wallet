@@ -1,4 +1,5 @@
 import 'package:beldex_wallet/l10n.dart';
+import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:flutter/material.dart';
 import 'package:beldex_wallet/palette.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -29,6 +30,7 @@ class SeedLanguagePicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final seedLanguageStore = Provider.of<SeedLanguageStore>(context);
    final seedLocales = getSeedLocales(tr(context));
+   final settingsStore = Provider.of<SettingsStore>(context);
     return Observer(
         builder: (_) => InkWell(
           onTap: () => _setSeedLanguage(context),
@@ -37,7 +39,7 @@ class SeedLanguagePicker extends StatelessWidget {
             //width: double.infinity,
             decoration: BoxDecoration(
                 border: Border.all(
-                    color: Theme.of(context).dividerTheme!.color!
+                    color: settingsStore.isDarkTheme?Color.fromRGBO(100, 115, 137, 0.5):Colors.grey,//Theme.of(context).dividerTheme?.color
                 ),
                 borderRadius: BorderRadius.circular(8.0)
             ),

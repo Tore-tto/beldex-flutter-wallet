@@ -102,7 +102,7 @@ bool isReversing = false;
 
   Future _onWalletChanged(Wallet wallet) async {
     if (_onBalanceChangeSubscription != null) {
-      await _onBalanceChangeSubscription!.cancel();
+      await _onBalanceChangeSubscription?.cancel();
     }
 
     _onBalanceChangeSubscription = _walletService.onBalanceChange
@@ -116,8 +116,8 @@ bool isReversing = false;
       return;
     }
 
-    fullBalance = await _walletService.getFullBalance();
-    unlockedBalance = await _walletService.getUnlockedBalance();
+    fullBalance = await _walletService.getFullBalance() ?? 0;
+    unlockedBalance = await _walletService.getUnlockedBalance() ?? 0;
     await updateFiatBalance();
   }
 

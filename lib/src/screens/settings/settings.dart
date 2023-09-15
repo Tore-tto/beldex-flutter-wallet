@@ -96,7 +96,7 @@ class SettingsFormState extends State<SettingsForm> {
                     style: TextStyle(
                         fontSize: 16.0,
                         color:
-                            Theme.of(context).primaryTextTheme.headline6!.color),
+                            Theme.of(context).primaryTextTheme.headline6?.color),
                   )),
           attribute: Attributes.arrow),
       SettingsItem(
@@ -111,7 +111,7 @@ class SettingsFormState extends State<SettingsForm> {
                     style: TextStyle(
                         fontSize: 16.0,
                         color:
-                            Theme.of(context).primaryTextTheme.headline6!.color),
+                            Theme.of(context).primaryTextTheme.headline6?.color),
                   )),
           attribute: Attributes.link),
       SettingsItem(
@@ -124,7 +124,7 @@ class SettingsFormState extends State<SettingsForm> {
                     style: TextStyle(
                         fontSize: 16.0,
                         color:
-                            Theme.of(context).primaryTextTheme.headline6!.color),
+                            Theme.of(context).primaryTextTheme.headline6?.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
@@ -140,7 +140,7 @@ class SettingsFormState extends State<SettingsForm> {
                     style: TextStyle(
                         fontSize: 16.0,
                         color:
-                            Theme.of(context).primaryTextTheme.headline6!.color),
+                            Theme.of(context).primaryTextTheme.headline6?.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
@@ -153,7 +153,7 @@ class SettingsFormState extends State<SettingsForm> {
                     style: TextStyle(
                         fontSize: 16.0,
                         color:
-                            Theme.of(context).primaryTextTheme.headline6!.color),
+                            Theme.of(context).primaryTextTheme.headline6?.color),
                   )),
           attribute: Attributes.widget),
       SettingsItem(
@@ -242,12 +242,11 @@ class SettingsFormState extends State<SettingsForm> {
 
   //String feePriorityFilter;
 
-  LocalAuthentication? auth;
+  LocalAuthentication auth = LocalAuthentication();
   List<BiometricType> _availableBiometrics = <BiometricType>[];
 
   @override
   void initState() {
-    auth = LocalAuthentication();
     //-->
     _getAvailableBiometrics();
     super.initState();
@@ -273,7 +272,7 @@ class SettingsFormState extends State<SettingsForm> {
   Future<void> _getAvailableBiometrics() async {
     List<BiometricType> availableBiometrics;
     try {
-      availableBiometrics = await auth!.getAvailableBiometrics();
+      availableBiometrics = await auth.getAvailableBiometrics();
     } on PlatformException catch (e) {
       availableBiometrics = <BiometricType>[];
       print(e);
@@ -385,7 +384,7 @@ class SettingsFormState extends State<SettingsForm> {
                         settingsStore.node == null
                             ? Container()
                             : Observer(builder: (_) {
-                                return Text(settingsStore.node!.uri,
+                                return Text(settingsStore.node?.uri ?? "",
                                     style: TextStyle(
                                         color: Color(0xff1BB71F),
                                         fontSize: 13));

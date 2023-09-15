@@ -381,9 +381,9 @@ class _SeedLanguageState extends State<SeedLanguageRoute> {
                 Navigator.of(context).popAndPushNamed(seedLanguageStore.currentRoute),
             text: tr(context).seed_language_next,
             color:
-            Theme.of(context).primaryTextTheme.button!.backgroundColor!,
+            Theme.of(context).primaryTextTheme.button?.backgroundColor,
             borderColor:
-            Theme.of(context).primaryTextTheme.button!.backgroundColor!),
+            Theme.of(context).primaryTextTheme.button?.backgroundColor),
     ),
       ),
     );

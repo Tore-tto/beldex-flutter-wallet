@@ -27,7 +27,7 @@ class PrimaryButton extends StatelessWidget {
           onPressed: isDisabled
               ? onDisabledPressed
               : onPressed,
-          color: isDisabled ? Theme.of(context).primaryTextTheme.button!.backgroundColor:color,//Colors.transparent : color,
+          color: isDisabled ? Theme.of(context).primaryTextTheme.button?.backgroundColor:color,//Colors.transparent : color,
           shape: RoundedRectangleBorder(
               side: BorderSide(color: borderColor!),
               borderRadius: BorderRadius.circular(10.0)),
@@ -35,7 +35,7 @@ class PrimaryButton extends StatelessWidget {
               style: TextStyle(
                   fontSize: 16.0,
                   fontWeight:FontWeight.w700,
-                  color: isDisabled ? Theme.of(context).primaryTextTheme.button!.color:Theme.of(context).primaryTextTheme.button!.color//Palette.darkGrey : Theme.of(context).primaryTextTheme.button.color
+                  color: isDisabled ? Theme.of(context).primaryTextTheme.button?.color:Theme.of(context).primaryTextTheme.button?.color//Palette.darkGrey : Theme.of(context).primaryTextTheme.button.color
               )),
         ));
   }
@@ -66,14 +66,14 @@ class PrimaryButtonNode extends StatelessWidget {
           onPressed: isDisabled
               ? onDisabledPressed
               : onPressed,
-          color: isDisabled ? Theme.of(context).primaryTextTheme.button!.backgroundColor:color,//Colors.transparent : color,
+          color: isDisabled ? Theme.of(context).primaryTextTheme.button?.backgroundColor:color,//Colors.transparent : color,
           shape: RoundedRectangleBorder(
               side: BorderSide(color: borderColor),
               borderRadius: BorderRadius.circular(10.0)),
           child: Text(text,
               style: TextStyle(
                   fontSize: 16.0,
-                  color: isDisabled ? Theme.of(context).primaryTextTheme.caption!.color:Theme.of(context).primaryTextTheme.caption!.color//Palette.darkGrey : Theme.of(context).primaryTextTheme.button.color
+                  color: isDisabled ? Theme.of(context).primaryTextTheme.caption?.color:Theme.of(context).primaryTextTheme.caption?.color//Palette.darkGrey : Theme.of(context).primaryTextTheme.button.color
               )),
         ));
   }
@@ -112,7 +112,7 @@ class LoadingPrimaryButton extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.w900,
-                      color: Theme.of(context).primaryTextTheme.button!.color)),
+                      color: Theme.of(context).primaryTextTheme.button?.color)),
         ));
   }
 }
@@ -168,7 +168,7 @@ class PrimaryIconButton extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 16.0,
                           color:
-                              Theme.of(context).primaryTextTheme.button!.color)),
+                              Theme.of(context).primaryTextTheme.button?.color)),
                 ),
               )
             ],

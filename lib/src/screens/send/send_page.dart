@@ -152,7 +152,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    animationController!.dispose();
+    animationController?.dispose();
     rdisposer1?.call();
     rdisposer2?.call();
     rdisposer3?.call();
@@ -352,7 +352,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                           AddressTextFieldOption.qrCode,
                         ],
                         validator: (value) {
-                          if (value!.isEmpty) {
+                          if (value?.isEmpty !=null) {
                             setState(() {
                               addressValidation = true;
                               addressErrorMessage =
@@ -362,31 +362,35 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                           } else {
                             final alphanumericRegex = RegExp(r'^[a-zA-Z0-9]+$');
 
-                            if (!alphanumericRegex.hasMatch(value)) {
-                              setState(() {
-                                addressErrorMessage = 'Enter a valid address';
-                              });
-                              return;
-                            } else {
-                              if (getAddressBasicValidation(value)) {
-                                sendStore.validateAddress(value,
-                                    cryptoCurrency: CryptoCurrency.bdx, t:tr(context));
-                                if (sendStore.errorMessage != null) {
-                                  setState(() {
-                                    addressValidation = true;
-                                    addressErrorMessage = 'Invalid bdx address';
-                                  });
-                                } else {
-                                  setState(() {
-                                    addressValidation = false;
-                                    addressErrorMessage = '';
-                                  });
-                                }
-                                return null;
-                              } else {
-                                setState(() {});
-                                addressErrorMessage = 'Enter a valid address';
+                            if(value !=null) {
+                              if (!alphanumericRegex.hasMatch(value)) {
+                                setState(() {
+                                  addressErrorMessage = 'Enter a valid address';
+                                });
                                 return;
+                              } else {
+                                if (getAddressBasicValidation(value)) {
+                                  sendStore.validateAddress(value,
+                                      cryptoCurrency: CryptoCurrency.bdx,
+                                      t: tr(context));
+                                  if (sendStore.errorMessage != null) {
+                                    setState(() {
+                                      addressValidation = true;
+                                      addressErrorMessage =
+                                      'Invalid bdx address';
+                                    });
+                                  } else {
+                                    setState(() {
+                                      addressValidation = false;
+                                      addressErrorMessage = '';
+                                    });
+                                  }
+                                  return null;
+                                } else {
+                                  setState(() {});
+                                  addressErrorMessage = 'Enter a valid address';
+                                  return;
+                                }
                               }
                             }
                           }
@@ -469,7 +473,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                                       errorStyle:
                                           TextStyle(color: BeldexPalette.red)),
                                   validator: (value) {
-                                    if (value!.isEmpty) {
+                                    if (value?.isEmpty !=null) {
                                       setState(() {
                                         amountValidation = true;
                                         amountErrorMessage =
@@ -477,30 +481,33 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                                       });
                                       return null;
                                     } else {
-                                      if (getAmountValidation(value)) {
-                                        sendStore.validateBELDEX(value,
-                                            balanceStore.unlockedBalance,tr(context));
-                                        if (sendStore.errorMessage != null) {
-                                          setState(() {
-                                            amountValidation = true;
-                                            amountErrorMessage = tr(context)
-                                                .pleaseEnterAValidAmount;
-                                          });
-                                          return;
+                                      if(value != null) {
+                                        if (getAmountValidation(value)) {
+                                          sendStore.validateBELDEX(value,
+                                              balanceStore.unlockedBalance,
+                                              tr(context));
+                                          if (sendStore.errorMessage != null) {
+                                            setState(() {
+                                              amountValidation = true;
+                                              amountErrorMessage = tr(context)
+                                                  .pleaseEnterAValidAmount;
+                                            });
+                                            return;
+                                          } else {
+                                            setState(() {
+                                              amountValidation = false;
+                                              amountErrorMessage = "";
+                                            });
+                                          }
+                                          return null;
                                         } else {
                                           setState(() {
-                                            amountValidation = false;
-                                            amountErrorMessage = "";
+                                            amountValidation = true;
+                                            amountErrorMessage =
+                                            'Enter a valid amount';
                                           });
+                                          return;
                                         }
-                                        return null;
-                                      } else {
-                                        setState(() {
-                                          amountValidation = true;
-                                          amountErrorMessage =
-                                              'Enter a valid amount';
-                                        });
-                                        return;
                                       }
                                     }
                                   }),
@@ -653,7 +660,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
                     if (!currentFocus.hasPrimaryFocus) {
                       currentFocus.unfocus();
                     }
-                    if (_formKey.currentState!.validate()) {
+                    if (_formKey.currentState?.validate() ?? false) {
                       if (!addressValidation && !amountValidation) {
                         await Navigator.of(context).pushNamed(Routes.auth,
                             arguments: (bool isAuthenticatedSuccessfully,
@@ -756,8 +763,8 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
           await showSimpleConfirmDialog(
               context,
               tr(context).confirm_sending,
-              sendStore.pendingTransaction!.amount,
-              sendStore.pendingTransaction!.fee,
+              sendStore.pendingTransaction?.amount,
+              sendStore.pendingTransaction!?.fee,
               _addressController.text, onPressed: (_) async {
             Navigator.of(context).pop();
              await Navigator.push(
@@ -779,7 +786,7 @@ class SendFormState extends State<SendForm> with TickerProviderStateMixin {
           await showSimpleSentTrans(
               context,
               tr(context).sending,
-              sendStore.pendingTransaction!.amount,
+              sendStore.pendingTransaction?.amount,
               'fee',
               _addressController.text, onPressed: (_) {
             _addressController.text = '';

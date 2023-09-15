@@ -23,12 +23,6 @@ class ChangeLanguage extends BasePage {
   @override
   Widget body(BuildContext context) {
     final settingsStore = Provider.of<SettingsStore>(context);
-    final currentLanguage = Provider.of<Language>(context);
-
-    final currentColor = Theme.of(context).selectedRowColor;
-    final notCurrentColor =
-        Theme.of(context).accentTextTheme.subtitle1!.backgroundColor;
-    //var scrollController = ScrollController(keepScrollOffset: true);
 
  final _controller = ScrollController(keepScrollOffset: true);
 

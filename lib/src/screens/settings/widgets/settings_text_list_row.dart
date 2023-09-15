@@ -36,7 +36,7 @@ class SettingsTextListRow extends StatelessWidget {
                     fontSize:MediaQuery.of(context).size.height*0.06/3, // 14.0,
                     fontWeight: FontWeight.w400,
                    // fontFamily: 'Poppins',
-                    color: Theme.of(context).primaryTextTheme.headline6!.color),
+                    color: Theme.of(context).primaryTextTheme.headline6?.color),
               ),
             ),
             Flexible(child: widget!)

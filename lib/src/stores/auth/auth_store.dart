@@ -36,13 +36,13 @@ abstract class AuthStoreBase with Store {
   int _failureCounter;
 
   @action
-  Future auth({required String password,required AppLocalizations t}) async {
+  Future auth({required String password,required AppLocalizations l10n}) async {
     state = AuthenticationStateInitial();
     final _banDuration = banDuration();
 
     if (_banDuration != null) {
       state = AuthenticationBanned(
-          error: t.auth_store_banned_for + '${_banDuration.inMinutes}' + t.auth_store_banned_minutes);
+          error: l10n.auth_store_banned_for + '${_banDuration.inMinutes}' + l10n.auth_store_banned_minutes);
       return;
     }
 
@@ -58,11 +58,11 @@ abstract class AuthStoreBase with Store {
       if (_failureCounter >= maxFailedLogins) {
         final banDuration = await ban();
         state = AuthenticationBanned(
-            error: t.auth_store_banned_for + '${banDuration.inMinutes}' + t.auth_store_banned_minutes);
+            error: l10n.auth_store_banned_for + '${banDuration.inMinutes}' + l10n.auth_store_banned_minutes);
         return;
       }
 
-      state = AuthenticationFailure(error: t.auth_store_incorrect_password);
+      state = AuthenticationFailure(error: l10n.auth_store_incorrect_password);
     }
   }
 

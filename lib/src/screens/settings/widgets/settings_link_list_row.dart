@@ -50,7 +50,7 @@ class SettingsLinktListRow extends StatelessWidget {
                      // fontFamily: 'Poppins',
                       fontWeight: FontWeight.w800,
                       //fontWeight: FontWeight.w500,
-                      color: Theme.of(context).primaryTextTheme.headline6!.color),
+                      color: Theme.of(context).primaryTextTheme.headline6?.color),
                 ),
               )
             ],

@@ -292,7 +292,7 @@ bool getAddressBasicValidation(String value){
 
   @override
   void dispose() {
-    animationController!.dispose();
+    animationController?.dispose();
     rdisposer1?.call();
     rdisposer2?.call();
    rdisposer3?.call();
@@ -714,7 +714,7 @@ void showHUDLoader(BuildContext context) {
 
                             
 
-                          if (value!.isEmpty) {
+                          if (value?.isEmpty !=null) {
                             setState(() {
                               addressValidation = true;
                               addressErrorMessage =
@@ -723,37 +723,39 @@ void showHUDLoader(BuildContext context) {
                             return null;
                           } else {
                               final alphanumericRegex = RegExp(r'^[a-zA-Z0-9]+$');
-                              if(!alphanumericRegex.hasMatch(value)){
-                                setState(() {          
-                                                                });
-                                addressErrorMessage = 'Enter a valid address';
-                                return;
-                              }else{
-                                if(getAddressBasicValidation(value)){
-                            sendStore.validateAddress(value,
-                                cryptoCurrency: CryptoCurrency.bdx,t: tr(context));
-                            if (sendStore.errorMessage != null) {
-                              setState(() {
-                                addressValidation = true;
-                                addressErrorMessage = 'Invalid bdx address';
-                              });
-                            } else {
-                              setState(() {
-                                addressValidation = false;
-                                addressErrorMessage = '';
-                              });
-                            }
-                            return null;
-                            }else{
-                              setState(() {
-                                                              
-                                                            });
-                              addressErrorMessage = 'Enter a valid address';
-                              return ;
-                            }
+                              if(value !=null) {
+                                if (!alphanumericRegex.hasMatch(value)) {
+                                  setState(() {});
+                                  addressErrorMessage = 'Enter a valid address';
+                                  return;
+                                } else {
+                                  if (getAddressBasicValidation(value)) {
+                                    sendStore.validateAddress(value,
+                                        cryptoCurrency: CryptoCurrency.bdx,
+                                        t: tr(context));
+                                    if (sendStore.errorMessage != null) {
+                                      setState(() {
+                                        addressValidation = true;
+                                        addressErrorMessage =
+                                        'Invalid bdx address';
+                                      });
+                                    } else {
+                                      setState(() {
+                                        addressValidation = false;
+                                        addressErrorMessage = '';
+                                      });
+                                    }
+                                    return null;
+                                  } else {
+                                    setState(() {
+
+                                    });
+                                    addressErrorMessage =
+                                    'Enter a valid address';
+                                    return;
+                                  }
+                                }
                               }
-                           
-                            
                           }
                         },
                       ),
@@ -875,7 +877,7 @@ void showHUDLoader(BuildContext context) {
                                       errorStyle:
                                           TextStyle(color: BeldexPalette.red)),
                                   validator: (value) {
-                                    if (value!.isEmpty) {
+                                    if (value?.isEmpty !=null) {
                                       setState(() {
                                         amountValidation = true;
                                         amountErrorMessage =
@@ -883,32 +885,35 @@ void showHUDLoader(BuildContext context) {
                                       });
                                       return null;
                                     } else {
-                                   if(getAmountValidation(value)){
-                                      sendStore.validateBELDEX(
-                                          value, balanceStore.unlockedBalance,tr(context));
-                                      if (sendStore.errorMessage != null) {
-                                        setState(() {
-                                          amountValidation = true;
-                                          amountErrorMessage =
+                                      if(value !=null) {
+                                        if (getAmountValidation(value)) {
+                                          sendStore.validateBELDEX(
+                                              value,
+                                              balanceStore.unlockedBalance,
+                                              tr(context));
+                                          if (sendStore.errorMessage != null) {
+                                            setState(() {
+                                              amountValidation = true;
+                                              amountErrorMessage =
                                               'Please enter a valid amount';
-                                        });
-                                        return ;
-                                      } else {
-                                        setState(() {
-                                          amountValidation = false;
-                                          amountErrorMessage = "";
-                                        });
-                                      }
-                                      return null;
-                                   }else{
-                                    setState(() {
-                                                                          
-                                                                        });
-                                    amountErrorMessage = 'Enter a valid amount';
-                                    return ;
-                                   }
+                                            });
+                                            return;
+                                          } else {
+                                            setState(() {
+                                              amountValidation = false;
+                                              amountErrorMessage = "";
+                                            });
+                                          }
+                                          return null;
+                                        } else {
+                                          setState(() {
 
-                                     
+                                          });
+                                          amountErrorMessage =
+                                          'Enter a valid amount';
+                                          return;
+                                        }
+                                      }
                                     }
                                   }),
                               Row(
@@ -1567,7 +1572,7 @@ bottomSection:
                                     }
                                     // await Future.delayed(
                                     //     const Duration(milliseconds: 100), () {});
-                                    if (_formKey.currentState!.validate()) {
+                                    if (_formKey.currentState?.validate() ?? false) {
                                       if (!addressValidation &&
                                           !amountValidation) {
                                         var isSuccessful = false;
@@ -1758,8 +1763,8 @@ bottomSection:
           print('inside the transaction created successfully---->');
         showSimpleConfirmDialog(context,
          tr(context).confirm_sending,
-          sendStore.pendingTransaction!.amount,
-          sendStore.pendingTransaction!.fee,
+          sendStore.pendingTransaction?.amount,
+          sendStore.pendingTransaction?.fee,
           _addressController.text,
           onPressed: (_)async{
             Navigator.of(context).pop();
@@ -1777,7 +1782,7 @@ bottomSection:
       if (state is TransactionCommitted) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
            print('inside the transaction commiteed ---->');
-          showSimpleSentTrans( context, tr(context).sending, sendStore.pendingTransaction!.amount,'fee',_addressController.text,
+          showSimpleSentTrans( context, tr(context).sending, sendStore.pendingTransaction?.amount,'fee',_addressController.text,
               onPressed: (_) {
             _addressController.text = '';
             _cryptoAmountController.text = '';

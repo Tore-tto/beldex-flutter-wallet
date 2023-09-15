@@ -124,8 +124,7 @@ class WalletListBodyState extends State<WalletListBody> {
                           itemCount: _walletListStore!.wallets.length,
                           itemBuilder: (__, index) {
                             final wallet = _walletListStore!.wallets[index];
-                            final isCurrentWallet =
-                            _walletListStore!.isCurrentWallet(wallet);
+                            final isCurrentWallet = _walletListStore!.isCurrentWallet(wallet);
 
                             return InkWell(
                                 onTap: () async {
@@ -225,7 +224,7 @@ class WalletListBodyState extends State<WalletListBody> {
           TextButton.icon(
             style: ElevatedButton.styleFrom(
                 side: BorderSide(
-                  color:Theme.of(context).accentTextTheme.caption!.decorationColor!,
+                  color:settingsStore.isDarkTheme?Color.fromRGBO(4, 139, 241, 1.0):Color.fromRGBO(4, 139, 241, 1.0),//Theme.of(context).accentTextTheme.caption?.decorationColor,
                 ),
                 alignment: Alignment.centerLeft,
                 primary: Color(0xff2979FB),

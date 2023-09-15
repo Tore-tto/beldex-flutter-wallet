@@ -70,7 +70,7 @@ class RestoreFromSeedForm extends StatefulWidget {
 
 class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
   final _seedKey = GlobalKey<SeedWidgetState>();
-  void clear() => _seedKey.currentState!.clear();
+  void clear() => _seedKey.currentState?.clear();
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,7 @@ class _RestoreFromSeedFormState extends State<RestoreFromSeedForm> {
           onMnemoticChange: (seed) => walletRestorationStore.setSeed(seed),
           onFinish: () => Navigator.of(context).pushNamed(
               Routes.restoreWalletFromSeedDetails,
-              arguments: _seedKey.currentState!.items),
+              arguments: _seedKey.currentState?.items),
           seedLanguage: seedLanguageStore.selectedSeedLanguage
         ),
       ),

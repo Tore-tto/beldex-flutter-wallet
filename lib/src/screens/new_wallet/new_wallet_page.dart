@@ -333,17 +333,15 @@ List<String> getSeedLocales(AppLocalizations l10n) {
                 width: double.infinity,
                 child: LoadingPrimaryButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
+                    if (_formKey.currentState?.validate() ?? false) {
                       walletCreationStore.create(
                           name: nameController.text,
                           language: seedLanguageStore.selectedSeedLanguage);
                     }
                   },
                   text: tr(context).continue_text,
-                  color:
-                      Theme.of(context).primaryTextTheme.button!.backgroundColor!,
-                  borderColor:
-                      Theme.of(context).primaryTextTheme.button!.backgroundColor!,
+                  color: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
+                  borderColor: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
                   isLoading: walletCreationStore.state is WalletIsCreating,
                 ),
               ),

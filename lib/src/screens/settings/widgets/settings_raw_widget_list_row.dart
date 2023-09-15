@@ -8,7 +8,7 @@ class SettingRawWidgetListRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).accentTextTheme.headline5!.backgroundColor,
+      color: Theme.of(context).accentTextTheme.headline5?.backgroundColor,
       child: widgetBuilder(context) ?? Container(),
     );
   }

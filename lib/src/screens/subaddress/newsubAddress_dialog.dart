@@ -39,8 +39,8 @@ class SubAddressAlertState extends State<SubAddressAlert> {
 
   void getSubAddressList() {
     setState(() {
-      for (var i = 0; i < widget.subAddressListStore.subaddresses!.length; i++) {
-        subAddressList.add(widget.subAddressListStore.subaddresses![i].label);
+      for (var i = 0; i < widget.subAddressListStore.subaddresses.length; i++) {
+        subAddressList.add(widget.subAddressListStore.subaddresses[i].label);
       }
     });
   }
@@ -111,7 +111,7 @@ class SubAddressAlertState extends State<SubAddressAlert> {
                     ),
                     LoadingPrimaryButton(
                         onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
+                          if (_formKey.currentState?.validate() ?? false) {
                             setState(() {
                               isLoading = true;
                             });

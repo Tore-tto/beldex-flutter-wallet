@@ -12,13 +12,13 @@ mixin _$NodeListStore on NodeListBase, Store {
   late final _$nodesAtom = Atom(name: 'NodeListBase.nodes', context: context);
 
   @override
-  ObservableList<Node>? get nodes {
+  ObservableList<Node> get nodes {
     _$nodesAtom.reportRead();
     return super.nodes;
   }
 
   @override
-  set nodes(ObservableList<Node>? value) {
+  set nodes(ObservableList<Node> value) {
     _$nodesAtom.reportWrite(value, super.nodes, () {
       super.nodes = value;
     });

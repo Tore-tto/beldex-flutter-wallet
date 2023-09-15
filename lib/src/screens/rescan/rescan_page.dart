@@ -53,7 +53,7 @@ class RescanPage extends BasePage {
               isLoading: rescanWalletStore.state == RescanWalletState.rescaning,
               text: tr(context).rescan,
               onPressed: () async {
-                if(_formKey.currentState!.validate()){
+                if(_formKey.currentState?.validate() ?? false){
                   print('block height ---> $height');
                   await rescanWalletStore.rescanCurrentWallet(
                  restoreHeight:height);
@@ -63,9 +63,9 @@ class RescanPage extends BasePage {
                   return null;
                 }
               },
-              color: Theme.of(context).primaryTextTheme.button!.backgroundColor!,
-              borderColor:
-                  Theme.of(context).primaryTextTheme.button!.backgroundColor!)),
+              color: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor,
+              borderColor: Color.fromARGB(255,46, 160, 33),//Theme.of(context).primaryTextTheme.button?.backgroundColor
+          )),
     );
   }
 
@@ -216,7 +216,7 @@ restoreHeightController.text = '';
                                     ),
                                     controller: dateController,
                                     validator: (value) {
-                                      if (value!.isEmpty) {
+                                      if (value?.isEmpty !=null) {
                                         return 'Date should not be empty';
                                       } else {
                                         return null;

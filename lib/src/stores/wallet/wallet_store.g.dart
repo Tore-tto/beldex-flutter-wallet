@@ -190,7 +190,7 @@ mixin _$WalletStore on WalletStoreBase, Store {
   }
 
   @override
-  void validateAmount(String amount, dynamic t) {
+  void validateAmount(String amount, AppLocalizations t) {
     final _$actionInfo = _$WalletStoreBaseActionController.startAction(
         name: 'WalletStoreBase.validateAmount');
     try {

@@ -87,7 +87,7 @@ void startReconnectionObserver({required SyncStore syncStore,required WalletStor
     try {
       final isConnected = await walletStore.isConnected();
 
-      if (!isConnected) {
+      if (isConnected !=null && !isConnected) {
         await walletStore.reconnect();
       }
     } catch (e) {

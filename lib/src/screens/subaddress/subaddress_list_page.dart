@@ -37,9 +37,9 @@ class SubaddressListPage extends BasePage {
                   ),
               itemCount: subaddressListStore.subaddresses == null
                   ? 0
-                  : subaddressListStore.subaddresses!.length,
+                  : subaddressListStore.subaddresses.length,
               itemBuilder: (BuildContext context, int index) {
-                final subaddress = subaddressListStore.subaddresses![index];
+                final subaddress = subaddressListStore.subaddresses[index];
                 final isCurrent =
                     walletStore.subaddress.address == subaddress.address;
                 final label = subaddress.label ?? subaddress.address;

@@ -71,7 +71,7 @@ class AddressTextField extends StatelessWidget {
                                 color: Palette.wildDarkBlueWithOpacity,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(8))),
-                            child: Icon(Icons.paste,size: 20,color: Theme.of(context).primaryTextTheme.caption!.color),
+                            child: Icon(Icons.paste,size: 20,color: Theme.of(context).primaryTextTheme.caption?.color),
                       )
                     ),
                   )
@@ -82,7 +82,7 @@ class AddressTextField extends StatelessWidget {
                       height: prefixIconHeight,
                       child: InkWell(
                         onTap: () async => _presentQRScanner(context),
-                        child: SvgPicture.asset('assets/images/qr_code_svg.svg',width: 20,height: 20,color: Theme.of(context).primaryTextTheme.caption!.color,),//Icon(Icons.qr_code_outlined),
+                        child: SvgPicture.asset('assets/images/qr_code_svg.svg',width: 20,height: 20,color: Theme.of(context).primaryTextTheme.caption?.color,),//Icon(Icons.qr_code_outlined),
                       ))
                 ],
                 SizedBox(width:10),
@@ -92,7 +92,7 @@ class AddressTextField extends StatelessWidget {
                       height: prefixIconHeight,
                       child: InkWell(
                         onTap: () async => presetAddressBookPicker(context),
-                        child: SvgPicture.asset('assets/images/contact_book_svg.svg',width: 25,height: 25,color: Theme.of(context).primaryTextTheme.caption!.color ,),//Icon(Icons.contacts_rounded),
+                        child: SvgPicture.asset('assets/images/contact_book_svg.svg',width: 25,height: 25,color: Theme.of(context).primaryTextTheme.caption?.color ,),//Icon(Icons.contacts_rounded),
                       ))
                 ],
                 if (options
@@ -128,12 +128,12 @@ class AddressTextField extends StatelessWidget {
       var address = '';
 
       if (uri == null) {
-        controller!.text = code;
+        controller?.text = code;
         return;
       }
 
       address = uri.path;
-      controller!.text = address;
+      controller?.text = address;
 
       if (onURIScanned != null) {
         onURIScanned!(uri);
@@ -151,7 +151,7 @@ class AddressTextField extends StatelessWidget {
         .pushNamed(Routes.pickerAddressBook);
 
     if (contact is Contact && contact.address != null) {
-      controller!.text = contact.address;
+      controller?.text = contact.address;
     }
   }
 
@@ -160,7 +160,7 @@ class AddressTextField extends StatelessWidget {
         .pushNamed(Routes.subaddressList);
 
     if (subaddress is Subaddress && subaddress.address != null) {
-      controller!.text = subaddress.address;
+      controller?.text = subaddress.address;
     }
   }
 
@@ -175,7 +175,7 @@ class AddressTextField extends StatelessWidget {
 //   });
 final data = await Clipboard.getData('text/plain');
   
-    controller!.text = data!.text.toString(); // this will paste "copied text" to textFieldController
+    controller?.text = data!.text.toString(); // this will paste "copied text" to textFieldController
   }catch(e){
     print(e);
   }
