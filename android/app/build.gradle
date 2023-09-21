@@ -51,9 +51,9 @@ android {
 
         externalNativeBuild {
             cmake {
-                cppFlags "-std=c++11"
+                cppFlags "-std=c++17"
                 arguments '-DANDROID_STL=c++_shared', '-DBUILD_TESTING=OFF'
-                version "3.18.1"//"3.10.2"
+                version "3.18.0+"//"3.10.2"
             }
         }
     }

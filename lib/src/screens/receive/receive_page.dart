@@ -1,4 +1,5 @@
 //import 'dart:html';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:beldex_wallet/l10n.dart';
@@ -92,7 +93,18 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
   void _incrementCounter(String address, String text) async {
     try {
       final imageUint8List = await _capturePng();
+     final tempDir = await getTemporaryDirectory();
+     final filePath = '${tempDir.path}/share.png';
 
+     await File(filePath).writeAsBytes(imageUint8List!);
+
+     await Share.shareFiles(
+      [filePath],
+      text: address,
+      subject: 'Share',
+      mimeTypes: ['image/png']
+     );
+     setState(() {});
       // await WcFlutterShare.share(
       //     text: address,
       //     sharePopupTitle: 'share',
@@ -347,7 +359,7 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
                                 hintText: 'Enter ${tr(context).amount}',
                                 validator: (value) {
                                   walletStore.validateAmount(value ?? '',tr(context));
-                                  return walletStore.errorMessage!;
+                                  return walletStore.errorMessage;
                                 },
                                 controller: amountController,
                                 onChanged: (val) {
@@ -394,79 +406,6 @@ class ReceiveBodyState extends State<ReceiveBody> with WidgetsBindingObserver {
                                           },
                                           child: displayContainer(context)),
                                     ),
-
-                                    // Padding(
-                                    //     padding: EdgeInsets.only(
-                                    //         left: MediaQuery.of(context)
-                                    //                 .size
-                                    //                 .height *
-                                    //             0.08 /
-                                    //             3,
-                                    //         right: MediaQuery.of(context)
-                                    //                 .size
-                                    //                 .height *
-                                    //             0.10 /
-                                    //             3,
-                                    //         top: MediaQuery.of(context)
-                                    //                 .size
-                                    //                 .height *
-                                    //             0.03 /
-                                    //             3),
-                                    //     child: Observer(
-                                    //       builder: (_) {
-                                    //         final canClick =
-                                    //             subAddressListStore
-                                    //                         .subaddresses
-                                    //                         .length ==
-                                    //                     1
-                                    //                 ? false
-                                    //                 : true;
-                                    //         return GestureDetector(
-                                    //             onTap: () {
-                                    //               final mHeight =
-                                    //                   MediaQuery.of(context)
-                                    //                       .size
-                                    //                       .height;
-                                    //               // setState(() {
-                                    //               //   canShow = canShow ? false : true;
-                                    //               // });
-                                    //               setState(() {
-                                    //                 isOpen =
-                                    //                     isOpen ? false : true;
-                                    //               });
-
-                                    //               print(
-                                    //                   "the value of the isOpen $isOpen");
-
-                                    //               if (canClick) {
-                                    //                 if (overlayEntry ==
-                                    //                     null) {
-                                    //                   final overlayState =
-                                    //                       Overlay.of(context);
-                                    //                   overlayEntry =
-                                    //                       OverlayEntry(
-                                    //                     builder: (context) {
-                                    //                       return _buildExitnodeListView(
-                                    //                           mHeight);
-                                    //                     },
-                                    //                   );
-
-                                    //                   overlayState?.insert(
-                                    //                       overlayEntry);
-
-                                    //                   setState(() {
-                                    //                     _isOverlayVisible =
-                                    //                         true;
-                                    //                   });
-                                    //                 }
-                                    //               }
-                                    //             },
-                                    //             child: displayContainer(
-                                    //                 context));
-                                    //       },
-                                    //     ),
-
-                                    //     ),
                                     SizedBox(height: 15),
                                     Container(
                                       margin: EdgeInsets.only(
@@ -747,7 +686,7 @@ class NewBeldexTextField extends StatelessWidget {
   final String? hintText;
   final TextInputType? keyboardType;
   final TextEditingController? controller;
-  final String Function(String?)? validator;
+  final String? Function(String?)? validator;
   final List<TextInputFormatter>? inputFormatters;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -845,13 +784,13 @@ final _controller = ScrollController(keepScrollOffset: true);
             children: [
               Expanded(
                 child: RawScrollbar(
-                  isAlwaysShown: true,
+                  thumbVisibility: true,
                   controller: _controller,
                   child: ListView.builder(
                     controller: _controller,
                       shrinkWrap: true,
                      // physics: NeverScrollableScrollPhysics(),
-                      itemCount: widget.subaddressListStore?.subaddresses.length,
+                      itemCount: widget.subaddressListStore.subaddresses.length,
                       itemBuilder: (context, i) {
                         return Observer(builder: (_) {
                           final subaddress = widget.subaddressListStore.subaddresses[i];
@@ -864,7 +803,7 @@ final _controller = ScrollController(keepScrollOffset: true);
                             onTap:isCurrent ? null : () async {
                               //  widget.walletStore.setSubaddress(subaddress),
                               final prefs = await SharedPreferences.getInstance();
-                              widget.walletStore?.setSubaddress(subaddress);
+                              widget.walletStore.setSubaddress(subaddress);
                               Navigator.pop(context);
                               await prefs.setString(
                                   'currentSubAddress', label.toString());

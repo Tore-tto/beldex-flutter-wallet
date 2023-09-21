@@ -10,19 +10,6 @@ import 'package:beldex_wallet/src/screens/base_page.dart';
 class FaqPage extends BasePage {
   @override
   String getTitle(AppLocalizations t) => t.faq;
-
-  // @override
-  // Widget leading(BuildContext context) {
-  //   return Container(
-  //       padding: const EdgeInsets.only(top: 12.0, left: 10),
-  //       decoration: BoxDecoration(
-  //         //borderRadius: BorderRadius.circular(10),
-  //         //color: Colors.black,
-  //       ),
-  //       child: SvgPicture.asset('assets/images/beldex_logo_foreground1.svg'));
-  // }
-
-
 @override
 Widget trailing(BuildContext context){
   return Icon(Icons.settings,color:Colors.transparent);
@@ -53,6 +40,9 @@ Widget trailing(BuildContext context){
        SizedBox(height:10.0),
        FutureBuilder(
       builder: (context, snapshot) {
+        if(!snapshot.hasData){
+          return SizedBox.shrink();
+        }
         final faqItems = jsonDecode(snapshot.data.toString()) as List;
 
         return Expanded(

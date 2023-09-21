@@ -129,12 +129,6 @@ class WelcomePage extends BasePage {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 color: Colors.transparent,
-                                // boxShadow: [
-                                //   BoxShadow(
-                                //       color: Colors.grey[900],
-                                //       offset: Offset(0.0, 2.0),
-                                //       blurRadius: 2.0)
-                                // ]
                                 ),
                            // child: SvgPicture.asset('assets/images/create_svg.svg',color: Colors.transparent,width: 15,height: 15,)
                             ),

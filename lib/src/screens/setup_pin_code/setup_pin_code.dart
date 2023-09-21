@@ -11,24 +11,13 @@ import 'package:beldex_wallet/src/stores/settings/settings_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SetupPinCodePage extends BasePage {
-  SetupPinCodePage({this.onPinCodeSetup});
+  SetupPinCodePage({required this.onPinCodeSetup});
 
-  final Function(BuildContext, String)? onPinCodeSetup;
+  final Function(BuildContext, String) onPinCodeSetup;
   //final String appBarTitle;
   @override
   String getTitle(AppLocalizations t) => t.setup_pin;
 
-
-  // @override
-  // Widget leading(BuildContext context) {
-  //   return Container(
-  //       padding: const EdgeInsets.only(top: 12.0, left: 10),
-  //       decoration: BoxDecoration(
-  //         //borderRadius: BorderRadius.circular(10),
-  //         //color: Colors.black,
-  //       ),
-  //       child: SvgPicture.asset('assets/images/beldex_logo_foreground1.svg'));
-  // }
 @override
   Widget trailing(BuildContext context) {
     return Container(
@@ -37,7 +26,7 @@ class SetupPinCodePage extends BasePage {
 
   @override
   Widget body(BuildContext context) =>
-      SetupPinCodeForm(onPinCodeSetup: onPinCodeSetup!, hasLengthSwitcher: true);
+      SetupPinCodeForm(onPinCodeSetup: onPinCodeSetup, hasLengthSwitcher: true);
 }
 
 class SetupPinCodeForm extends PinCodeWidget {
@@ -53,25 +42,25 @@ class SetupPinCodeForm extends PinCodeWidget {
 
 class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
     extends PinCodeState<WidgetType> {
-  _SetupPinCodeFormState() {
-    title = tr(context).enterYourPin;
-  }
+  // _SetupPinCodeFormState() {
+  //   title = tr(context).enterYourPin;
+  // }
 
   bool isEnteredOriginalPin() => _originalPin.isNotEmpty;
-  Function(BuildContext)? onPinCodeSetup;
-  List<int?> _originalPin = [];
+  // Function(BuildContext)? onPinCodeSetup;
+  List<int> _originalPin = [];
   UserStore? _userStore;
   SettingsStore? _settingsStore;
 
   @override
   void onPinCodeEntered(PinCodeState state) {
     if (!isEnteredOriginalPin()) {
-      _originalPin = state.pin;
-      state.title = tr(context).enter_your_pin_again;
+      _originalPin =[...state.pin];
+      state.setTitle(tr(context).enter_your_pin_again);
       state.clear();
     } else {
-      if (listEquals<int>(state.pin.cast<int>(), _originalPin.cast<int>())) {
-        final String pin = state.pin.fold('', (ac, val) => ac + '$val');
+      if (listEquals<int>(state.pin, _originalPin)) {
+        final pin = state.pin.join();
         _userStore?.set(password: pin);
         _settingsStore?.setDefaultPinLength(pinLength: state.pinLength);
                          showDialog<void>(
@@ -112,7 +101,7 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
                               onPressed: () {
                                  Navigator.of(context).pop();
                                 widget.onPinCodeSetup(context, pin);
-                                reset();
+                                reset(tr(context));
                               },
                               child:Text(
                                 tr(context).ok,
@@ -221,14 +210,14 @@ class _SetupPinCodeFormState<WidgetType extends SetupPinCodeForm>
               );
             });*/
 
-        reset();
+        reset(tr(context));
       }
     }
   }
 
-  void reset() {
+  void reset(AppLocalizations t) {
     clear();
-    setTitle(tr(context).enterYourPin);
+    setTitle(t.enterYourPin);
     _originalPin = [];
   }
 
